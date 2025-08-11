@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreams Beauty</title>
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header>
+    <div class="logo-container">
+      <img src="imagenes/logo.png" alt="Logo Dreams Beauty" class="logo">
+      <h1>Dreams Beauty</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#productos">Productos</a></li>
+        <li id="carrito-icono">🛒 Carrito (<span id="contador-carrito">0</span>)</li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Lista de productos -->
+  <section id="productos">
+    <h2>Nuestros Productos</h2>
+    <div class="productos-grid" id="productos-container"></div>
+  </section>
+
+  <!-- Modal de imagen -->
+  <div id="modal-imagen" class="modal">
+    <span class="cerrar" onclick="cerrarModal()">&times;</span>
+    <img class="modal-contenido" id="imagen-ampliada">
+  </div>
+
+  <!-- Carrito -->
+  <div id="carrito" class="carrito">
+    <h3>Carrito de Compras</h3>
+    <ul id="lista-carrito"></ul>
+    <p><strong>Total: </strong>$<span id="total-carrito">0</span> MXN</p>
+    <button onclick="vaciarCarrito()">Vaciar Carrito</button>
+  </div>
+
+  <!-- Redes Sociales -->
+  <section id="redes">
+    <h2>Síguenos</h2>
+    <div class="redes-icons">
+      <a href="https://www.instagram.com" target="_blank">📷 Instagram</a>
+      <a href="https://www.facebook.com" target="_blank">📘 Facebook</a>
+      <a href="https://wa.me/521234567890" target="_blank">💬 WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="terminos">
+    <p>© 2025 Dreams Beauty. Todos los derechos reservados.</p>
+    <p><a href="#">Términos y Condiciones</a></p>
+  </footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
+      authDomain: "dreamsbeautiy.firebaseapp.com",
+      projectId: "dreamsbeautiy",
+      storageBucket: "dreamsbeautiy.firebasestorage.app",
+      messagingSenderId: "1034221935895",
+      appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
+    };
+  </script>
+  <script src="script.js" defer></script>
+</body>
+</html>
