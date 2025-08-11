@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Administración</title>
+
+  <!-- Si estilo.css está junto a admin.html, dejar así. Si está en otra carpeta, ajustar ruta -->
+  <link rel="stylesheet" href="./estilos.css" onerror="console.warn('⚠️ No se encontró estilo.css')">
+
+  <style>
+    body {
+      background-color: #fff8fd;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #cfa2f2;
+      text-align: center;
+    }
+    form {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 2px solid #f5c0ff;
+    }
+    button {
+      background-color: #ff85c1;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #ff5ca0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Agregar Producto</h1>
+
+  <form id="form-producto">
+    <input type="text" id="nombre" placeholder="Nombre del producto" required />
+    <textarea id="descripcion" placeholder="Descripción" required></textarea>
+    <input type="number" id="stock" placeholder="Stock" required />
+    <input type="number" step="0.01" id="precio" placeholder="Precio" required />
+    <input type="text" id="imagen" placeholder="Nombre de la imagen (ej: exfoliante.png)" required />
+    <button type="submit">Guardar Producto</button>
+  </form>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
+      authDomain: "dreamsbeautiy.firebaseapp.com",
+      projectId: "dreamsbeautiy",
+      storageBucket: "dreamsbeautiy.appspot.com", /* Ajuste aquí: quitar .app extra */
+      messagingSenderId: "1034221935895",
+      appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <script src="./admin.js"></script>
+</body>
+</html>

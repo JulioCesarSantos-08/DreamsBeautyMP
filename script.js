@@ -12,9 +12,11 @@ function cargarProductos() {
     contenedor.innerHTML = "";
     snapshot.forEach(doc => {
       const producto = doc.data();
+      const rutaImagen = `imagenes/${producto.imagen}`; // 🔹 Construir ruta automáticamente
+
       contenedor.innerHTML += `
         <div class="producto">
-          <img src="${producto.imagen}" alt="${producto.nombre}" onclick="ampliarImagen('${producto.imagen}')">
+          <img src="${rutaImagen}" alt="${producto.nombre}" onclick="ampliarImagen('${rutaImagen}')">
           <h3>${producto.nombre}</h3>
           <p>${producto.descripcion}</p>
           <p><strong>Stock:</strong> ${producto.stock}</p>
@@ -73,6 +75,7 @@ function ampliarImagen(src) {
   document.getElementById("modal-imagen").style.display = "block";
   document.getElementById("imagen-ampliada").src = src;
 }
+
 function cerrarModal() {
   document.getElementById("modal-imagen").style.display = "none";
 }
