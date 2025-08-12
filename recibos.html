@@ -1,1 +1,43 @@
-Aun en pruebas....
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recibos - Dreams Beauty</title>
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+  <link rel="stylesheet" href="recibos.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>🧾 Recibos</h1>
+    <div class="nav-buttons">
+      <button onclick="window.location.href='admin.html'">⬅ Volver a Admin</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="lista-recibos" class="recibos-container">
+      <!-- Recibos dinámicos -->
+    </div>
+  </main>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
+      authDomain: "dreamsbeautiy.firebaseapp.com",
+      projectId: "dreamsbeautiy",
+      storageBucket: "dreamsbeautiy.firebasestorage.app",
+      messagingSenderId: "1034221935895",
+      appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script src="recibos.js" defer></script>
+
+</body>
+</html>
