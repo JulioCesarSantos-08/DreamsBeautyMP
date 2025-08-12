@@ -22,9 +22,7 @@
       align-items: center;
       flex-wrap: wrap;
     }
-    header h1 {
-      margin: 0;
-    }
+    header h1 { margin: 0; font-size: 1.2rem; }
     header nav a {
       color: white;
       text-decoration: none;
@@ -34,46 +32,64 @@
       border-radius: 8px;
       margin-left: 10px;
     }
+
     main {
-      max-width: 600px;
-      margin: 20px auto;
+      max-width: 720px;
+      margin: 24px auto;
       background: white;
       padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      box-shadow: 0px 6px 18px rgba(0,0,0,0.06);
     }
     h2 {
       text-align: center;
       color: #ff5ca0;
+      margin-top: 0;
     }
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
+    form .full { grid-column: 1 / -1; }
     label {
-      font-weight: bold;
-      margin-top: 5px;
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+      color:#444;
+      font-size:0.95rem;
     }
-    input, textarea {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
+    input[type="text"], input[type="number"], textarea {
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #e8dff7;
+      background: #fff;
+      font-size: 0.95rem;
     }
-    button {
-      background-color: #ff85c1;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
+    textarea { min-height: 90px; resize: vertical; }
+    .actions { display:flex; gap:8px; grid-column: 1 / -1; }
+    .actions button {
+      flex:1;
+      padding:10px 12px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
     }
-    button:hover {
-      background-color: #ff5ca0;
+    .btn-save { background:#ff85c1; color:#fff; }
+    .btn-save:hover { background:#ff5ca0; }
+    .btn-view { background:#7cc1ff; color:#fff; }
+    .btn-view:hover { background:#5fb0ff; }
+
+    @media (max-width:700px) {
+      form { grid-template-columns: 1fr; }
+      header { padding:12px; }
+      main { margin:12px; padding:16px; }
     }
   </style>
+
+  <!-- Firebase (compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
@@ -87,23 +103,42 @@
 
   <main>
     <h2>Agregar Producto</h2>
+
     <form id="form-producto">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" placeholder="Nombre del producto" required>
+      <div class="full">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" placeholder="Nombre del producto" required>
+      </div>
 
-      <label for="descripcion">Descripción:</label>
-      <textarea id="descripcion" placeholder="Descripción breve" required></textarea>
+      <div class="full">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" placeholder="Descripción breve" required></textarea>
+      </div>
 
-      <label for="stock">Stock:</label>
-      <input type="number" id="stock" min="0" required>
+      <div>
+        <label for="stock">Stock</label>
+        <input type="number" id="stock" min="0" value="0" required>
+      </div>
 
-      <label for="precio">Precio (MXN):</label>
-      <input type="number" id="precio" step="0.01" min="0" required>
+      <div>
+        <label for="precio">Precio (MXN)</label>
+        <input type="number" id="precio" step="0.01" min="0" value="0.00" required>
+      </div>
 
-      <label for="imagen">Nombre de imagen:</label>
-      <input type="text" id="imagen" placeholder="ej: exfoliante.png" required>
+      <div>
+        <label for="imagen">Nombre de imagen</label>
+        <input type="text" id="imagen" placeholder="ej: exfoliante.png" required>
+      </div>
 
-      <button type="submit">Guardar Producto</button>
+      <div>
+        <label for="categoria">Categoría (texto)</label>
+        <input type="text" id="categoria" placeholder="Ej: Maquillaje, Cremas, Cabello" required>
+      </div>
+
+      <div class="full actions">
+        <button type="submit" class="btn-save">Guardar Producto</button>
+        <button type="button" class="btn-view" onclick="window.location.href='productos.html'">Ir a Productos</button>
+      </div>
     </form>
   </main>
 
@@ -116,9 +151,12 @@
       messagingSenderId: "1034221935895",
       appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
     };
+
+    // Inicializar Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // Guardar producto
     document.getElementById("form-producto").addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -127,8 +165,9 @@
       const stock = parseInt(document.getElementById("stock").value);
       const precio = parseFloat(document.getElementById("precio").value);
       const imagen = document.getElementById("imagen").value.trim();
+      const categoria = document.getElementById("categoria").value.trim();
 
-      if (!nombre || !descripcion || isNaN(stock) || isNaN(precio) || !imagen) {
+      if (!nombre || !descripcion || isNaN(stock) || isNaN(precio) || !imagen || !categoria) {
         alert("Por favor completa todos los campos correctamente.");
         return;
       }
@@ -139,7 +178,8 @@
           descripcion,
           stock,
           precio,
-          imagen
+          imagen,
+          categoria
         });
 
         alert("✅ Producto guardado correctamente.");

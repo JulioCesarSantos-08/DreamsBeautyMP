@@ -1,6 +1,6 @@
 /********************
   script.js completo
-  - compatible con firebase compat (como lo tienes en el HTML)
+  - compatible con firebase compat
 ********************/
 
 // Inicializar Firebase
@@ -55,16 +55,17 @@ function mostrarProductos(lista) {
 
   lista.forEach(producto => {
     const rutaImagen = `imagenes/${producto.imagen}`;
+    const agotado = producto.stock <= 0;
     contenedor.innerHTML += `
       <div class="producto">
         <img src="${rutaImagen}" alt="${producto.nombre}" onclick="ampliarImagen('${rutaImagen}')">
         <h3>${producto.nombre}</h3>
         <p>${producto.descripcion || ''}</p>
-        <p><strong>Stock:</strong> ${producto.stock ?? 'N/A'}</p>
+        <p><strong>Stock:</strong> ${agotado ? '<span style="color:red;">AGOTADO</span>' : producto.stock}</p>
         <p><strong>Precio:</strong> $${producto.precio} MXN</p>
-        <div style="display:flex; gap:8px;">
-          <button onclick="agregarAlCarrito('${escapeHtml(producto.nombre)}', ${Number(producto.precio)})">Agregar al carrito</button>
-          <button onclick="abrirCompraAhora('${producto.id}')" style="background:#7cc1ff;">Comprar ahora</button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="agregarAlCarrito('${escapeHtml(producto.nombre)}', ${Number(producto.precio)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
+          <button onclick="abrirCompraAhora('${producto.id}')" style="background:#7cc1ff;" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Comprar ahora</button>
         </div>
       </div>
     `;
@@ -136,7 +137,6 @@ function cerrarModal() {
 
 /* ---------------- COMPRA DIRECTA (COMPRAR AHORA) ---------------- */
 function abrirCompraAhora(productoId) {
-  // buscar producto en productos[]
   const prod = productos.find(p => p.id === productoId);
   if (!prod) {
     alert("Producto no encontrado.");
@@ -144,7 +144,6 @@ function abrirCompraAhora(productoId) {
   }
   productoCompraAhora = prod;
 
-  // llenar modal
   document.getElementById("modal-titulo").textContent = "Comprar ahora";
   document.getElementById("producto-seleccionado").innerHTML = `
     <strong>${escapeHtml(prod.nombre)}</strong><br>
@@ -163,7 +162,7 @@ function cerrarModalCompra() {
   productoCompraAhora = null;
 }
 
-/* Cuando confirman compra directa */
+/* Confirmar compra directa */
 async function confirmarCompraAhora() {
   const nombreCliente = document.getElementById("nombre-usuario").value.trim();
   const metodoPago = document.getElementById("metodo-pago").value;
@@ -176,38 +175,101 @@ async function confirmarCompraAhora() {
     alert("No hay producto seleccionado.");
     return;
   }
+  if (productoCompraAhora.stock <= 0) {
+    alert("Este producto está agotado.");
+    return;
+  }
 
-  // crear objeto recibo
   const recibo = {
     cliente: nombreCliente,
     metodoPago: metodoPago,
     items: [
-      {
-        nombre: productoCompraAhora.nombre || "",
-        precio: Number(productoCompraAhora.precio) || 0,
-        cantidad: 1
-      }
+      { nombre: productoCompraAhora.nombre, precio: Number(productoCompraAhora.precio), cantidad: 1 }
     ],
-    total: Number(productoCompraAhora.precio) || 0,
+    total: Number(productoCompraAhora.precio),
     fecha: firebase.firestore.FieldValue.serverTimestamp(),
     origen: "compra_directa",
     entregado: false
   };
 
   try {
-    const docRef = await db.collection("recibos").add(recibo);
-    // mostrar vista de recibo para que el cliente imprima o capture
-    mostrarReciboImprimible(docRef.id, recibo);
+    await db.collection("recibos").add(recibo);
+    await db.collection("productos").doc(productoCompraAhora.id).update({
+      stock: firebase.firestore.FieldValue.increment(-1)
+    });
+    productoCompraAhora.stock -= 1;
+
+    mostrarReciboImprimible("N/A", recibo);
+    cargarProductos(); // recargar lista sin refresh
   } catch (err) {
-    console.error("Error guardando recibo:", err);
-    alert("Ocurrió un error al guardar el recibo. Intenta de nuevo.");
+    console.error("Error en la compra directa:", err);
+    alert("Error al procesar la compra.");
   }
 }
 
-/* Mostrar recibo imprimible dentro del modal */
+/* ---------------- FINALIZAR COMPRA (CARRITO) ---------------- */
+async function finalizarCompra() {
+  const nombreCliente = document.getElementById("nombre-cliente").value.trim();
+  const metodoPago = document.getElementById("metodo-pago-carrito").value;
+
+  if (!nombreCliente) {
+    alert("Por favor ingresa tu nombre para el ticket.");
+    return;
+  }
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío.");
+    return;
+  }
+
+  const agrupado = {};
+  carrito.forEach(it => {
+    if (!agrupado[it.nombre]) agrupado[it.nombre] = { ...it, cantidad: 0 };
+    agrupado[it.nombre].cantidad += 1;
+  });
+
+  const items = Object.values(agrupado);
+  const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
+
+  const recibo = {
+    cliente: nombreCliente,
+    metodoPago: metodoPago,
+    items,
+    total,
+    fecha: firebase.firestore.FieldValue.serverTimestamp(),
+    origen: "carrito",
+    entregado: false
+  };
+
+  try {
+    await db.collection("recibos").add(recibo);
+
+    const batch = db.batch();
+    items.forEach(item => {
+      const prod = productos.find(p => p.nombre === item.nombre);
+      if (prod) {
+        batch.update(db.collection("productos").doc(prod.id), {
+          stock: firebase.firestore.FieldValue.increment(-item.cantidad)
+        });
+        prod.stock -= item.cantidad;
+      }
+    });
+    await batch.commit();
+
+    carrito = [];
+    actualizarCarrito();
+    mostrarReciboImprimible("N/A", recibo);
+    document.getElementById("modal-compra").style.display = "block";
+    cargarProductos();
+  } catch (err) {
+    console.error("Error finalizando compra:", err);
+    alert("Error al procesar la compra.");
+  }
+}
+
+/* ---------------- RECIBO ---------------- */
 function mostrarReciboImprimible(id, recibo) {
   const cont = document.getElementById("recibo-imprimible");
-  const fecha = new Date(); // Será diferente al timestamp del servidor, pero el cliente puede ver la hora local
+  const fecha = new Date();
   let itemsHtml = "";
   recibo.items.forEach(it => {
     itemsHtml += `<div style="display:flex; justify-content:space-between; margin:6px 0;">
@@ -231,20 +293,17 @@ function mostrarReciboImprimible(id, recibo) {
       <strong>Total</strong><strong>$${Number(recibo.total).toFixed(2)} MXN</strong>
     </div>
     <div style="margin-top:8px;"><small>Método: ${escapeHtml(recibo.metodoPago)}</small></div>
-    <div style="margin-top:8px;"><small>Por favor captura la pantalla de este recibo y envíala según el proceso de tu tienda.</small></div>
+    <div style="margin-top:8px;"><small>Por favor captura la pantalla de este recibo.</small></div>
   `;
 
-  // ocultar formulario y mostrar vista
   document.getElementById("form-compra").style.display = "none";
   document.getElementById("vista-recibo").style.display = "block";
 }
 
-/* Imprimir / Guardar PDF (usa la ventana de impresión del navegador) */
 function imprimirRecibo() {
   const contenido = document.getElementById("recibo-imprimible").innerHTML;
   const ventana = window.open('', 'PRINT', 'height=600,width=800');
-  ventana.document.write('<html><head><title>Recibo Dreams Beauty</title>');
-  ventana.document.write('</head><body>');
+  ventana.document.write('<html><head><title>Recibo Dreams Beauty</title></head><body>');
   ventana.document.write(contenido);
   ventana.document.write('</body></html>');
   ventana.document.close();
@@ -253,71 +312,21 @@ function imprimirRecibo() {
   ventana.close();
 }
 
-/* ---------------- FINALIZAR COMPRA (CARRITO) ---------------- */
-async function finalizarCompra() {
-  const nombreCliente = document.getElementById("nombre-cliente").value.trim();
-  const metodoPago = document.getElementById("metodo-pago-carrito").value;
-
-  if (!nombreCliente) {
-    alert("Por favor ingresa tu nombre para el ticket.");
-    return;
-  }
-  if (carrito.length === 0) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
-
-  // construir items agregando cantidades por nombre
-  const agrupado = {};
-  carrito.forEach(it => {
-    const key = it.nombre;
-    if (!agrupado[key]) agrupado[key] = { nombre: it.nombre, precio: Number(it.precio), cantidad: 0 };
-    agrupado[key].cantidad += 1;
-  });
-
-  const items = Object.values(agrupado);
-  const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
-
-  const recibo = {
-    cliente: nombreCliente,
-    metodoPago: metodoPago,
-    items: items,
-    total: total,
-    fecha: firebase.firestore.FieldValue.serverTimestamp(),
-    origen: "carrito",
-    entregado: false
-  };
-
-  try {
-    const docRef = await db.collection("recibos").add(recibo);
-    alert("Compra registrada. Se creó el recibo en la base de datos.");
-    // vaciar carrito local
-    carrito = [];
-    actualizarCarrito();
-
-    // opcional: abrir modal con recibo para imprimir
-    mostrarReciboImprimible(docRef.id, recibo);
-    document.getElementById("modal-compra").style.display = "block";
-  } catch (err) {
-    console.error("Error guardando recibo:", err);
-    alert("Ocurrió un error al guardar la compra.");
-  }
-}
-
 /* ---------------- UTILIDADES ---------------- */
 function escapeHtml(str) {
   if (typeof str !== "string") return str;
-  return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+  return str.replaceAll('&','&amp;')
+            .replaceAll('<','&lt;')
+            .replaceAll('>','&gt;')
+            .replaceAll('"','&quot;')
+            .replaceAll("'",'&#39;');
 }
 
 /* ---------------- INICIO ---------------- */
 cargarProductos();
 actualizarCarrito();
 
-/* Cerrar modal si se da click fuera del contenido */
 window.addEventListener('click', function(e){
-  const modalImg = document.getElementById('modal-imagen');
-  const modalCompra = document.getElementById('modal-compra');
-  if (e.target === modalImg) cerrarModal();
-  if (e.target === modalCompra) cerrarModalCompra();
+  if (e.target === document.getElementById('modal-imagen')) cerrarModal();
+  if (e.target === document.getElementById('modal-compra')) cerrarModalCompra();
 });

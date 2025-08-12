@@ -10,6 +10,23 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* Buscador */
+    .buscador {
+      max-width: 500px;
+      margin: 15px auto;
+      display: flex;
+      justify-content: center;
+    }
+    .buscador input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+  </style>
 </head>
 <body>
 
@@ -22,6 +39,11 @@
   </header>
 
   <main>
+    <!-- Buscador -->
+    <div class="buscador">
+      <input type="text" id="buscar" placeholder="🔍 Buscar producto por nombre...">
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -30,6 +52,7 @@
           <th>Descripción</th>
           <th>Stock</th>
           <th>Precio</th>
+          <th>Categoría</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -44,6 +67,7 @@
       <h2>Editar Producto</h2>
       <form id="form-editar">
         <input type="hidden" id="edit-id">
+
         <label>Nombre:</label>
         <input type="text" id="edit-nombre" required>
 
@@ -58,6 +82,9 @@
 
         <label>Imagen (nombre o URL):</label>
         <input type="text" id="edit-imagen" required>
+
+        <label>Categoría:</label>
+        <input type="text" id="edit-categoria" required>
 
         <button type="submit" class="btn-guardar">💾 Guardar Cambios</button>
       </form>

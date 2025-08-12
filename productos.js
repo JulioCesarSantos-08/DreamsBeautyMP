@@ -2,11 +2,14 @@ const db = firebase.firestore();
 const tabla = document.getElementById("tabla-productos");
 const btnVolver = document.getElementById("btn-volver");
 const btnRecibos = document.getElementById("btn-recibos");
+const inputBuscar = document.getElementById("buscar"); // buscador
 
 // Modal
 const modal = document.getElementById("modal-editar");
 const cerrarModal = document.querySelector(".cerrar");
 const formEditar = document.getElementById("form-editar");
+
+let listaProductos = []; // almacenamos productos para buscador
 
 // Abrir modal y cargar datos
 function editarProducto(id, producto) {
@@ -16,6 +19,7 @@ function editarProducto(id, producto) {
   document.getElementById("edit-stock").value = producto.stock;
   document.getElementById("edit-precio").value = producto.precio;
   document.getElementById("edit-imagen").value = producto.imagen;
+  document.getElementById("edit-categoria").value = producto.categoria || "";
 
   modal.style.display = "block";
 }
@@ -29,10 +33,11 @@ formEditar.addEventListener("submit", async (e) => {
   const stock = parseInt(document.getElementById("edit-stock").value);
   const precio = parseFloat(document.getElementById("edit-precio").value);
   const imagen = document.getElementById("edit-imagen").value.trim();
+  const categoria = document.getElementById("edit-categoria").value.trim();
 
   try {
     await db.collection("productos").doc(id).update({
-      nombre, descripcion, stock, precio, imagen
+      nombre, descripcion, stock, precio, imagen, categoria
     });
     alert("✅ Producto actualizado");
     modal.style.display = "none";
@@ -60,11 +65,17 @@ btnRecibos.addEventListener("click", () => {
 
 // Mostrar productos en tiempo real
 db.collection("productos").onSnapshot(snapshot => {
-  tabla.innerHTML = "";
+  listaProductos = [];
   snapshot.forEach(doc => {
-    const producto = doc.data();
-    const id = doc.id;
+    listaProductos.push({ id: doc.id, ...doc.data() });
+  });
+  mostrarProductos(listaProductos);
+});
 
+// Función para renderizar productos
+function mostrarProductos(productos) {
+  tabla.innerHTML = "";
+  productos.forEach(producto => {
     const fila = document.createElement("tr");
     fila.innerHTML = `
       <td><img src="${producto.imagen}" alt="${producto.nombre}" width="60"></td>
@@ -72,14 +83,15 @@ db.collection("productos").onSnapshot(snapshot => {
       <td>${producto.descripcion}</td>
       <td>${producto.stock}</td>
       <td>$${producto.precio.toFixed(2)}</td>
+      <td>${producto.categoria || ""}</td>
       <td>
-        <button class="editar" onclick='editarProducto("${id}", ${JSON.stringify(producto)})'>✏ Editar</button>
-        <button class="eliminar" onclick="eliminarProducto('${id}')">🗑 Eliminar</button>
+        <button class="editar" onclick='editarProducto("${producto.id}", ${JSON.stringify(producto)})'>✏ Editar</button>
+        <button class="eliminar" onclick="eliminarProducto('${producto.id}')">🗑 Eliminar</button>
       </td>
     `;
     tabla.appendChild(fila);
   });
-});
+}
 
 // Eliminar producto
 function eliminarProducto(id) {
@@ -89,3 +101,12 @@ function eliminarProducto(id) {
       .catch(err => console.error("❌ Error al eliminar:", err));
   }
 }
+
+// Buscador en tiempo real
+inputBuscar.addEventListener("input", () => {
+  const texto = inputBuscar.value.toLowerCase();
+  const filtrados = listaProductos.filter(p =>
+    p.nombre.toLowerCase().includes(texto)
+  );
+  mostrarProductos(filtrados);
+});
