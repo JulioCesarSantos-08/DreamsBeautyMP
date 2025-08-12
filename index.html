@@ -6,6 +6,8 @@
   <title>Dreams Beauty</title>
   <link rel="icon" type="image/png" href="imagenes/logo.png">
   <link rel="stylesheet" href="estilos.css">
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
@@ -20,7 +22,7 @@
     <nav>
       <ul>
         <li><a href="#productos">Productos</a></li>
-        <li id="carrito-icono">🛒 Carrito (<span id="contador-carrito">0</span>)</li>
+        <li id="carrito-icono" style="cursor:pointer;">🛒 Carrito (<span id="contador-carrito">0</span>)</li>
       </ul>
     </nav>
   </header>
@@ -37,12 +39,16 @@
     <img class="modal-contenido" id="imagen-ampliada">
   </div>
 
-  <!-- Carrito -->
+  <!-- Carrito lateral -->
   <div id="carrito" class="carrito">
     <h3>Carrito de Compras</h3>
     <ul id="lista-carrito"></ul>
     <p><strong>Total: </strong>$<span id="total-carrito">0</span> MXN</p>
-    <button onclick="vaciarCarrito()">Vaciar Carrito</button>
+    <input type="text" id="nombre-cliente" placeholder="Tu nombre para el ticket" required>
+    <div class="carrito-botones">
+      <button onclick="finalizarCompra()">Finalizar Compra</button>
+      <button onclick="vaciarCarrito()">Vaciar Carrito</button>
+    </div>
   </div>
 
   <!-- Redes Sociales -->
@@ -61,6 +67,7 @@
     <p><a href="#">Términos y Condiciones</a></p>
   </footer>
 
+  <!-- Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
@@ -71,6 +78,8 @@
       appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
     };
   </script>
+
+  <!-- Script principal -->
   <script src="script.js" defer></script>
 </body>
 </html>

@@ -9,8 +9,17 @@ document.getElementById("form-producto").addEventListener("submit", async (e) =>
   const precio = parseFloat(document.getElementById("precio").value);
   const imagen = document.getElementById("imagen").value.trim();
 
+  // Validaciones
   if (!nombre || !descripcion || isNaN(stock) || isNaN(precio) || !imagen) {
     alert("Por favor completa todos los campos correctamente.");
+    return;
+  }
+  if (stock < 0) {
+    alert("El stock no puede ser negativo.");
+    return;
+  }
+  if (precio < 0) {
+    alert("El precio no puede ser negativo.");
     return;
   }
 
@@ -20,11 +29,17 @@ document.getElementById("form-producto").addEventListener("submit", async (e) =>
       descripcion,
       stock,
       precio,
-      imagen
+      imagen,
+      fechaCreacion: new Date().toISOString()
     });
 
     alert("✅ Producto guardado correctamente.");
     e.target.reset();
+
+    if (confirm("¿Quieres ir a la lista de productos ahora?")) {
+      window.location.href = "productos.html";
+    }
+
   } catch (error) {
     console.error("❌ Error al guardar en Firestore:", error);
     alert("Hubo un error al guardar el producto. Revisa la consola.");

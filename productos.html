@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Productos - Dreams Beauty</title>
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+  <link rel="stylesheet" href="productos.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1>📦 Lista de Productos</h1>
+    <div class="botones-header">
+      <button id="btn-volver">⬅ Volver a Admin</button>
+      <button id="btn-recibos">🧾 Recibos</button>
+    </div>
+  </header>
+
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Stock</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-productos"></tbody>
+    </table>
+  </main>
+
+  <!-- Modal para editar producto -->
+  <div id="modal-editar" class="modal">
+    <div class="modal-content">
+      <span class="cerrar">&times;</span>
+      <h2>Editar Producto</h2>
+      <form id="form-editar">
+        <input type="hidden" id="edit-id">
+        <label>Nombre:</label>
+        <input type="text" id="edit-nombre" required>
+
+        <label>Descripción:</label>
+        <textarea id="edit-descripcion" required></textarea>
+
+        <label>Stock:</label>
+        <input type="number" id="edit-stock" min="0" required>
+
+        <label>Precio:</label>
+        <input type="number" id="edit-precio" min="0" step="0.01" required>
+
+        <label>Imagen (nombre o URL):</label>
+        <input type="text" id="edit-imagen" required>
+
+        <button type="submit" class="btn-guardar">💾 Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
+      authDomain: "dreamsbeautiy.firebaseapp.com",
+      projectId: "dreamsbeautiy",
+      storageBucket: "dreamsbeautiy.firebasestorage.app",
+      messagingSenderId: "1034221935895",
+      appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script src="productos.js" defer></script>
+
+</body>
+</html>
