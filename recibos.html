@@ -1,29 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recibos - Dreams Beauty</title>
-  <link rel="icon" type="image/png" href="imagenes/logo.png">
-  <link rel="stylesheet" href="recibos.css">
-
+  <link rel="stylesheet" href="estilos.css" />
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
-  <header>
-    <h1>🧾 Recibos</h1>
-    <div class="nav-buttons">
-      <button onclick="window.location.href='admin.html'">⬅ Volver a Admin</button>
-    </div>
+  <header style="background:#cfa2f2; padding:12px; color:#fff;">
+    <h2>Recibos Guardados</h2>
+    <a href="admin.html" style="color:white; font-weight:bold;">← Volver</a>
   </header>
 
-  <main>
-    <div id="lista-recibos" class="recibos-container">
-      <!-- Recibos dinámicos -->
-    </div>
+  <main style="padding:16px;">
+    <div id="lista-recibos"></div>
   </main>
 
   <script>
@@ -36,8 +29,101 @@
       appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
     };
     firebase.initializeApp(firebaseConfig);
-  </script>
-  <script src="recibos.js" defer></script>
+    const db = firebase.firestore();
 
+    function cargarRecibos() {
+      const cont = document.getElementById("lista-recibos");
+      cont.innerHTML = "<p>Cargando recibos...</p>";
+
+      db.collection("recibos").orderBy("fecha", "desc").get().then(snapshot => {
+        if (snapshot.empty) {
+          cont.innerHTML = "<p>No hay recibos guardados.</p>";
+          return;
+        }
+        cont.innerHTML = "";
+        snapshot.forEach(doc => {
+          const r = doc.data();
+          const id = doc.id;
+          const fecha = r.fecha && r.fecha.toDate ? r.fecha.toDate().toLocaleString() : " — ";
+          let itemsHtml = "";
+          (r.items || []).forEach(it => {
+            itemsHtml += `<div style="display:flex; justify-content:space-between;">${escapeHtml(it.nombre)} x${it.cantidad || 1} <strong>$${Number(it.precio).toFixed(2)}</strong></div>`;
+          });
+
+          cont.innerHTML += `
+            <div style="border:1px solid #f5c0ff; padding:12px; border-radius:10px; margin-bottom:12px; background:white;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <strong>ID:</strong> ${id}<br>
+                  <strong>Cliente:</strong> ${escapeHtml(r.cliente)}<br>
+                  <small>${fecha}</small>
+                </div>
+                <div style="text-align:right;">
+                  <strong>$${Number(r.total || 0).toFixed(2)} MXN</strong><br>
+                  <small>${escapeHtml(r.metodoPago || '')}</small>
+                </div>
+              </div>
+              <div style="margin-top:8px;">${itemsHtml}</div>
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button onclick="verRecibo('${id}')" style="flex:1;">Ver</button>
+                <button onclick="eliminarRecibo('${id}')" style="flex:1; background:#ff7b7b;">Eliminar</button>
+              </div>
+            </div>
+          `;
+        });
+      }).catch(err=>{
+        console.error(err);
+        cont.innerHTML = "<p>Error cargando recibos.</p>";
+      });
+    }
+
+    function verRecibo(id) {
+      db.collection("recibos").doc(id).get().then(doc=>{
+        if (!doc.exists) return alert("Recibo no encontrado.");
+        const r = doc.data();
+        // mostrar en nueva ventana simple para imprimir si se desea
+        const w = window.open('', '_blank', 'width=700,height=800');
+        let itemsHtml = '';
+        (r.items || []).forEach(it=>{
+          itemsHtml += `<div style="display:flex; justify-content:space-between; margin:6px 0;">${escapeHtml(it.nombre)} x${it.cantidad || 1} <div>$${Number(it.precio).toFixed(2)}</div></div>`;
+        });
+        const fecha = r.fecha && r.fecha.toDate ? r.fecha.toDate().toLocaleString() : '';
+        w.document.write(`<html><head><title>Recibo ${id}</title></head><body style="font-family:Arial, sans-serif; padding:16px;">
+          <h2>Dreams Beauty</h2>
+          <div><strong>ID:</strong> ${id}</div>
+          <div><strong>Cliente:</strong> ${escapeHtml(r.cliente)}</div>
+          <div><strong>Fecha:</strong> ${fecha}</div>
+          <hr>
+          <div>${itemsHtml}</div>
+          <hr>
+          <div style="display:flex; justify-content:space-between;"><strong>Total</strong><strong>$${Number(r.total||0).toFixed(2)} MXN</strong></div>
+          <div style="margin-top:12px;"><button onclick="window.print()">Imprimir</button></div>
+        </body></html>`);
+        w.document.close();
+      }).catch(err=>{
+        console.error(err);
+        alert("Error al recuperar el recibo.");
+      });
+    }
+
+    function eliminarRecibo(id) {
+      if (!confirm("¿Eliminar este recibo? Esta acción no se puede deshacer.")) return;
+      db.collection("recibos").doc(id).delete().then(()=>{
+        alert("Recibo eliminado.");
+        cargarRecibos();
+      }).catch(err=>{
+        console.error(err);
+        alert("No se pudo eliminar el recibo.");
+      });
+    }
+
+    function escapeHtml(str) {
+      if (typeof str !== "string") return str;
+      return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+    }
+
+    // cargar al inicio
+    cargarRecibos();
+  </script>
 </body>
 </html>
