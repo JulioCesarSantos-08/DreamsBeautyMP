@@ -1,6 +1,8 @@
 /********************
   script.js completo
   - compatible con firebase compat
+  - ampliación de imagen
+  - ver más / ver menos (25 caracteres, botones pequeños) SIN inyectar texto en onclick
 ********************/
 
 // Inicializar Firebase
@@ -11,6 +13,8 @@ const db = firebase.firestore();
 let carrito = [];
 let productos = [];
 let productoCompraAhora = null; // para compra directa
+
+const DESC_PREVIEW = 25; // caracteres visibles por defecto
 
 /* ---------------- CARGA Y MOSTRAR PRODUCTOS ---------------- */
 function cargarProductos() {
@@ -26,14 +30,13 @@ function cargarProductos() {
       const producto = doc.data();
       producto.id = doc.id;
       productos.push(producto);
-
       if (producto.categoria) categoriasSet.add(producto.categoria);
     });
 
     // llenar select categorias
     filtroSelect.innerHTML = `<option value="">Todas las categorías</option>`;
     categoriasSet.forEach(cat => {
-      filtroSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+      filtroSelect.innerHTML += `<option value="${escapeHtml(String(cat))}">${escapeHtml(String(cat))}</option>`;
     });
 
     // mostrar productos
@@ -56,21 +59,56 @@ function mostrarProductos(lista) {
   lista.forEach(producto => {
     const rutaImagen = `imagenes/${producto.imagen}`;
     const agotado = producto.stock <= 0;
+    const descripcion = String(producto.descripcion || '');
+    const descripcionCorta = descripcion.length > DESC_PREVIEW
+      ? descripcion.slice(0, DESC_PREVIEW) + '...'
+      : descripcion;
+
+    // Encodificamos la descripción completa para guardarla en data-atributo
+    const descCodificada = encodeURIComponent(descripcion);
+
     contenedor.innerHTML += `
       <div class="producto">
-        <img src="${rutaImagen}" alt="${producto.nombre}" onclick="ampliarImagen('${rutaImagen}')">
-        <h3>${producto.nombre}</h3>
-        <p class="categoria">Categoría: ${producto.categoria || 'Sin categoría'}</p>
-        <p>${producto.descripcion || ''}</p>
-        <p><strong>Stock:</strong> ${agotado ? '<span style="color:red;">AGOTADO</span>' : producto.stock}</p>
-        <p><strong>Precio:</strong> $${producto.precio} MXN</p>
+        <img src="${rutaImagen}" alt="${escapeHtml(String(producto.nombre))}" onclick="ampliarImagen('${rutaImagen}')">
+        <h3>${escapeHtml(String(producto.nombre))}</h3>
+        <p class="categoria">Categoría: ${escapeHtml(String(producto.categoria || 'Sin categoría'))}</p>
+
+        <p id="desc-${producto.id}" class="descripcion">
+          ${escapeHtml(descripcionCorta)}
+        </p>
+
+        ${descripcion.length > DESC_PREVIEW
+          ? `<button class="ver-mas" data-id="${producto.id}" data-desc="${descCodificada}" onclick="toggleDescripcion(this)" style="font-size:11px; padding:3px 6px;">Ver más</button>`
+          : ''}
+
+        <p><strong>Stock:</strong> ${agotado ? '<span style="color:red;">AGOTADO</span>' : Number(producto.stock)}</p>
+        <p><strong>Precio:</strong> $${Number(producto.precio)} MXN</p>
+
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button onclick="agregarAlCarrito('${escapeHtml(producto.nombre)}', ${Number(producto.precio)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
+          <button onclick="agregarAlCarrito('${escapeHtml(String(producto.nombre))}', ${Number(producto.precio)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
           <button onclick="abrirCompraAhora('${producto.id}')" style="background:#7cc1ff;" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Comprar ahora</button>
         </div>
       </div>
     `;
   });
+}
+
+/* ---------------- VER MÁS / VER MENOS ---------------- */
+function toggleDescripcion(btnEl) {
+  const id = btnEl.dataset.id;
+  const p = document.getElementById(`desc-${id}`);
+  if (!p) return;
+
+  const textoCompleto = decodeURIComponent(btnEl.dataset.desc || "");
+  const estaAbierto = btnEl.textContent.trim().toLowerCase() === "ver menos";
+
+  if (estaAbierto) {
+    p.textContent = textoCompleto.slice(0, DESC_PREVIEW) + (textoCompleto.length > DESC_PREVIEW ? "..." : "");
+    btnEl.textContent = "Ver más";
+  } else {
+    p.textContent = textoCompleto;
+    btnEl.textContent = "Ver menos";
+  }
 }
 
 /* ---------------- FILTRADO ---------------- */
@@ -81,7 +119,7 @@ function filtrarProductos() {
   const filtrados = productos.filter(prod => {
     const nombre = (prod.nombre || "").toLowerCase();
     const coincideTexto = nombre.includes(texto);
-    const coincideCategoria = categoria === "" || (prod.categoria === categoria);
+    const coincideCategoria = categoria === "" || (String(prod.categoria) === String(categoria));
     return coincideTexto && coincideCategoria;
   });
 
@@ -147,7 +185,7 @@ function abrirCompraAhora(productoId) {
 
   document.getElementById("modal-titulo").textContent = "Comprar ahora";
   document.getElementById("producto-seleccionado").innerHTML = `
-    <strong>${escapeHtml(prod.nombre)}</strong><br>
+    <strong>${escapeHtml(String(prod.nombre))}</strong><br>
     Precio: $${Number(prod.precio).toFixed(2)} MXN
   `;
   document.getElementById("nombre-usuario").value = "";
@@ -316,11 +354,12 @@ function imprimirRecibo() {
 /* ---------------- UTILIDADES ---------------- */
 function escapeHtml(str) {
   if (typeof str !== "string") return str;
-  return str.replaceAll('&','&amp;')
-            .replaceAll('<','&lt;')
-            .replaceAll('>','&gt;')
-            .replaceAll('"','&quot;')
-            .replaceAll("'",'&#39;');
+  return str
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#39;');
 }
 
 /* ---------------- INICIO ---------------- */
