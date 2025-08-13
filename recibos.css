@@ -24,8 +24,14 @@ header button {
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  transition: background 0.2s ease;
 }
 
+header button:hover {
+  background: #f1f1f1;
+}
+
+/* Contenedor de recibos */
 .recibos-container {
   display: grid;
   gap: 15px;
@@ -37,6 +43,12 @@ header button {
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recibo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .recibo-card h3 {
@@ -50,22 +62,50 @@ header button {
   margin-top: 10px;
 }
 
+/* Botones de estado */
 .estado-btn {
   border: none;
   padding: 8px 12px;
   border-radius: 6px;
   color: white;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
 .estado-btn.verde {
   background: #28a745;
 }
 
+.estado-btn.verde:hover {
+  background: #218838;
+}
+
 .estado-btn.rojo {
   background: #dc3545;
 }
 
+.estado-btn.rojo:hover {
+  background: #c82333;
+}
+
+/* Botón cancelar */
+.cancelar-btn {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.cancelar-btn:hover {
+  background: #e68900;
+}
+
+/* Botón eliminar */
 .eliminar-btn {
   background: #6c757d;
   color: white;
@@ -73,10 +113,24 @@ header button {
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
+.eliminar-btn:hover {
+  background: #5a6268;
+}
+
+/* Responsividad móvil */
 @media (max-width: 600px) {
   .acciones {
     flex-direction: column;
+  }
+
+  .estado-btn,
+  .cancelar-btn,
+  .eliminar-btn {
+    width: 100%;
+    text-align: center;
   }
 }

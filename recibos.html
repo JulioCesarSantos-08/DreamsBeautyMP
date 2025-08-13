@@ -4,69 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recibos - Dreams Beauty</title>
-  <link rel="stylesheet" href="estilos.css" />
+  <link rel="stylesheet" href="recibos.css" />
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 16px;
-      background: white;
-      border: 1px solid #f5c0ff;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid #eee;
-    }
-    th {
-      background: #f5c0ff;
-      text-align: left;
-    }
-    .btn-verde {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn-rojo {
-      background: #f44336;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn-cancelar {
-      background: #ff9800;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn-eliminar {
-      background: #9c27b0;
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
-  <header style="background:#cfa2f2; padding:12px; color:#fff;">
-    <h2>Recibos Guardados</h2>
+  <header>
+    <h1>Recibos Guardados</h1>
     <a href="admin.html" style="color:white; font-weight:bold;">← Volver</a>
   </header>
 
-  <main style="padding:16px;">
+  <main>
     <div id="lista-recibos"></div>
   </main>
 
@@ -140,19 +89,15 @@
                 </tr>
                 <tr>
                   <td colspan="3" style="text-align:center; padding-top:8px;">
-                    <button class="${r.pagado ? 'btn-verde' : 'btn-rojo'}" 
+                    <button class="${r.pagado ? 'estado-btn verde' : 'estado-btn rojo'}" 
                       onclick="toggleEstado('${id}', 'pagado', ${r.pagado || false})">
                       ${r.pagado ? 'Pagado' : 'No Pagado'}
                     </button>
-                    <button class="${r.entregado ? 'btn-verde' : 'btn-rojo'}" 
+                    <button class="${r.entregado ? 'estado-btn verde' : 'estado-btn rojo'}" 
                       onclick="toggleEstado('${id}', 'entregado', ${r.entregado || false})">
                       ${r.entregado ? 'Entregado' : 'No Entregado'}
                     </button>
-                    <button class="btn-cancelar" 
-                      onclick="cancelarCompra('${id}', ${encodeURIComponent(JSON.stringify(productos))})">
-                      Cancelar Compra
-                    </button>
-                    <button class="btn-eliminar" onclick="eliminarRecibo('${id}')">
+                    <button class="eliminar-btn" onclick="eliminarRecibo('${id}')">
                       Eliminar
                     </button>
                     <button onclick="verRecibo('${id}')">Ver / Imprimir</button>
@@ -167,18 +112,6 @@
 
     function toggleEstado(id, campo, valorActual) {
       db.collection("recibos").doc(id).update({ [campo]: !valorActual });
-    }
-
-    function cancelarCompra(id, productosEncoded) {
-      const productos = JSON.parse(decodeURIComponent(productosEncoded));
-      productos.forEach(prod => {
-        if (!prod.id) return;
-        const refProducto = db.collection("productos").doc(prod.id);
-        refProducto.update({
-          stock: firebase.firestore.FieldValue.increment(prod.cantidad || 1)
-        });
-      });
-      db.collection("recibos").doc(id).update({ cancelado: true });
     }
 
     function eliminarRecibo(id) {

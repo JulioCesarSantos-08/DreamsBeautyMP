@@ -7,9 +7,154 @@
   <link rel="icon" type="image/png" href="imagenes/logo.png">
   <link rel="stylesheet" href="estilos.css">
 
-  <!-- Firebase (compat para este ejemplo) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* Ajuste general */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+    }
+
+    /* Grid de productos */
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 15px;
+    }
+
+    @media (max-width: 768px) {
+      .productos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .productos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .producto-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 10px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .producto-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .producto-card img {
+      max-width: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .producto-card h3 {
+      font-size: 1.1rem;
+      margin: 10px 0 5px;
+    }
+
+    .producto-card p {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .producto-card .categoria {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .producto-card button {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #ff85c1;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .producto-card button:hover {
+      background: #e374ad;
+    }
+
+    /* Buscador y filtro */
+    .busqueda-filtros {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px 15px;
+      background: white;
+      border-radius: 8px;
+      margin: 10px;
+    }
+
+    .busqueda-filtros input,
+    .busqueda-filtros select {
+      flex: 1;
+      min-width: 150px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    /* Carrito */
+    .carrito {
+      position: fixed;
+      right: -350px;
+      top: 0;
+      width: 320px;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      transition: right 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .carrito.visible {
+      right: 0;
+    }
+
+    .carrito h3 {
+      margin-top: 0;
+    }
+
+    .carrito-botones {
+      margin-top: auto;
+    }
+
+    .carrito button {
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Botón volver */
+    .btn-volver {
+      margin-top: 10px;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      background: #7cc1ff;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
@@ -29,63 +174,18 @@
 
   <!-- Lista de productos -->
   <section id="productos">
-    <h2>Nuestros Productos</h2>
+    <h2 style="text-align:center;">Nuestros Productos</h2>
 
     <!-- Buscador y Filtro -->
     <div class="busqueda-filtros">
       <input type="text" id="buscador" placeholder="Buscar productos..." oninput="filtrarProductos()">
       <select id="filtro-categoria" onchange="filtrarProductos()">
         <option value="">Todas las categorías</option>
-        <!-- Dinámico -->
       </select>
     </div>
 
     <div class="productos-grid" id="productos-container"></div>
   </section>
-
-  <!-- Modal de imagen -->
-  <div id="modal-imagen" class="modal">
-    <span class="cerrar" onclick="cerrarModal()">&times;</span>
-    <img class="modal-contenido" id="imagen-ampliada" alt="Imagen ampliada">
-  </div>
-
-  <!-- Modal de compra / recibo -->
-  <div id="modal-compra" class="modal">
-    <div class="modal-box" style="background:white; max-width:520px; margin:40px auto; padding:18px; border-radius:10px; position:relative;">
-      <span class="cerrar" onclick="cerrarModalCompra()" style="right:20px; top:10px;">&times;</span>
-      <h3 id="modal-titulo">Comprar producto</h3>
-
-      <!-- Formulario breve -->
-      <div id="form-compra">
-        <p id="producto-seleccionado"></p>
-
-        <label for="nombre-usuario">Tu nombre (para el recibo)</label><br>
-        <input type="text" id="nombre-usuario" placeholder="Ej. María Pérez" style="width:100%; padding:8px; margin:8px 0;"/>
-
-        <label for="metodo-pago">Método de pago</label><br>
-        <select id="metodo-pago" style="width:100%; padding:8px; margin:8px 0;">
-          <option value="Efectivo">Efectivo</option>
-          <option value="Transferencia">Transferencia</option>
-        </select>
-
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button onclick="confirmarCompraAhora()" style="flex:1; padding:10px; border-radius:8px; background:#ff85c1; color:white; border:none; cursor:pointer;">Generar recibo</button>
-          <button onclick="cerrarModalCompra()" style="flex:1; padding:10px; border-radius:8px; background:#ccc; color:#333; border:none; cursor:pointer;">Cancelar</button>
-        </div>
-      </div>
-
-      <!-- Area del recibo para imprimir/capturar despues de guardar -->
-      <div id="vista-recibo" style="display:none; margin-top:12px;">
-        <div id="recibo-imprimible" style="background:#fff; padding:12px; border:1px dashed #eee; border-radius:6px; text-align:left;">
-          <!-- Se rellena dinamicamente -->
-        </div>
-        <div style="display:flex; gap:8px; margin-top:10px;">
-          <button onclick="imprimirRecibo()" style="flex:1; padding:10px; border-radius:8px; background:#7cc1ff; color:white; border:none; cursor:pointer;">Imprimir / Guardar PDF</button>
-          <button onclick="cerrarModalCompra()" style="flex:1; padding:10px; border-radius:8px; background:#ccc; color:#333; border:none; cursor:pointer;">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Carrito lateral -->
   <div id="carrito" class="carrito">
@@ -94,35 +194,19 @@
     <p><strong>Total: </strong>$<span id="total-carrito">0</span> MXN</p>
 
     <label for="nombre-cliente">Tu nombre para el ticket</label>
-    <input type="text" id="nombre-cliente" placeholder="Tu nombre para el ticket" required style="width:100%; padding:8px; margin:8px 0;"/>
+    <input type="text" id="nombre-cliente" placeholder="Tu nombre" required/>
 
     <label for="metodo-pago-carrito">Método de pago</label>
-    <select id="metodo-pago-carrito" style="width:100%; padding:8px; margin:8px 0;">
+    <select id="metodo-pago-carrito">
       <option value="Efectivo">Efectivo</option>
       <option value="Transferencia">Transferencia</option>
     </select>
 
-    <div class="carrito-botones" style="display:flex; gap:8px;">
-      <button onclick="finalizarCompra()" style="flex:1;">Finalizar Compra</button>
-      <button onclick="vaciarCarrito()" style="flex:1;">Vaciar Carrito</button>
+    <div class="carrito-botones">
+      <button onclick="finalizarCompra()">Finalizar Compra</button>
+      <button onclick="vaciarCarrito()">Vaciar Carrito</button>
     </div>
   </div>
-
-  <!-- Redes Sociales -->
-  <section id="redes">
-    <h2>Síguenos</h2>
-    <div class="redes-icons">
-      <a href="https://www.instagram.com/dreams.beauty.mp/" target="_blank">📷 Instagram</a>
-      <a href="https://www.facebook.com/DreamMilyCosmetics/?ref=_xav_ig_profile_page_web#" target="_blank">📘 Facebook</a>
-      <a href="https://wa.me/5219541344611" target="_blank">💬 WhatsApp</a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer id="terminos">
-    <p>© 2025 Dreams Beauty. Todos los derechos reservados.</p>
-    <p><a href="terminosycondiciones.html">Términos y Condiciones</a></p>
-  </footer>
 
   <!-- Firebase Config -->
   <script>
@@ -136,7 +220,6 @@
     };
   </script>
 
-  <!-- Script principal -->
   <script src="script.js" defer></script>
 </body>
 </html>

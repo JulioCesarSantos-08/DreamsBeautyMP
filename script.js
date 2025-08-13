@@ -60,10 +60,10 @@ function mostrarProductos(lista) {
       <div class="producto">
         <img src="${rutaImagen}" alt="${producto.nombre}" onclick="ampliarImagen('${rutaImagen}')">
         <h3>${producto.nombre}</h3>
+        <p class="categoria">Categoría: ${producto.categoria || 'Sin categoría'}</p>
         <p>${producto.descripcion || ''}</p>
         <p><strong>Stock:</strong> ${agotado ? '<span style="color:red;">AGOTADO</span>' : producto.stock}</p>
         <p><strong>Precio:</strong> $${producto.precio} MXN</p>
-        <p class="categoria">Categoría: ${producto.categoria || 'Sin categoría'}</p>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button onclick="agregarAlCarrito('${escapeHtml(producto.nombre)}', ${Number(producto.precio)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
           <button onclick="abrirCompraAhora('${producto.id}')" style="background:#7cc1ff;" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Comprar ahora</button>
