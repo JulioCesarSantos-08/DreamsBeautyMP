@@ -1,21 +1,20 @@
 /********************
-  script.js
-  - Inicializa Firebase
-  - Carga productos y descuentos
-  - Filtrado
-  - Vista previa / Ver más
-  - Carrito
-  - Modal imagen
+  script.js actualizado
+  - compatible con firebase compat
+  - ampliación de imagen
+  - ver más / ver menos (25 caracteres, botones pequeños) SIN inyectar texto en onclick
+  - soporte para mostrar descuentos activos
 ********************/
 
 // Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Variables
 let carrito = [];
 let productos = [];
 let descuentos = [];
-let productoCompraAhora = null; // para compra directa
+let productoCompraAhora = null;
 
 const DESC_PREVIEW = 25; // caracteres visibles por defecto
 
@@ -47,7 +46,6 @@ async function cargarProductos() {
       if (producto.categoria) categoriasSet.add(producto.categoria);
     });
 
-    // Llenar selector de categorías
     filtroSelect.innerHTML = `<option value="">Todas las categorías</option>`;
     categoriasSet.forEach(cat => {
       filtroSelect.innerHTML += `<option value="${escapeHtml(String(cat))}">${escapeHtml(String(cat))}</option>`;
@@ -215,7 +213,45 @@ function cerrarModal() {
   document.getElementById("modal-imagen").style.display = "none";
 }
 
-/* ---------------- UTILIDAD ESCAPE HTML ---------------- */
+/* ---------------- COMPRA DIRECTA ---------------- */
+function abrirCompraAhora(productoId) {
+  const prod = productos.find(p => p.id === productoId);
+  if (!prod) {
+    alert("Producto no encontrado.");
+    return;
+  }
+  productoCompraAhora = prod;
+
+  // Calcular precio con descuento si aplica
+  let precioFinal = Number(prod.precio);
+  descuentos.forEach(desc => {
+    if (
+      (desc.productos && desc.productos.includes(prod.id)) ||
+      (desc.categorias && desc.categorias.includes(prod.categoria))
+    ) {
+      precioFinal = precioFinal - (precioFinal * (desc.porcentaje / 100));
+    }
+  });
+
+  document.getElementById("modal-titulo").textContent = "Comprar ahora";
+  document.getElementById("producto-seleccionado").innerHTML = `
+    <strong>${escapeHtml(String(prod.nombre))}</strong><br>
+    Precio: $${precioFinal.toFixed(2)} MXN
+  `;
+  document.getElementById("nombre-usuario").value = "";
+  document.getElementById("metodo-pago").value = "Efectivo";
+  document.getElementById("form-compra").style.display = "block";
+  document.getElementById("vista-recibo").style.display = "none";
+
+  document.getElementById("modal-compra").style.display = "block";
+}
+
+function cerrarModalCompra() {
+  document.getElementById("modal-compra").style.display = "none";
+  productoCompraAhora = null;
+}
+
+/* ---------------- UTILIDADES ---------------- */
 function escapeHtml(str) {
   if (typeof str !== "string") return str;
   return str

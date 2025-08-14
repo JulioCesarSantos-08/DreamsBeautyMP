@@ -10,37 +10,37 @@
   <!-- Firebase (compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  <!-- Ajustes mínimos de layout para el grid y carrito -->
   <style>
-    /* Grid de productos (compacto y responsivo) */
-    .productos-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:20px;
-      padding:15px;
+    /* Grid de productos */
+    .productos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 15px;
     }
-    @media (max-width:768px){ .productos-grid{ grid-template-columns:repeat(2,1fr); } }
-    @media (max-width:480px){ .productos-grid{ grid-template-columns:1fr; } }
+    @media (max-width: 768px) { .productos-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .productos-grid { grid-template-columns: 1fr; } }
 
     /* Buscador y filtro */
-    .busqueda-filtros{
-      display:flex; flex-wrap:wrap; gap:10px;
-      padding:10px 15px; background:#fff; border-radius:8px; margin:10px;
+    .busqueda-filtros {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      padding: 10px 15px; background: #fff; border-radius: 8px; margin: 10px;
     }
-    .busqueda-filtros input, .busqueda-filtros select{
-      flex:1; min-width:150px; padding:8px; border:1px solid #ddd; border-radius:6px;
+    .busqueda-filtros input, .busqueda-filtros select {
+      flex: 1; min-width: 150px; padding: 8px; border: 1px solid #ddd; border-radius: 6px;
     }
 
-    /* Carrito: mantenemos display:none para que funcione con tu script actual */
-    .carrito{
-      position:fixed; right:0; top:70px; width:300px; height:calc(100% - 70px);
-      background:#fff; border-left:2px solid #cfa2f2; padding:15px;
-      display:none; overflow-y:auto; z-index:999;
+    /* Carrito */
+    .carrito {
+      position: fixed; right: 0; top: 70px; width: 300px; height: calc(100% - 70px);
+      background: #fff; border-left: 2px solid #cfa2f2; padding: 15px;
+      display: none; overflow-y: auto; z-index: 999;
     }
-    .btn-volver{
-      width:100%; margin:10px 0 0; padding:8px; border:none; border-radius:6px;
-      background:#7cc1ff; color:#fff; cursor:pointer;
+    .btn-volver {
+      width: 100%; margin: 10px 0 0; padding: 8px; border: none; border-radius: 6px;
+      background: #7cc1ff; color: #fff; cursor: pointer;
     }
   </style>
 </head>
@@ -63,82 +63,66 @@
   <!-- Productos -->
   <section id="productos">
     <h2 style="text-align:center;">Nuestros Productos</h2>
-
     <div class="busqueda-filtros">
       <input type="text" id="buscador" placeholder="Buscar productos..." oninput="filtrarProductos()"/>
       <select id="filtro-categoria" onchange="filtrarProductos()">
         <option value="">Todas las categorías</option>
-        <!-- Opciones dinámicas -->
       </select>
     </div>
-
     <div class="productos-grid" id="productos-container"></div>
   </section>
 
-  <!-- Modal para IMAGEN ampliada -->
+  <!-- Modal para IMAGEN -->
   <div id="modal-imagen" class="modal">
     <span class="cerrar" onclick="cerrarModal()">&times;</span>
     <img class="modal-contenido" id="imagen-ampliada" alt="Imagen ampliada">
   </div>
 
-  <!-- Modal de COMPRA / RECIBO (para 'Comprar ahora') -->
+  <!-- Modal de compra -->
   <div id="modal-compra" class="modal">
-    <div class="modal-box" style="background:white; max-width:520px; margin:40px auto; padding:18px; border-radius:10px; position:relative;">
-      <span class="cerrar" onclick="cerrarModalCompra()" style="right:20px; top:10px;">&times;</span>
+    <div class="modal-box">
+      <span class="cerrar" onclick="cerrarModalCompra()">&times;</span>
       <h3 id="modal-titulo">Comprar producto</h3>
-
-      <!-- Formulario -->
       <div id="form-compra">
         <p id="producto-seleccionado"></p>
-
-        <label for="nombre-usuario">Tu nombre (para el recibo)</label><br>
-        <input type="text" id="nombre-usuario" placeholder="Ej. María Pérez" style="width:100%; padding:8px; margin:8px 0;"/>
-
-        <label for="metodo-pago">Método de pago</label><br>
-        <select id="metodo-pago" style="width:100%; padding:8px; margin:8px 0;">
+        <label>Tu nombre</label>
+        <input type="text" id="nombre-usuario" placeholder="Ej. María Pérez"/>
+        <label>Método de pago</label>
+        <select id="metodo-pago">
           <option value="Efectivo">Efectivo</option>
           <option value="Transferencia">Transferencia</option>
         </select>
-
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button onclick="confirmarCompraAhora()" style="flex:1; padding:10px; border-radius:8px; background:#ff85c1; color:white; border:none; cursor:pointer;">Generar recibo</button>
-          <button onclick="cerrarModalCompra()" style="flex:1; padding:10px; border-radius:8px; background:#ccc; color:#333; border:none; cursor:pointer;">Cancelar</button>
+        <div>
+          <button onclick="confirmarCompraAhora()">Generar recibo</button>
+          <button onclick="cerrarModalCompra()">Cancelar</button>
         </div>
       </div>
-
-      <!-- Vista del recibo -->
-      <div id="vista-recibo" style="display:none; margin-top:12px;">
-        <div id="recibo-imprimible" style="background:#fff; padding:12px; border:1px dashed #eee; border-radius:6px; text-align:left;"></div>
-        <div style="display:flex; gap:8px; margin-top:10px;">
-          <button onclick="imprimirRecibo()" style="flex:1; padding:10px; border-radius:8px; background:#7cc1ff; color:white; border:none; cursor:pointer;">Imprimir / Guardar PDF</button>
-          <button onclick="cerrarModalCompra()" style="flex:1; padding:10px; border-radius:8px; background:#ccc; color:#333; border:none; cursor:pointer;">Cerrar</button>
+      <div id="vista-recibo" style="display:none;">
+        <div id="recibo-imprimible"></div>
+        <div>
+          <button onclick="imprimirRecibo()">Imprimir / Guardar PDF</button>
+          <button onclick="cerrarModalCompra()">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Carrito lateral -->
+  <!-- Carrito -->
   <div id="carrito" class="carrito">
     <h3>Carrito de Compras</h3>
-
     <ul id="lista-carrito"></ul>
     <p><strong>Total: </strong>$<span id="total-carrito">0</span> MXN</p>
-
-    <label for="nombre-cliente">Tu nombre para el ticket</label>
-    <input type="text" id="nombre-cliente" placeholder="Tu nombre" required/>
-
-    <label for="metodo-pago-carrito">Método de pago</label>
+    <label>Tu nombre</label>
+    <input type="text" id="nombre-cliente"/>
+    <label>Método de pago</label>
     <select id="metodo-pago-carrito">
       <option value="Efectivo">Efectivo</option>
       <option value="Transferencia">Transferencia</option>
     </select>
-
-    <div class="carrito-botones" style="display:flex; gap:8px;">
-      <button onclick="finalizarCompra()" style="flex:1;">Finalizar Compra</button>
-      <button onclick="vaciarCarrito()" style="flex:1;">Vaciar Carrito</button>
+    <div>
+      <button onclick="finalizarCompra()">Finalizar Compra</button>
+      <button onclick="vaciarCarrito()">Vaciar Carrito</button>
     </div>
-
-    <!-- Botón Volver a productos -->
     <button class="btn-volver" onclick="document.getElementById('carrito').style.display='none'">
       ← Volver a productos
     </button>
@@ -149,18 +133,18 @@
     <h2>Síguenos</h2>
     <div class="redes-icons">
       <a href="https://www.instagram.com/dreams.beauty.mp/" target="_blank">📷 Instagram</a>
-      <a href="https://www.facebook.com/DreamMilyCosmetics/?ref=_xav_ig_profile_page_web#" target="_blank">📘 Facebook</a>
+      <a href="https://www.facebook.com/DreamMilyCosmetics/" target="_blank">📘 Facebook</a>
       <a href="https://wa.me/5219541344611" target="_blank">💬 WhatsApp</a>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer id="terminos">
+  <footer>
     <p>© 2025 Dreams Beauty. Todos los derechos reservados.</p>
     <p><a href="terminosycondiciones.html">Términos y Condiciones</a></p>
   </footer>
 
-  <!-- Firebase Config -->
+  <!-- Firebase Config e Inicialización -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA9t21iW6BnWe-c67CtMsk8V5j7j4MBb70",
@@ -170,9 +154,11 @@
       messagingSenderId: "1034221935895",
       appId: "1:1034221935895:web:e1c7f71d18711a62452b52"
     };
+    firebase.initializeApp(firebaseConfig);
   </script>
 
-  <!-- Script principal -->
+  <!-- Scripts -->
   <script src="script.js" defer></script>
+  <script src="script2.js" defer></script>
 </body>
 </html>

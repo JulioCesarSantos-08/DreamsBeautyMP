@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Gestión de Descuentos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #ff4fa3;
+    margin-bottom: 20px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  label {
+    font-weight: bold;
+    color: #333;
+  }
+  input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 4px;
+  }
+  #lista-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .producto-item {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    padding: 10px;
+    text-align: center;
+  }
+  .producto-item img {
+    max-width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .producto-item label {
+    display: block;
+    font-size: 0.9rem;
+    margin-top: 6px;
+  }
+  button {
+    background: #ff4fa3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.2s ease;
+  }
+  button:hover {
+    background: #e34494;
+  }
+  .btn-volver {
+    background: #7cc1ff;
+    margin-bottom: 15px;
+  }
+</style>
+</head>
+<body>
+
+<button class="btn-volver" onclick="location.href='admin.html'">⬅ Volver a Admin</button>
+<button class="btn-volver" onclick="location.href='productos.html'">⬅ Volver a Inventario</button>
+
+<h1>Gestión de Descuentos</h1>
+
+<div class="form-group">
+  <label>Porcentaje de descuento:</label>
+  <input type="number" id="porcentaje" min="1" max="100" placeholder="Ej. 40">
+</div>
+
+<div class="form-group">
+  <label>Fecha inicio:</label>
+  <input type="datetime-local" id="fechaInicio">
+</div>
+
+<div class="form-group">
+  <label>Fecha fin:</label>
+  <input type="datetime-local" id="fechaFin">
+</div>
+
+<div class="form-group">
+  <label>Buscar producto:</label>
+  <input type="text" id="buscarProducto" placeholder="Escribe para buscar...">
+</div>
+
+<div class="form-group">
+  <label>Seleccionar categoría:</label>
+  <select id="categoriaSelect">
+    <option value="">-- Seleccionar categoría --</option>
+  </select>
+</div>
+
+<h2>Seleccionar productos</h2>
+<div id="lista-productos">Cargando productos...</div>
+
+<button id="btnGuardar">💾 Guardar Descuentos</button>
+
+<script src="descuentos.js"></script>
+</body>
+</html>
