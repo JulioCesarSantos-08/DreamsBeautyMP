@@ -77,10 +77,21 @@ function mostrarProductos(productos) {
   tabla.innerHTML = "";
   productos.forEach(producto => {
     const fila = document.createElement("tr");
+
+    // Recortamos la descripción
+    const descripcionCorta = producto.descripcion.length > 15
+      ? producto.descripcion.substring(0, 15) + "..."
+      : producto.descripcion;
+
     fila.innerHTML = `
       <td><img src="${producto.imagen}" alt="${producto.nombre}" width="60"></td>
       <td>${producto.nombre}</td>
-      <td>${producto.descripcion}</td>
+      <td>
+        <span class="desc-texto">${descripcionCorta}</span>
+        ${producto.descripcion.length > 15
+          ? `<button class="ver-mas-btn" data-full="${producto.descripcion}">Ver más</button>`
+          : ""}
+      </td>
       <td>${producto.stock}</td>
       <td>$${producto.precio.toFixed(2)}</td>
       <td>${producto.categoria || ""}</td>
@@ -90,6 +101,20 @@ function mostrarProductos(productos) {
       </td>
     `;
     tabla.appendChild(fila);
+  });
+
+  // Listener para ver más / ver menos
+  document.querySelectorAll(".ver-mas-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const span = this.previousElementSibling;
+      if (this.textContent === "Ver más") {
+        span.textContent = this.getAttribute("data-full");
+        this.textContent = "Ver menos";
+      } else {
+        span.textContent = this.getAttribute("data-full").substring(0, 15) + "...";
+        this.textContent = "Ver más";
+      }
+    });
   });
 }
 

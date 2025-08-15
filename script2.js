@@ -227,7 +227,7 @@ function mostrarReciboImprimible(id, recibo) {
       <strong>Total</strong><strong>$${Number(recibo.total || 0).toFixed(2)} MXN</strong>
     </div>
     <div style="margin-top:8px;"><small>Método: ${escapeHtml(recibo.metodoPago || "")}</small></div>
-    <div style="margin-top:8px;"><small>Por favor captura o imprime este recibo.</small></div>
+    <div style="margin-top:8px;"><small>Por favor captura o imprime este recibo, debes mostrarlo al recibir tu pedido.</small></div>
   `;
 
   const formCompraEl = document.getElementById("form-compra");
