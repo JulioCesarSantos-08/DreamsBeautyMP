@@ -134,3 +134,15 @@ header button:hover {
     text-align: center;
   }
 }
+.btn-cancelar {
+  background: #f39c12;
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background: #d68910;
+}

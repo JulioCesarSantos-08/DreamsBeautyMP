@@ -75,6 +75,10 @@ function cargarRecibos() {
                   onclick="toggleEstado('${id}', 'entregado', ${r.entregado || false})">
                   ${r.entregado ? 'Entregado' : 'No Entregado'}
                 </button>
+                <button class="${r.destacado ? 'btn-verde' : 'btn-rojo'}" 
+                  onclick="toggleEstado('${id}', 'destacado', ${r.destacado || false})">
+                  ${r.destacado ? 'Destacado' : 'No Destacado'}
+                </button>
                 <button class="btn-eliminar" onclick="eliminarRecibo('${id}', '${escapeHtml(JSON.stringify(productos))}')">
                   Eliminar
                 </button>
