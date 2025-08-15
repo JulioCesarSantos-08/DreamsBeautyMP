@@ -54,8 +54,8 @@
           const r = doc.data();
           const id = doc.id;
           const fecha = r.fecha && r.fecha.toDate ? r.fecha.toDate().toLocaleString() : " — ";
-
           const productos = r.productos || r.items || [];
+
           let filasProductos = productos.map(p => `
             <tr>
               <td>${escapeHtml(p.nombre)}</td>
@@ -98,6 +98,10 @@
                       onclick="toggleEstado('${id}', 'entregado', ${r.entregado || false})">
                       ${r.entregado ? 'Entregado' : 'No Entregado'}
                     </button>
+                    <button class="cancelar-btn" 
+                      onclick="cancelarCompra('${id}', '${escapeHtml(JSON.stringify(productos))}')">
+                      Cancelar Compra
+                    </button>
                     <button class="eliminar-btn" onclick="eliminarRecibo('${id}')">
                       Eliminar
                     </button>
@@ -113,6 +117,26 @@
 
     function toggleEstado(id, campo, valorActual) {
       db.collection("recibos").doc(id).update({ [campo]: !valorActual });
+    }
+
+    function cancelarCompra(id, productosJSON) {
+      if (!confirm("¿Seguro que quieres cancelar esta compra? Esto devolverá el stock y eliminará el recibo.")) return;
+
+      let productos;
+      try {
+        productos = JSON.parse(productosJSON);
+      } catch (e) {
+        productos = [];
+      }
+
+      productos.forEach(prod => {
+        if (!prod.id) return;
+        db.collection("productos").doc(prod.id).update({
+          stock: firebase.firestore.FieldValue.increment(prod.cantidad || 1)
+        });
+      });
+
+      db.collection("recibos").doc(id).delete();
     }
 
     function eliminarRecibo(id) {

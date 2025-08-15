@@ -1,80 +1,93 @@
+/* ===== Estilos Generales ===== */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
-  background: #f8f9fa;
+  background: #f4f6f8;
+  color: #333;
 }
 
 header {
   background: #d63384;
   color: white;
-  padding: 15px;
+  padding: 15px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 header h1 {
   margin: 0;
+  font-size: 1.8em;
 }
 
-header button {
-  background: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
+header a {
+  color: white;
   font-weight: bold;
-  transition: background 0.2s ease;
+  text-decoration: none;
+  margin-left: 15px;
+  transition: color 0.2s ease;
 }
 
-header button:hover {
-  background: #f1f1f1;
+header a:hover {
+  color: #ffccf2;
 }
 
-/* Contenedor de recibos */
-.recibos-container {
+/* ===== Contenedor de Recibos ===== */
+#lista-recibos {
   display: grid;
-  gap: 15px;
-  padding: 15px;
+  gap: 20px;
+  padding: 20px;
 }
 
-.recibo-card {
+/* ===== Tarjeta de Recibo ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
   background: white;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.recibo-card:hover {
+table:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-.recibo-card h3 {
-  margin: 0 0 10px 0;
+thead th {
+  background: #f8f9fa;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+  color: #555;
 }
 
-.acciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+tbody td {
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
 }
 
-/* Botones de estado */
-.estado-btn {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
+tfoot td {
+  padding: 12px 15px;
   font-weight: bold;
-  transition: background 0.2s ease;
+  border-top: 2px solid #dcdcdc;
+}
+
+/* ===== Botones ===== */
+button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .estado-btn.verde {
   background: #28a745;
+  color: white;
 }
 
 .estado-btn.verde:hover {
@@ -83,66 +96,65 @@ header button:hover {
 
 .estado-btn.rojo {
   background: #dc3545;
+  color: white;
 }
 
 .estado-btn.rojo:hover {
   background: #c82333;
 }
 
-/* Botón cancelar */
 .cancelar-btn {
   background: #ff9800;
   color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s ease;
 }
 
 .cancelar-btn:hover {
   background: #e68900;
 }
 
-/* Botón eliminar */
 .eliminar-btn {
   background: #6c757d;
   color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s ease;
 }
 
 .eliminar-btn:hover {
   background: #5a6268;
 }
 
-/* Responsividad móvil */
-@media (max-width: 600px) {
-  .acciones {
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* ===== Acciones (Botones de cada recibo) ===== */
+tfoot tr td {
+  text-align: center;
+}
+
+tfoot tr td button {
+  margin: 5px 5px 0 0;
+}
+
+/* ===== Responsividad ===== */
+@media (max-width: 768px) {
+  header {
     flex-direction: column;
+    align-items: flex-start;
   }
 
-  .estado-btn,
-  .cancelar-btn,
-  .eliminar-btn {
+  header a {
+    margin: 5px 0 0 0;
+  }
+
+  #lista-recibos {
+    padding: 15px;
+  }
+
+  tbody td, thead th, tfoot td {
+    padding: 8px 10px;
+  }
+
+  tfoot tr td button {
     width: 100%;
-    text-align: center;
+    margin: 5px 0;
   }
-}
-.btn-cancelar {
-  background: #f39c12;
-  border: none;
-  padding: 6px 12px;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-cancelar:hover {
-  background: #d68910;
 }
