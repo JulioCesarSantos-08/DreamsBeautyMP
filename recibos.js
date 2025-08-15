@@ -32,8 +32,8 @@ function cargarRecibos() {
       const r = doc.data();
       const id = doc.id;
       const fecha = r.fecha && r.fecha.toDate ? r.fecha.toDate().toLocaleString() : " — ";
-
       const productos = r.productos || r.items || [];
+
       let filasProductos = productos.map(p => `
         <tr>
           <td>${escapeHtml(p.nombre)}</td>
@@ -79,6 +79,9 @@ function cargarRecibos() {
                   onclick="toggleEstado('${id}', 'destacado', ${r.destacado || false})">
                   ${r.destacado ? 'Destacado' : 'No Destacado'}
                 </button>
+                <button class="btn-cancelar" onclick="cancelarCompra('${id}', '${escapeHtml(JSON.stringify(productos))}')">
+                  Cancelar Compra
+                </button>
                 <button class="btn-eliminar" onclick="eliminarRecibo('${id}', '${escapeHtml(JSON.stringify(productos))}')">
                   Eliminar
                 </button>
@@ -96,6 +99,26 @@ function toggleEstado(id, campo, valorActual) {
   db.collection("recibos").doc(id).update({ [campo]: !valorActual });
 }
 
+function cancelarCompra(id, productosJSON) {
+  if (!confirm("¿Seguro que quieres cancelar esta compra? Esto devolverá el stock y eliminará el recibo.")) return;
+
+  let productos;
+  try {
+    productos = JSON.parse(productosJSON);
+  } catch (e) {
+    productos = [];
+  }
+
+  productos.forEach(prod => {
+    if (!prod.id) return;
+    db.collection("productos").doc(prod.id).update({
+      stock: firebase.firestore.FieldValue.increment(prod.cantidad || 1)
+    });
+  });
+
+  db.collection("recibos").doc(id).delete();
+}
+
 function eliminarRecibo(id, productosJSON) {
   if (!confirm("¿Eliminar este recibo? Esta acción no se puede deshacer.")) return;
 
@@ -106,7 +129,6 @@ function eliminarRecibo(id, productosJSON) {
     productos = [];
   }
 
-  // Restaurar stock
   productos.forEach(prod => {
     if (!prod.id) return;
     const refProducto = db.collection("productos").doc(prod.id);
