@@ -4,7 +4,7 @@
   - Carga productos y descuentos
   - Filtrado
   - Vista previa / Ver más
-  - Carrito
+  - Carrito (GUARDA id de producto en cada item)
   - Modal imagen
 ********************/
 
@@ -71,7 +71,7 @@ function mostrarProductos(lista) {
 
   lista.forEach(producto => {
     const rutaImagen = `imagenes/${producto.imagen}`;
-    const agotado = producto.stock <= 0;
+    const agotado = Number(producto.stock) <= 0;
     const descripcion = String(producto.descripcion || '');
     const descripcionCorta = descripcion.length > DESC_PREVIEW
       ? descripcion.slice(0, DESC_PREVIEW) + '...'
@@ -95,12 +95,12 @@ function mostrarProductos(lista) {
     let descuentoAplicado = null;
 
     // Buscar si hay un descuento para este producto o su categoría
-    descuentos.forEach(desc => {
+    (Array.isArray(descuentos) ? descuentos : []).forEach(desc => {
       if (
         (desc.productos && desc.productos.includes(producto.id)) ||
         (desc.categorias && desc.categorias.includes(producto.categoria))
       ) {
-        precioFinal = precioOriginal - (precioOriginal * (desc.porcentaje / 100));
+        precioFinal = precioOriginal - (precioOriginal * (Number(desc.porcentaje) / 100));
         descuentoAplicado = desc;
       }
     });
@@ -122,12 +122,12 @@ function mostrarProductos(lista) {
           descuentoAplicado
             ? `<p><strong>Precio:</strong> <span style="text-decoration:line-through;color:red;">$${precioOriginal.toFixed(2)}</span> 
                 <span style="color:green;font-weight:bold;">$${precioFinal.toFixed(2)} MXN</span>
-                <br><small>${descuentoAplicado.porcentaje}% de descuento</small></p>`
+                <br><small>${Number(descuentoAplicado.porcentaje)}% de descuento</small></p>`
             : `<p><strong>Precio:</strong> $${precioOriginal.toFixed(2)} MXN</p>`
         }
 
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button onclick="agregarAlCarrito('${escapeHtml(String(producto.nombre))}', ${precioFinal.toFixed(2)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
+          <button onclick="agregarAlCarrito('${producto.id}','${escapeHtml(String(producto.nombre))}', ${precioFinal.toFixed(2)})" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Agregar al carrito</button>
           <button onclick="abrirCompraAhora('${producto.id}')" style="background:#7cc1ff;" ${agotado ? 'disabled style="background:#ccc;"' : ''}>Comprar ahora</button>
         </div>
       </div>
@@ -158,7 +158,7 @@ function filtrarProductos() {
   const texto = document.getElementById("buscador").value.toLowerCase();
   const categoria = document.getElementById("filtro-categoria").value;
 
-  const filtrados = productos.filter(prod => {
+  const filtrados = (Array.isArray(productos) ? productos : []).filter(prod => {
     const nombre = (prod.nombre || "").toLowerCase();
     const coincideTexto = nombre.includes(texto);
     const coincideCategoria = categoria === "" || (String(prod.categoria) === String(categoria));
@@ -169,8 +169,9 @@ function filtrarProductos() {
 }
 
 /* ---------------- CARRITO ---------------- */
-function agregarAlCarrito(nombre, precio) {
-  carrito.push({ nombre, precio: Number(precio) });
+// 🚩 AHORA guardamos { id, nombre, precio } para que el recibo tenga el id
+function agregarAlCarrito(id, nombre, precio) {
+  carrito.push({ id: String(id), nombre, precio: Number(precio) });
   actualizarCarrito();
 }
 
@@ -179,10 +180,12 @@ function actualizarCarrito() {
   const total = document.getElementById("total-carrito");
   const contador = document.getElementById("contador-carrito");
 
+  if (!lista || !total || !contador) return;
+
   lista.innerHTML = "";
   let suma = 0;
   carrito.forEach((item, index) => {
-    lista.innerHTML += `<li>${escapeHtml(item.nombre)} - $${item.precio} 
+    lista.innerHTML += `<li>${escapeHtml(item.nombre)} - $${Number(item.precio).toFixed(2)} 
       <button onclick="eliminarDelCarrito(${index})">❌</button></li>`;
     suma += Number(item.precio);
   });
@@ -201,8 +204,9 @@ function vaciarCarrito() {
   actualizarCarrito();
 }
 
-document.getElementById("carrito-icono").addEventListener("click", () => {
+document.getElementById("carrito-icono")?.addEventListener("click", () => {
   const carritoDiv = document.getElementById("carrito");
+  if (!carritoDiv) return;
   carritoDiv.style.display = carritoDiv.style.display === "block" ? "none" : "block";
 });
 
