@@ -79,10 +79,10 @@ function cargarRecibos() {
                   onclick="toggleEstado('${id}', 'destacado', ${r.destacado || false})">
                   ${r.destacado ? 'Destacado' : 'No Destacado'}
                 </button>
-                <button class="btn-cancelar" onclick="cancelarCompra('${id}', '${escapeHtml(JSON.stringify(productos))}')">
+                <button class="btn-cancelar" onclick='cancelarCompra("${id}", ${JSON.stringify(productos ? productos : [])})'>
                   Cancelar Compra
                 </button>
-                <button class="btn-eliminar" onclick="eliminarRecibo('${id}', '${escapeHtml(JSON.stringify(productos))}')">
+                <button class="btn-eliminar" onclick="eliminarRecibo('${id}')">
                   Eliminar
                 </button>
                 <button onclick="verRecibo('${id}')">Ver / Imprimir</button>
@@ -99,44 +99,30 @@ function toggleEstado(id, campo, valorActual) {
   db.collection("recibos").doc(id).update({ [campo]: !valorActual });
 }
 
-function cancelarCompra(id, productosJSON) {
+function cancelarCompra(id, productos) {
   if (!confirm("¿Seguro que quieres cancelar esta compra? Esto devolverá el stock y eliminará el recibo.")) return;
 
-  let productos;
-  try {
-    productos = JSON.parse(productosJSON);
-  } catch (e) {
-    productos = [];
-  }
+  if (!Array.isArray(productos)) productos = [];
 
-  productos.forEach(prod => {
-    if (!prod.id) return;
-    db.collection("productos").doc(prod.id).update({
-      stock: firebase.firestore.FieldValue.increment(prod.cantidad || 1)
-    });
-  });
-
-  db.collection("recibos").doc(id).delete();
-}
-
-function eliminarRecibo(id, productosJSON) {
-  if (!confirm("¿Eliminar este recibo? Esta acción no se puede deshacer.")) return;
-
-  let productos;
-  try {
-    productos = JSON.parse(productosJSON);
-  } catch (e) {
-    productos = [];
-  }
-
+  const batch = db.batch();
   productos.forEach(prod => {
     if (!prod.id) return;
     const refProducto = db.collection("productos").doc(prod.id);
-    refProducto.update({
+    batch.update(refProducto, {
       stock: firebase.firestore.FieldValue.increment(prod.cantidad || 1)
     });
   });
 
+  const reciboRef = db.collection("recibos").doc(id);
+  batch.delete(reciboRef);
+
+  batch.commit()
+    .then(() => alert("Compra cancelada y stock devuelto correctamente"))
+    .catch(e => console.error("Error al cancelar compra:", e));
+}
+
+function eliminarRecibo(id) {
+  if (!confirm("¿Eliminar este recibo? Esta acción no se puede deshacer.")) return;
   db.collection("recibos").doc(id).delete();
 }
 
