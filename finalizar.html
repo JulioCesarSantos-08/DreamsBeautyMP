@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Finalizar pedido | Dreams Cosmetic</title>
+
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="css/carrito.css">
+
+  <style>
+    .checkout-page {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 18px 15px 130px;
+    }
+
+    .checkout-title {
+      margin-bottom: 22px;
+    }
+
+    .checkout-title span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+    }
+
+    .checkout-title h1 {
+      margin-top: 3px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(26px, 8vw, 36px);
+    }
+
+    .checkout-title p {
+      margin-top: 7px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .checkout-section {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid var(--borde);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .checkout-section-title {
+      margin-bottom: 16px;
+    }
+
+    .checkout-section-title span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.4px;
+    }
+
+    .checkout-section-title h2 {
+      margin-top: 2px;
+      font-family: "Playfair Display", serif;
+      font-size: 21px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--texto);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 13px;
+      border: 1px solid var(--borde);
+      border-radius: 13px;
+      outline: none;
+      background: var(--fondo-suave);
+      color: var(--texto);
+      font-family: inherit;
+      font-size: 12px;
+      transition: 0.2s ease;
+    }
+
+    .form-group textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      background: white;
+      border-color: var(--lila);
+      box-shadow: 0 0 0 3px rgba(201, 167, 232, 0.13);
+    }
+
+    .payment-options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .payment-option {
+      position: relative;
+    }
+
+    .payment-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .payment-card {
+      min-height: 68px;
+      padding: 13px;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 20px;
+      align-items: center;
+      gap: 11px;
+      border: 1px solid var(--borde);
+      border-radius: 15px;
+      background: var(--fondo-suave);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .payment-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(
+        135deg,
+        var(--lila-claro),
+        var(--rosa-claro)
+      );
+      color: var(--rosa-fuerte);
+      font-size: 15px;
+    }
+
+    .payment-card strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .payment-card span {
+      display: block;
+      margin-top: 2px;
+      color: var(--texto-secundario);
+      font-size: 9px;
+    }
+
+    .payment-check {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--borde);
+      border-radius: 50%;
+    }
+
+    .payment-option input:checked + .payment-card {
+      border-color: var(--rosa-fuerte);
+      background: var(--rosa-claro);
+    }
+
+    .payment-option input:checked + .payment-card .payment-check {
+      border-color: var(--rosa-fuerte);
+      box-shadow: inset 0 0 0 4px white;
+      background: var(--rosa-fuerte);
+    }
+
+    .checkout-products {
+      display: grid;
+      gap: 10px;
+    }
+
+    .checkout-product {
+      display: grid;
+      grid-template-columns: 62px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkout-product img {
+      width: 62px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 11px;
+      background: var(--fondo-suave);
+    }
+
+    .checkout-product-info {
+      min-width: 0;
+    }
+
+    .checkout-product-info strong {
+      display: block;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .checkout-product-info span {
+      display: block;
+      margin-top: 3px;
+      color: var(--texto-secundario);
+      font-size: 9px;
+    }
+
+    .checkout-product-price {
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .checkout-summary {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--borde);
+    }
+
+    .checkout-summary-row {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+    }
+
+    .checkout-summary-row.total {
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px solid var(--borde);
+      color: var(--texto);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .checkout-summary-row.total strong {
+      font-size: 19px;
+    }
+
+    .checkout-notice {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 13px;
+      background: linear-gradient(
+        135deg,
+        var(--lila-claro),
+        var(--rosa-claro)
+      );
+      color: var(--texto-secundario);
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .finish-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 150;
+      min-height: 80px;
+      padding: 10px 15px calc(10px + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: 0.8fr 1.6fr;
+      gap: 12px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--borde);
+    }
+
+    .finish-total {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .finish-total span {
+      font-size: 9px;
+      color: var(--texto-secundario);
+    }
+
+    .finish-total strong {
+      margin-top: 2px;
+      font-size: 16px;
+    }
+
+    .finish-button {
+      min-height: 50px;
+      border: none;
+      border-radius: 50px;
+      background: var(--texto);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .finish-button:disabled {
+      background: #d8d4d8;
+      color: #888;
+      cursor: default;
+    }
+
+    .order-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(8px);
+    }
+
+    .order-loader.active {
+      display: flex;
+    }
+
+    .loader-card {
+      width: min(100%, 280px);
+      padding: 28px 20px;
+      border-radius: 22px;
+      background: white;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .loader-circle {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto;
+      border: 4px solid var(--lila-claro);
+      border-top-color: var(--rosa-fuerte);
+      border-radius: 50%;
+      animation: girar 0.8s linear infinite;
+    }
+
+    .loader-card strong {
+      display: block;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .loader-card span {
+      display: block;
+      margin-top: 5px;
+      color: var(--texto-secundario);
+      font-size: 10px;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 350px) {
+      .checkout-page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .checkout-section {
+        padding: 14px;
+      }
+
+      .finish-bar {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media (min-width: 600px) {
+      .checkout-page {
+        padding: 28px 25px 140px;
+      }
+
+      .form-grid.two-columns {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .payment-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .finish-bar {
+        left: 50%;
+        right: auto;
+        bottom: 18px;
+        width: min(calc(100% - 40px), 650px);
+        transform: translateX(-50%);
+        border: 1px solid var(--borde);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .checkout-page {
+        max-width: 1050px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 25px;
+        align-items: start;
+      }
+
+      .checkout-title {
+        grid-column: 1 / -1;
+      }
+
+      .checkout-left,
+      .checkout-right {
+        min-width: 0;
+      }
+
+      .checkout-right {
+        position: sticky;
+        top: 90px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="cart-header">
+
+    <button
+      class="back-button"
+      id="btn-volver"
+      aria-label="Volver"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <div class="cart-header-title">
+      <span>Dreams Cosmetic</span>
+      <h1>Finalizar</h1>
+    </div>
+
+    <div></div>
+
+  </header>
+
+
+  <main class="checkout-page">
+
+    <div class="checkout-title">
+      <span>ÚLTIMO PASO</span>
+      <h1>Confirma tu pedido</h1>
+      <p>
+        Ingresa tus datos para generar tu recibo digital.
+      </p>
+    </div>
+
+
+    <div class="checkout-left">
+
+      <section class="checkout-section">
+
+        <div class="checkout-section-title">
+          <span>CLIENTE</span>
+          <h2>Tus datos</h2>
+        </div>
+
+        <div class="form-grid two-columns">
+
+          <div class="form-group">
+            <label for="nombre-cliente">
+              Nombre completo
+            </label>
+
+            <input
+              type="text"
+              id="nombre-cliente"
+              placeholder="Ej. María López"
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="telefono-cliente">
+              Número de teléfono
+            </label>
+
+            <input
+              type="tel"
+              id="telefono-cliente"
+              placeholder="Ej. 954 123 4567"
+              autocomplete="tel"
+              inputmode="tel"
+            >
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="notas-cliente">
+              Indicaciones o notas
+            </label>
+
+            <textarea
+              id="notas-cliente"
+              placeholder="Opcional"
+            ></textarea>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="checkout-section">
+
+        <div class="checkout-section-title">
+          <span>PAGO</span>
+          <h2>Método de pago</h2>
+        </div>
+
+        <div class="payment-options">
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="metodo-pago"
+              value="Efectivo"
+              checked
+            >
+
+            <div class="payment-card">
+
+              <div class="payment-icon">
+                <i class="fa-solid fa-money-bill-wave"></i>
+              </div>
+
+              <div>
+                <strong>Efectivo</strong>
+                <span>Paga al recibir tu pedido</span>
+              </div>
+
+              <div class="payment-check"></div>
+
+            </div>
+
+          </label>
+
+
+          <label class="payment-option">
+
+            <input
+              type="radio"
+              name="metodo-pago"
+              value="Transferencia"
+            >
+
+            <div class="payment-card">
+
+              <div class="payment-icon">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+
+              <div>
+                <strong>Transferencia</strong>
+                <span>Realiza el pago por transferencia</span>
+              </div>
+
+              <div class="payment-check"></div>
+
+            </div>
+
+          </label>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <div class="checkout-right">
+
+      <section class="checkout-section">
+
+        <div class="checkout-section-title">
+          <span>PEDIDO</span>
+          <h2>Productos</h2>
+        </div>
+
+        <div
+          class="checkout-products"
+          id="checkout-productos"
+        ></div>
+
+        <div class="checkout-summary">
+
+          <div class="checkout-summary-row">
+            <span>Productos</span>
+            <strong id="checkout-cantidad">0</strong>
+          </div>
+
+          <div class="checkout-summary-row total">
+            <span>Total</span>
+            <strong id="checkout-resumen-total">$0.00</strong>
+          </div>
+
+        </div>
+
+        <div class="checkout-notice">
+          Al confirmar el pedido se descontarán temporalmente las existencias de los productos. Si el pedido es cancelado desde administración, el stock se devolverá automáticamente.
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <div class="finish-bar">
+
+    <div class="finish-total">
+      <span>Total</span>
+      <strong id="finish-total">$0.00</strong>
+    </div>
+
+    <button
+      class="finish-button"
+      id="btn-confirmar-pedido"
+    >
+      Confirmar pedido
+    </button>
+
+  </div>
+
+
+  <div
+    class="order-loader"
+    id="order-loader"
+  >
+
+    <div class="loader-card">
+
+      <div class="loader-circle"></div>
+
+      <strong>Creando tu pedido</strong>
+
+      <span>
+        Estamos generando tu recibo.
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/pedidos.js"></script>
+
+</body>
+</html>

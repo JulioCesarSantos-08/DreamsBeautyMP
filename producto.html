@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Producto | Dreams Cosmetic</title>
+
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="css/producto.css">
+</head>
+
+<body>
+
+  <header class="product-header">
+
+    <button
+      class="header-button"
+      id="btn-volver"
+      aria-label="Volver"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <a href="index.html" class="product-brand">
+      <img src="imagenes/logo.png" alt="Dreams Cosmetic">
+      <span>Dreams Cosmetic</span>
+    </a>
+
+    <button
+      class="header-button cart-button"
+      id="btn-carrito"
+      aria-label="Carrito"
+    >
+      <i class="fa-solid fa-bag-shopping"></i>
+
+      <span
+        class="cart-counter"
+        id="contador-carrito"
+      >
+        0
+      </span>
+    </button>
+
+  </header>
+
+
+  <main
+    class="product-main"
+    id="producto-contenido"
+  >
+
+    <section class="product-loading">
+
+      <div class="loading-image"></div>
+
+      <div class="loading-info">
+        <div class="loading-line small"></div>
+        <div class="loading-line large"></div>
+        <div class="loading-line medium"></div>
+        <div class="loading-line"></div>
+        <div class="loading-line"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <section
+    class="product-error"
+    id="producto-error"
+    hidden
+  >
+
+    <div class="error-icon">
+      <i class="fa-solid fa-box-open"></i>
+    </div>
+
+    <h1>Producto no encontrado</h1>
+
+    <p>
+      Es posible que este producto ya no esté disponible.
+    </p>
+
+    <a href="index.html">
+      Volver al catálogo
+    </a>
+
+  </section>
+
+
+  <div
+    class="product-bottom"
+    id="product-bottom"
+    hidden
+  >
+
+    <div class="bottom-price">
+      <span>Total</span>
+      <strong id="precio-bottom">$0.00</strong>
+    </div>
+
+    <button
+      class="bottom-add-button"
+      id="btn-agregar-bottom"
+    >
+      <i class="fa-solid fa-bag-shopping"></i>
+      Agregar al carrito
+    </button>
+
+  </div>
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/carrito.js"></script>
+
+  <script>
+    let productoActual = null;
+    let descuentosProducto = [];
+
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    const productoId =
+      params.get("id") ||
+      sessionStorage.getItem(
+        "dreamsProductoSeleccionado"
+      );
+
+    function escapeProducto(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function precioProducto(valor) {
+      return new Intl.NumberFormat(
+        "es-MX",
+        {
+          style: "currency",
+          currency: "MXN"
+        }
+      ).format(Number(valor) || 0);
+    }
+
+    function obtenerRutaImagenProducto(producto) {
+      const imagen =
+        String(producto.imagen || "").trim();
+
+      if (!imagen) {
+        return "imagenes/sistema/producto-sin-imagen.png";
+      }
+
+      if (
+        imagen.startsWith("http://") ||
+        imagen.startsWith("https://") ||
+        imagen.startsWith("data:")
+      ) {
+        return imagen;
+      }
+
+      if (
+        imagen.startsWith("imagenes/")
+      ) {
+        return imagen;
+      }
+
+      return `imagenes/${imagen}`;
+    }
+
+    function timestampProducto(valor) {
+      if (!valor) return null;
+
+      if (
+        typeof valor.toMillis ===
+        "function"
+      ) {
+        return valor.toMillis();
+      }
+
+      if (valor.seconds) {
+        return valor.seconds * 1000;
+      }
+
+      const fecha =
+        new Date(valor).getTime();
+
+      return Number.isNaN(fecha)
+        ? null
+        : fecha;
+    }
+
+    function descuentoActivoProducto(descuento) {
+      if (
+        descuento.activo === false
+      ) {
+        return false;
+      }
+
+      const ahora = Date.now();
+
+      const inicio =
+        timestampProducto(
+          descuento.fechaInicio
+        );
+
+      const fin =
+        timestampProducto(
+          descuento.fechaFin
+        );
+
+      if (
+        inicio &&
+        ahora < inicio
+      ) {
+        return false;
+      }
+
+      if (
+        fin &&
+        ahora > fin
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function calcularPrecioProducto(producto) {
+      const original =
+        Math.max(
+          0,
+          Number(producto.precio) || 0
+        );
+
+      const aplicables =
+        descuentosProducto.filter(
+          descuento => {
+            if (
+              !descuentoActivoProducto(
+                descuento
+              )
+            ) {
+              return false;
+            }
+
+            const productos =
+              Array.isArray(
+                descuento.productos
+              )
+                ? descuento.productos
+                : [];
+
+            const categorias =
+              Array.isArray(
+                descuento.categorias
+              )
+                ? descuento.categorias
+                : [];
+
+            const categoriaIndividual =
+              descuento.categoria
+                ? [descuento.categoria]
+                : [];
+
+            return (
+              productos.includes(
+                producto.id
+              ) ||
+              categorias.includes(
+                producto.categoria
+              ) ||
+              categoriaIndividual.includes(
+                producto.categoria
+              )
+            );
+          }
+        );
+
+      if (!aplicables.length) {
+        return {
+          original,
+          final: original,
+          porcentaje: 0,
+          descuento: false
+        };
+      }
+
+      const mejor =
+        aplicables.reduce(
+          (mayor, actual) => {
+            return Number(
+              actual.porcentaje || 0
+            ) >
+              Number(
+                mayor.porcentaje || 0
+              )
+              ? actual
+              : mayor;
+          }
+        );
+
+      const porcentaje =
+        Math.min(
+          100,
+          Math.max(
+            0,
+            Number(
+              mejor.porcentaje
+            ) || 0
+          )
+        );
+
+      const final =
+        original -
+        original *
+          (porcentaje / 100);
+
+      return {
+        original,
+        final: Math.max(0, final),
+        porcentaje,
+        descuento: porcentaje > 0
+      };
+    }
+
+    function renderizarProducto() {
+      if (!productoActual) {
+        return;
+      }
+
+      const contenedor =
+        document.getElementById(
+          "producto-contenido"
+        );
+
+      const bottom =
+        document.getElementById(
+          "product-bottom"
+        );
+
+      const precioBottom =
+        document.getElementById(
+          "precio-bottom"
+        );
+
+      const botonBottom =
+        document.getElementById(
+          "btn-agregar-bottom"
+        );
+
+      const precios =
+        calcularPrecioProducto(
+          productoActual
+        );
+
+      const stock =
+        Number(
+          productoActual.stock
+        ) || 0;
+
+      const agotado =
+        stock <= 0;
+
+      const imagen =
+        obtenerRutaImagenProducto(
+          productoActual
+        );
+
+      document.title =
+        `${productoActual.nombre || "Producto"} | Dreams Cosmetic`;
+
+      contenedor.innerHTML = `
+        <section class="product-layout">
+
+          <div class="product-gallery">
+
+            <div class="main-image-container">
+
+              <img
+                src="${escapeProducto(imagen)}"
+                alt="${escapeProducto(productoActual.nombre || "Producto")}"
+                class="main-product-image"
+                onerror="this.src='imagenes/sistema/producto-sin-imagen.png'"
+              >
+
+              ${
+                precios.descuento
+                  ? `
+                    <span class="discount-badge">
+                      -${Math.round(precios.porcentaje)}%
+                    </span>
+                  `
+                  : ""
+              }
+
+              ${
+                agotado
+                  ? `
+                    <span class="soldout-badge">
+                      AGOTADO
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+
+          <div class="product-details">
+
+            <span class="product-category">
+              ${escapeProducto(
+                productoActual.categoria ||
+                "Dreams Cosmetic"
+              )}
+            </span>
+
+            <h1>
+              ${escapeProducto(
+                productoActual.nombre ||
+                "Producto"
+              )}
+            </h1>
+
+            <div class="product-prices">
+
+              <strong>
+                ${precioProducto(
+                  precios.final
+                )}
+              </strong>
+
+              ${
+                precios.descuento
+                  ? `
+                    <span>
+                      ${precioProducto(
+                        precios.original
+                      )}
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+            ${
+              precios.descuento
+                ? `
+                  <div class="saving-box">
+                    Ahorras ${precioProducto(
+                      precios.original -
+                      precios.final
+                    )}
+                  </div>
+                `
+                : ""
+            }
+
+            <div
+              class="stock-status ${
+                agotado
+                  ? "soldout"
+                  : ""
+              }"
+            >
+
+              <span class="stock-dot"></span>
+
+              ${
+                agotado
+                  ? "Agotado temporalmente"
+                  : `${stock} unidad${
+                      stock === 1
+                        ? ""
+                        : "es"
+                    } disponible${
+                      stock === 1
+                        ? ""
+                        : "s"
+                    }`
+              }
+
+            </div>
+
+
+            <div class="product-description">
+
+              <span>DESCRIPCIÓN</span>
+
+              <p>
+                ${
+                  escapeProducto(
+                    productoActual.descripcion ||
+                    "Producto disponible en Dreams Cosmetic."
+                  )
+                }
+              </p>
+
+            </div>
+
+
+            <div class="product-benefits">
+
+              <div>
+                <i class="fa-solid fa-bag-shopping"></i>
+
+                <div>
+                  <strong>Compra sencilla</strong>
+                  <span>Realiza tu pedido desde tu celular</span>
+                </div>
+              </div>
+
+              <div>
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+                <div>
+                  <strong>Pago flexible</strong>
+                  <span>Efectivo o transferencia</span>
+                </div>
+              </div>
+
+              <div>
+                <i class="fa-solid fa-receipt"></i>
+
+                <div>
+                  <strong>Recibo digital</strong>
+                  <span>Generamos tu pedido automáticamente</span>
+                </div>
+              </div>
+
+            </div>
+
+
+            ${
+              agotado
+                ? `
+                  <div class="soldout-message">
+
+                    <i class="fa-regular fa-clock"></i>
+
+                    <div>
+                      <strong>
+                        Producto agotado
+                      </strong>
+
+                      <p>
+                        Este producto sigue en nuestro catálogo y puede volver a estar disponible próximamente.
+                      </p>
+                    </div>
+
+                  </div>
+                `
+                : `
+                  <button
+                    class="desktop-add-button"
+                    onclick="agregarProductoActual()"
+                  >
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    Agregar al carrito
+                  </button>
+                `
+            }
+
+          </div>
+
+        </section>
+      `;
+
+      precioBottom.textContent =
+        precioProducto(
+          precios.final
+        );
+
+      bottom.hidden = false;
+
+      if (agotado) {
+        botonBottom.disabled = true;
+
+        botonBottom.innerHTML = `
+          <i class="fa-solid fa-ban"></i>
+          Producto agotado
+        `;
+      } else {
+        botonBottom.disabled = false;
+
+        botonBottom.innerHTML = `
+          <i class="fa-solid fa-bag-shopping"></i>
+          Agregar al carrito
+        `;
+      }
+    }
+
+    function agregarProductoActual() {
+      if (!productoActual) {
+        return;
+      }
+
+      const precios =
+        calcularPrecioProducto(
+          productoActual
+        );
+
+      const productoCarrito = {
+        ...productoActual,
+        precio: precios.final,
+        imagen:
+          obtenerRutaImagenProducto(
+            productoActual
+          )
+      };
+
+      window.agregarAlCarrito(
+        productoCarrito
+      );
+    }
+
+    async function cargarProducto() {
+      if (!productoId) {
+        mostrarError();
+        return;
+      }
+
+      try {
+        const [
+          productoDoc,
+          descuentosSnap
+        ] = await Promise.all([
+          db.collection("productos")
+            .doc(productoId)
+            .get(),
+
+          db.collection("descuentos")
+            .get()
+        ]);
+
+        if (!productoDoc.exists) {
+          mostrarError();
+          return;
+        }
+
+        productoActual = {
+          id: productoDoc.id,
+          ...productoDoc.data()
+        };
+
+        descuentosProducto =
+          descuentosSnap.docs.map(
+            doc => ({
+              id: doc.id,
+              ...doc.data()
+            })
+          );
+
+        renderizarProducto();
+
+      } catch (error) {
+        console.error(error);
+        mostrarError();
+      }
+    }
+
+    function mostrarError() {
+      document.getElementById(
+        "producto-contenido"
+      ).style.display = "none";
+
+      document.getElementById(
+        "product-bottom"
+      ).hidden = true;
+
+      document.getElementById(
+        "producto-error"
+      ).hidden = false;
+    }
+
+    document
+      .getElementById("btn-volver")
+      .addEventListener(
+        "click",
+        () => {
+          if (
+            document.referrer &&
+            document.referrer.includes(
+              window.location.host
+            )
+          ) {
+            history.back();
+          } else {
+            window.location.href =
+              "index.html";
+          }
+        }
+      );
+
+    document
+      .getElementById("btn-carrito")
+      .addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "carrito.html";
+        }
+      );
+
+    document
+      .getElementById(
+        "btn-agregar-bottom"
+      )
+      .addEventListener(
+        "click",
+        agregarProductoActual
+      );
+
+    window.agregarProductoActual =
+      agregarProductoActual;
+
+    cargarProducto();
+  </script>
+
+</body>
+</html>

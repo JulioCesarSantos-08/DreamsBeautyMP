@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Recibo | Dreams Cosmetic</title>
+
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    :root {
+      --rosa: #f06fa8;
+      --rosa-fuerte: #e84f94;
+      --rosa-claro: #fff0f7;
+      --lila: #c9a7e8;
+      --lila-claro: #f3eafd;
+      --lila-profundo: #a77bd4;
+      --amarillo: #f6cc48;
+      --blanco: #ffffff;
+      --fondo: #fffafd;
+      --fondo-suave: #faf7fc;
+      --texto: #252027;
+      --texto-secundario: #777078;
+      --texto-suave: #aaa3aa;
+      --borde: #eee8ef;
+      --verde: #37a46d;
+      --rojo: #dc5353;
+      --shadow-sm: 0 5px 18px rgba(76, 51, 72, 0.07);
+      --shadow-md: 0 12px 30px rgba(76, 51, 72, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .receipt-header {
+      min-height: 68px;
+      padding: 10px 15px;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .header-button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: var(--fondo-suave);
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-title {
+      text-align: center;
+    }
+
+    .header-title span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .header-title h1 {
+      margin-top: 2px;
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+    }
+
+    .receipt-main {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px 15px 35px;
+    }
+
+    .success-box {
+      margin-bottom: 18px;
+      padding: 24px 18px;
+      border-radius: 22px;
+      text-align: center;
+      background: linear-gradient(
+        135deg,
+        var(--lila-claro),
+        var(--rosa-claro)
+      );
+    }
+
+    .success-icon {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: white;
+      color: var(--verde);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .success-box h2 {
+      margin-top: 14px;
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+    }
+
+    .success-box p {
+      max-width: 340px;
+      margin: 7px auto 0;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .receipt-card {
+      overflow: hidden;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .receipt-brand {
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-bottom: 1px dashed var(--borde);
+    }
+
+    .receipt-brand img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 5px 18px rgba(201, 167, 232, 0.2);
+    }
+
+    .receipt-brand h2 {
+      margin-top: 9px;
+      font-family: "Playfair Display", serif;
+      color: var(--rosa-fuerte);
+      font-size: 22px;
+    }
+
+    .receipt-brand span {
+      margin-top: 2px;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .folio-section {
+      padding: 17px 18px;
+      text-align: center;
+      border-bottom: 1px dashed var(--borde);
+    }
+
+    .folio-section span {
+      display: block;
+      color: var(--texto-secundario);
+      font-size: 9px;
+    }
+
+    .folio-section strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--rosa-fuerte);
+      font-size: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 9px;
+      padding: 6px 10px;
+      border-radius: 50px;
+      background: #fff7dc;
+      color: #a07a00;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .status-badge.preparado {
+      background: #edf5ff;
+      color: #3978ad;
+    }
+
+    .status-badge.pagado {
+      background: #e8f8ef;
+      color: var(--verde);
+    }
+
+    .status-badge.cancelado {
+      background: #fff0f0;
+      color: var(--rojo);
+    }
+
+    .receipt-section {
+      padding: 18px;
+      border-bottom: 1px dashed var(--borde);
+    }
+
+    .receipt-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-label {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .client-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      font-size: 11px;
+    }
+
+    .info-row span {
+      color: var(--texto-secundario);
+    }
+
+    .info-row strong {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .receipt-products {
+      display: grid;
+      gap: 14px;
+    }
+
+    .receipt-product {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .receipt-product img {
+      width: 54px;
+      height: 62px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: var(--fondo-suave);
+    }
+
+    .receipt-product-info {
+      min-width: 0;
+    }
+
+    .receipt-product-info strong {
+      display: block;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .receipt-product-info span {
+      display: block;
+      margin-top: 3px;
+      color: var(--texto-secundario);
+      font-size: 9px;
+    }
+
+    .receipt-product-total {
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .receipt-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .receipt-total span {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .receipt-total strong {
+      font-size: 23px;
+    }
+
+    .receipt-note {
+      margin-top: 13px;
+      padding: 12px;
+      border-radius: 13px;
+      background: var(--fondo-suave);
+      color: var(--texto-secundario);
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .receipt-actions {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-button {
+      min-height: 48px;
+      border-radius: 50px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .action-button.primary {
+      background: var(--texto);
+      color: white;
+    }
+
+    .action-button.secondary {
+      background: white;
+      color: var(--texto);
+      border: 1px solid var(--borde);
+    }
+
+    .action-button.pink {
+      background: var(--rosa-fuerte);
+      color: white;
+    }
+
+    .loading-receipt {
+      padding: 70px 20px;
+      text-align: center;
+    }
+
+    .loading-circle {
+      width: 50px;
+      height: 50px;
+      margin: auto;
+      border: 4px solid var(--lila-claro);
+      border-top-color: var(--rosa-fuerte);
+      border-radius: 50%;
+      animation: girar 0.8s linear infinite;
+    }
+
+    .loading-receipt strong {
+      display: block;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .loading-receipt span {
+      display: block;
+      margin-top: 5px;
+      color: var(--texto-secundario);
+      font-size: 10px;
+    }
+
+    .error-receipt {
+      padding: 70px 25px;
+      text-align: center;
+    }
+
+    .error-receipt i {
+      color: var(--rosa-fuerte);
+      font-size: 38px;
+    }
+
+    .error-receipt h2 {
+      margin-top: 15px;
+      font-family: "Playfair Display", serif;
+      font-size: 24px;
+    }
+
+    .error-receipt p {
+      margin-top: 7px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+    }
+
+    .error-receipt a {
+      display: inline-flex;
+      margin-top: 20px;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: 50px;
+      background: var(--rosa-fuerte);
+      color: white;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 350px) {
+      .receipt-main {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .receipt-section {
+        padding: 15px;
+      }
+
+      .receipt-product {
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      .receipt-product img {
+        width: 48px;
+        height: 56px;
+      }
+    }
+
+    @media (min-width: 600px) {
+      .receipt-main {
+        padding: 28px 25px 45px;
+      }
+
+      .success-box {
+        padding: 30px;
+      }
+
+      .receipt-section {
+        padding: 22px 25px;
+      }
+
+      .client-grid {
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 30px;
+      }
+
+      .receipt-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      body {
+        padding: 30px 0;
+      }
+
+      .receipt-header {
+        max-width: 760px;
+        margin: 0 auto;
+        border: 1px solid var(--borde);
+        border-radius: 18px;
+      }
+
+      .receipt-main {
+        padding-top: 25px;
+      }
+
+      .receipt-card {
+        border-radius: 26px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .receipt-header,
+      .success-box,
+      .receipt-actions {
+        display: none !important;
+      }
+
+      .receipt-main {
+        max-width: none;
+        padding: 0;
+      }
+
+      .receipt-card {
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="receipt-header">
+
+    <button
+      class="header-button"
+      id="btn-inicio"
+      aria-label="Inicio"
+    >
+      <i class="fa-solid fa-house"></i>
+    </button>
+
+    <div class="header-title">
+      <span>DREAMS COSMETIC</span>
+      <h1>Tu recibo</h1>
+    </div>
+
+    <button
+      class="header-button"
+      id="btn-compartir-header"
+      aria-label="Compartir"
+    >
+      <i class="fa-solid fa-share-nodes"></i>
+    </button>
+
+  </header>
+
+
+  <main class="receipt-main">
+
+    <div id="recibo-contenido">
+
+      <section class="loading-receipt">
+
+        <div class="loading-circle"></div>
+
+        <strong>Cargando tu recibo</strong>
+
+        <span>
+          Un momento por favor.
+        </span>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+
+  <script>
+    let reciboActual = null;
+    let reciboIdActual = null;
+
+    const parametros =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    reciboIdActual =
+      parametros.get("id");
+
+    if (!reciboIdActual) {
+      try {
+        const ultimoPedido =
+          JSON.parse(
+            localStorage.getItem(
+              "dreamsUltimoPedido"
+            )
+          );
+
+        reciboIdActual =
+          ultimoPedido?.id || null;
+      } catch {
+        reciboIdActual = null;
+      }
+    }
+
+    function escapeRecibo(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function monedaRecibo(valor) {
+      return new Intl.NumberFormat(
+        "es-MX",
+        {
+          style: "currency",
+          currency: "MXN"
+        }
+      ).format(Number(valor) || 0);
+    }
+
+    function formatearFechaRecibo(valor) {
+      if (!valor) {
+        return "Generando fecha...";
+      }
+
+      let fecha;
+
+      if (
+        typeof valor.toDate === "function"
+      ) {
+        fecha = valor.toDate();
+      } else {
+        fecha = new Date(valor);
+      }
+
+      if (
+        Number.isNaN(
+          fecha.getTime()
+        )
+      ) {
+        return "Fecha no disponible";
+      }
+
+      return new Intl.DateTimeFormat(
+        "es-MX",
+        {
+          dateStyle: "long",
+          timeStyle: "short"
+        }
+      ).format(fecha);
+    }
+
+    function obtenerImagenRecibo(imagen) {
+      const ruta =
+        String(imagen || "").trim();
+
+      if (!ruta) {
+        return "imagenes/sistema/producto-sin-imagen.png";
+      }
+
+      if (
+        ruta.startsWith("http://") ||
+        ruta.startsWith("https://") ||
+        ruta.startsWith("data:")
+      ) {
+        return ruta;
+      }
+
+      if (
+        ruta.startsWith("imagenes/")
+      ) {
+        return ruta;
+      }
+
+      return `imagenes/${ruta}`;
+    }
+
+    function obtenerEstadoRecibo(recibo) {
+      if (
+        recibo.cancelado === true ||
+        recibo.estado === "cancelado"
+      ) {
+        return {
+          texto: "Pedido cancelado",
+          clase: "cancelado",
+          icono: "fa-circle-xmark"
+        };
+      }
+
+      if (
+        recibo.pagado === true ||
+        recibo.estado === "pagado"
+      ) {
+        return {
+          texto: "Pedido pagado",
+          clase: "pagado",
+          icono: "fa-circle-check"
+        };
+      }
+
+      if (
+        recibo.preparado === true ||
+        recibo.estado === "preparado"
+      ) {
+        return {
+          texto: "Pedido preparado",
+          clase: "preparado",
+          icono: "fa-box"
+        };
+      }
+
+      return {
+        texto: "Pedido pendiente",
+        clase: "",
+        icono: "fa-clock"
+      };
+    }
+
+    function renderizarRecibo() {
+      const contenedor =
+        document.getElementById(
+          "recibo-contenido"
+        );
+
+      const recibo =
+        reciboActual;
+
+      const productos =
+        Array.isArray(
+          recibo.productos
+        )
+          ? recibo.productos
+          : [];
+
+      const estado =
+        obtenerEstadoRecibo(
+          recibo
+        );
+
+      const folio =
+        recibo.folio ||
+        `DC-${reciboIdActual
+          .slice(0, 8)
+          .toUpperCase()}`;
+
+      document.title =
+        `${folio} | Dreams Cosmetic`;
+
+      contenedor.innerHTML = `
+        <section class="success-box">
+
+          <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+          </div>
+
+          <h2>
+            ¡Pedido recibido!
+          </h2>
+
+          <p>
+            Tu pedido fue registrado correctamente. Conserva este recibo para cualquier aclaración.
+          </p>
+
+        </section>
+
+
+        <article
+          class="receipt-card"
+          id="recibo-imprimible"
+        >
+
+          <section class="receipt-brand">
+
+            <img
+              src="imagenes/logo.png"
+              alt="Dreams Cosmetic"
+            >
+
+            <h2>
+              Dreams Cosmetic
+            </h2>
+
+            <span>
+              BEAUTY SHOP
+            </span>
+
+          </section>
+
+
+          <section class="folio-section">
+
+            <span>
+              NÚMERO DE PEDIDO
+            </span>
+
+            <strong>
+              ${escapeRecibo(folio)}
+            </strong>
+
+            <div
+              class="status-badge ${estado.clase}"
+            >
+              <i class="fa-solid ${estado.icono}"></i>
+
+              ${estado.texto}
+            </div>
+
+          </section>
+
+
+          <section class="receipt-section">
+
+            <span class="section-label">
+              INFORMACIÓN
+            </span>
+
+            <div class="client-grid">
+
+              <div class="info-row">
+                <span>Cliente</span>
+
+                <strong>
+                  ${escapeRecibo(
+                    recibo.cliente ||
+                    "Cliente"
+                  )}
+                </strong>
+              </div>
+
+              <div class="info-row">
+                <span>Teléfono</span>
+
+                <strong>
+                  ${escapeRecibo(
+                    recibo.telefono ||
+                    "—"
+                  )}
+                </strong>
+              </div>
+
+              <div class="info-row">
+                <span>Fecha</span>
+
+                <strong>
+                  ${escapeRecibo(
+                    formatearFechaRecibo(
+                      recibo.fecha ||
+                      recibo.fechaCreacion
+                    )
+                  )}
+                </strong>
+              </div>
+
+              <div class="info-row">
+                <span>Pago</span>
+
+                <strong>
+                  ${escapeRecibo(
+                    recibo.metodoPago ||
+                    "Efectivo"
+                  )}
+                </strong>
+              </div>
+
+            </div>
+
+            ${
+              recibo.notas
+                ? `
+                  <div class="receipt-note">
+                    <strong>Notas:</strong>
+                    ${escapeRecibo(recibo.notas)}
+                  </div>
+                `
+                : ""
+            }
+
+          </section>
+
+
+          <section class="receipt-section">
+
+            <span class="section-label">
+              PRODUCTOS
+            </span>
+
+            <div class="receipt-products">
+
+              ${
+                productos.map(
+                  producto => `
+                    <article class="receipt-product">
+
+                      <img
+                        src="${escapeRecibo(
+                          obtenerImagenRecibo(
+                            producto.imagen
+                          )
+                        )}"
+                        alt="${escapeRecibo(
+                          producto.nombre ||
+                          "Producto"
+                        )}"
+                        onerror="this.src='imagenes/sistema/producto-sin-imagen.png'"
+                      >
+
+                      <div class="receipt-product-info">
+
+                        <strong>
+                          ${escapeRecibo(
+                            producto.nombre ||
+                            "Producto"
+                          )}
+                        </strong>
+
+                        <span>
+                          ${Number(
+                            producto.cantidad
+                          ) || 1}
+                          ×
+                          ${monedaRecibo(
+                            producto.precio
+                          )}
+                        </span>
+
+                      </div>
+
+                      <div class="receipt-product-total">
+
+                        ${monedaRecibo(
+                          producto.subtotal ??
+                          (
+                            Number(
+                              producto.precio
+                            ) *
+                            Number(
+                              producto.cantidad ||
+                              1
+                            )
+                          )
+                        )}
+
+                      </div>
+
+                    </article>
+                  `
+                ).join("")
+              }
+
+            </div>
+
+          </section>
+
+
+          <section class="receipt-section">
+
+            <div class="receipt-total">
+
+              <span>
+                Total
+              </span>
+
+              <strong>
+                ${monedaRecibo(
+                  recibo.total
+                )}
+              </strong>
+
+            </div>
+
+            <div class="receipt-note">
+              ${
+                recibo.metodoPago ===
+                "Transferencia"
+                  ? "Seleccionaste pago por transferencia. El pedido se marcará como pagado cuando la tienda confirme el pago."
+                  : "Seleccionaste pago en efectivo. El pago se realizará al momento de recibir tu pedido."
+              }
+            </div>
+
+          </section>
+
+        </article>
+
+
+        <div class="receipt-actions">
+
+          <button
+            class="action-button primary"
+            onclick="imprimirRecibo()"
+          >
+            <i class="fa-solid fa-print"></i>
+            Guardar / imprimir
+          </button>
+
+          <button
+            class="action-button pink"
+            onclick="compartirRecibo()"
+          >
+            <i class="fa-solid fa-share-nodes"></i>
+            Compartir
+          </button>
+
+          <a
+            href="index.html"
+            class="action-button secondary"
+          >
+            <i class="fa-solid fa-house"></i>
+            Volver a la tienda
+          </a>
+
+        </div>
+      `;
+    }
+
+    function mostrarErrorRecibo() {
+      document.getElementById(
+        "recibo-contenido"
+      ).innerHTML = `
+        <section class="error-receipt">
+
+          <i class="fa-solid fa-receipt"></i>
+
+          <h2>
+            No encontramos el recibo
+          </h2>
+
+          <p>
+            El pedido solicitado no está disponible.
+          </p>
+
+          <a href="index.html">
+            Volver a la tienda
+          </a>
+
+        </section>
+      `;
+    }
+
+    async function cargarRecibo() {
+      if (!reciboIdActual) {
+        mostrarErrorRecibo();
+        return;
+      }
+
+      try {
+        const documento =
+          await db
+            .collection("recibos")
+            .doc(reciboIdActual)
+            .get();
+
+        if (!documento.exists) {
+          mostrarErrorRecibo();
+          return;
+        }
+
+        reciboActual = {
+          id: documento.id,
+          ...documento.data()
+        };
+
+        renderizarRecibo();
+
+      } catch (error) {
+        console.error(error);
+        mostrarErrorRecibo();
+      }
+    }
+
+    function imprimirRecibo() {
+      window.print();
+    }
+
+    async function compartirRecibo() {
+      if (!reciboActual) {
+        return;
+      }
+
+      const folio =
+        reciboActual.folio ||
+        reciboIdActual;
+
+      const texto =
+        `Dreams Cosmetic\nPedido: ${folio}\nTotal: ${monedaRecibo(
+          reciboActual.total
+        )}\nMétodo de pago: ${
+          reciboActual.metodoPago ||
+          "Efectivo"
+        }`;
+
+      if (
+        navigator.share
+      ) {
+        try {
+          await navigator.share({
+            title:
+              `Pedido ${folio} - Dreams Cosmetic`,
+            text: texto,
+            url:
+              window.location.href
+          });
+
+          return;
+        } catch (error) {
+          if (
+            error.name ===
+            "AbortError"
+          ) {
+            return;
+          }
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          `${texto}\n${window.location.href}`
+        );
+
+        alert(
+          "La información del recibo fue copiada."
+        );
+      } catch {
+        alert(
+          "No fue posible compartir el recibo desde este dispositivo."
+        );
+      }
+    }
+
+    document
+      .getElementById(
+        "btn-inicio"
+      )
+      .addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "index.html";
+        }
+      );
+
+    document
+      .getElementById(
+        "btn-compartir-header"
+      )
+      .addEventListener(
+        "click",
+        compartirRecibo
+      );
+
+    window.imprimirRecibo =
+      imprimirRecibo;
+
+    window.compartirRecibo =
+      compartirRecibo;
+
+    cargarRecibo();
+  </script>
+
+</body>
+</html>

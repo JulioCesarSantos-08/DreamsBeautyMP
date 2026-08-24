@@ -1,116 +1,851 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Términos y Condiciones - Dreams Beauty</title>
-  <link rel="icon" type="image/png" href="https://via.placeholder.com/100">
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+  <title>Términos y condiciones | Dreams Cosmetic</title>
+
+  <meta
+    name="description"
+    content="Términos y condiciones de compra de Dreams Cosmetic."
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="imagenes/logo.png"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    :root {
+      --rosa: #f06fa8;
+      --rosa-fuerte: #e84f94;
+      --rosa-claro: #fff0f7;
+      --lila: #c9a7e8;
+      --lila-claro: #f3eafd;
+      --lila-profundo: #a77bd4;
+      --blanco: #ffffff;
+      --fondo: #fffafd;
+      --fondo-suave: #faf7fc;
+      --texto: #252027;
+      --texto-secundario: #777078;
+      --texto-suave: #aaa3aa;
+      --borde: #eee8ef;
+      --shadow-sm: 0 5px 18px rgba(76, 51, 72, 0.07);
+      --shadow-md: 0 12px 30px rgba(76, 51, 72, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background: #f9f7fb;
-      color: #333;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--fondo);
+      color: var(--texto);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .legal-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      min-height: 70px;
+      padding: 10px 14px;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: var(--fondo-suave);
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .header-brand img {
+      width: 38px;
+      height: 38px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .header-brand div {
+      min-width: 0;
+    }
+
+    .header-brand strong {
+      display: block;
+      color: var(--rosa-fuerte);
+      font-family: "Playfair Display", serif;
+      font-size: 16px;
+    }
+
+    .header-brand span {
+      display: block;
+      margin-top: 1px;
+      color: var(--lila-profundo);
+      font-size: 6px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .legal-main {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 22px 14px 50px;
+    }
+
+    .legal-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px;
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          135deg,
+          var(--lila-claro),
+          var(--rosa-claro)
+        );
+    }
+
+    .legal-hero::before {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      top: -70px;
+      right: -50px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+
+    .legal-hero span {
+      position: relative;
+      z-index: 2;
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+    }
+
+    .legal-hero h1 {
+      position: relative;
+      z-index: 2;
+      margin-top: 5px;
+      max-width: 500px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(29px, 8vw, 42px);
+      line-height: 1.05;
+    }
+
+    .legal-hero p {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      margin-top: 12px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .legal-update {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--texto-secundario);
+      font-size: 8px;
+    }
+
+    .legal-content {
+      margin-top: 18px;
+      display: grid;
+      gap: 13px;
+    }
+
+    .legal-section {
+      padding: 19px;
+      border-radius: 19px;
+      background: white;
+      border: 1px solid var(--borde);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-number {
+      width: 35px;
+      height: 35px;
+      margin-bottom: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(
+          135deg,
+          var(--lila-claro),
+          var(--rosa-claro)
+        );
+      color: var(--rosa-fuerte);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .legal-section h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+    }
+
+    .legal-section p {
+      margin-top: 9px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.75;
+    }
+
+    .legal-section ul {
+      margin-top: 10px;
+      padding-left: 18px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.75;
+    }
+
+    .legal-section li + li {
+      margin-top: 5px;
+    }
+
+    .legal-highlight {
+      margin-top: 12px;
+      padding: 12px 13px;
+      border-radius: 13px;
+      background: var(--fondo-suave);
+      border-left: 3px solid var(--rosa-fuerte);
+      color: var(--texto-secundario);
+      font-size: 10px;
+      line-height: 1.65;
+    }
+
+    .legal-contact {
+      margin-top: 18px;
+      padding: 22px 18px;
+      border-radius: 20px;
+      text-align: center;
+      background: #282229;
+      color: white;
+    }
+
+    .legal-contact i {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(240,111,168,0.14);
+      color: #f18ab9;
+      font-size: 17px;
+    }
+
+    .legal-contact h2 {
+      margin-top: 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+    }
+
+    .legal-contact p {
+      max-width: 440px;
+      margin: 8px auto 0;
+      color: rgba(255,255,255,0.58);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .contact-links {
+      margin-top: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .contact-links a {
+      min-height: 44px;
+      padding: 0 15px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .legal-footer {
+      margin-top: 28px;
+      padding: 20px 15px 28px;
+      text-align: center;
+      border-top: 1px solid var(--borde);
+    }
+
+    .legal-footer img {
+      width: 45px;
+      height: 45px;
+      margin: 0 auto;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .legal-footer strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--rosa-fuerte);
+      font-family: "Playfair Display", serif;
+      font-size: 16px;
+    }
+
+    .legal-footer p {
+      margin-top: 5px;
+      color: var(--texto-suave);
+      font-size: 8px;
       line-height: 1.6;
     }
-    header {
-      background: #cfa2f2;
-      color: white;
-      padding: 15px;
-      text-align: center;
+
+    @media (max-width: 350px) {
+      .legal-main {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .legal-section {
+        padding: 16px;
+      }
+
+      .header-brand strong {
+        font-size: 14px;
+      }
     }
-    header img {
-      height: 50px;
-      vertical-align: middle;
+
+    @media (min-width: 600px) {
+      .legal-main {
+        padding: 30px 24px 60px;
+      }
+
+      .legal-hero {
+        padding: 38px;
+      }
+
+      .legal-section {
+        padding: 25px;
+      }
+
+      .contact-links {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    h1 {
-      color: #c46ef0;
-    }
-    h2 {
-      color: #ff5ca0;
-      margin-top: 20px;
-    }
-    ul {
-      margin-left: 18px;
-    }
-    .btn-volver {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 16px;
-      background: #ff85c1;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .btn-volver:hover {
-      background: #ff5ca0;
-    }
-    @media (max-width: 600px) {
-      main { margin: 10px; padding: 14px; }
+
+    @media (min-width: 900px) {
+      .legal-main {
+        padding-top: 45px;
+      }
+
+      .legal-content {
+        gap: 16px;
+      }
+
+      .legal-section {
+        padding: 28px 32px;
+      }
+
+      .legal-section p,
+      .legal-section ul {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <header>
-    <img src="https://via.placeholder.com/100" alt="Logo Dreams Beauty">
-    <div>
-      <h1>Términos y Condiciones</h1>
-    </div>
+  <header class="legal-header">
+
+    <button
+      class="back-button"
+      id="btn-volver"
+      aria-label="Volver"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <a
+      href="index.html"
+      class="header-brand"
+    >
+
+      <img
+        src="imagenes/logo.png"
+        alt="Dreams Cosmetic"
+      >
+
+      <div>
+        <strong>Dreams Cosmetic</strong>
+        <span>BEAUTY SHOP</span>
+      </div>
+
+    </a>
+
+    <div></div>
+
   </header>
 
-  <main>
-    <p><strong>Última actualización:</strong> <span id="fecha-actualizacion"></span></p>
 
-    <h2>1. Alcance</h2>
-    <p>Estas condiciones regulan el uso del sitio web de Dreams Beauty y la compra de productos ofrecidos en el mismo. Al utilizar el sitio o realizar una compra aceptas estos Términos y Condiciones.</p>
+  <main class="legal-main">
 
-    <h2>2. Productos</h2>
-    <p>Los productos mostrados incluyen su descripción, precio y stock disponible. Hacemos todo lo posible por mantener la información actualizada.</p>
+    <section class="legal-hero">
 
-    <h2>3. Precios y promociones</h2>
-    <p>Todos los precios están expresados en pesos mexicanos (MXN) e incluyen los impuestos indicados en el sitio.</p>
+      <span>
+        INFORMACIÓN IMPORTANTE
+      </span>
 
-    <h2>4. Proceso de compra</h2>
-    <ul>
-      <li>Agrega al carrito los productos deseados.</li>
-      <li>Finaliza la compra e ingresa tus datos.</li>
-      <li>Recibirás un recibo o confirmación del pedido.</li>
-    </ul>
+      <h1>
+        Términos y condiciones
+      </h1>
 
-    <h2>5. Pagos</h2>
-    <p>Las formas de pago disponibles se indicarán al finalizar la compra.</p>
+      <p>
+        Estos términos regulan el uso de nuestra tienda en línea y el proceso de solicitud de productos a través de Dreams Cosmetic.
+      </p>
 
-    <h2>6. Envíos y entregas</h2>
-    <p>Los plazos y costos de envío se calculan en el proceso de compra según la dirección proporcionada.</p>
+      <div class="legal-update">
+        <i class="fa-regular fa-calendar"></i>
+        Última actualización: agosto de 2026
+      </div>
 
-    <h2>7. Devoluciones y cambios</h2>
-    <p>Consulta la política de devoluciones y cambios en la sección correspondiente del sitio.</p>
+    </section>
 
-    <h2>8. Protección de datos</h2>
-    <p>Tus datos se tratan conforme a nuestra política de privacidad.</p>
 
-    <h2>9. Propiedad intelectual</h2>
-    <p>Todo el contenido del sitio es propiedad de Dreams Beauty o de sus licenciantes.</p>
+    <div class="legal-content">
 
-    <h2>10. Modificaciones</h2>
-    <p>Podemos modificar estos términos en cualquier momento; las modificaciones se publicarán en esta página.</p>
+      <section class="legal-section">
 
-    <a href="index.html" class="btn-volver">Volver al inicio</a>
+        <div class="section-number">
+          01
+        </div>
+
+        <h2>
+          Uso de la tienda
+        </h2>
+
+        <p>
+          Dreams Cosmetic pone a disposición de sus clientes este catálogo digital para consultar productos, precios, promociones y disponibilidad, así como para realizar solicitudes de compra.
+        </p>
+
+        <p>
+          El uso de la página implica la aceptación de estos términos y condiciones.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          02
+        </div>
+
+        <h2>
+          Productos y disponibilidad
+        </h2>
+
+        <p>
+          Los productos mostrados en el catálogo están sujetos a disponibilidad. La cantidad disponible puede cambiar conforme se registran nuevos pedidos.
+        </p>
+
+        <p>
+          Los productos agotados pueden permanecer visibles dentro del catálogo para que los clientes conozcan los artículos que Dreams Cosmetic maneja normalmente.
+        </p>
+
+        <div class="legal-highlight">
+          Que un producto aparezca en el catálogo no significa necesariamente que exista disponibilidad inmediata.
+        </div>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          03
+        </div>
+
+        <h2>
+          Precios y promociones
+        </h2>
+
+        <p>
+          Todos los precios mostrados en esta tienda están expresados en pesos mexicanos.
+        </p>
+
+        <p>
+          Dreams Cosmetic puede aplicar descuentos temporales a productos individuales o categorías completas. Las promociones únicamente serán válidas durante el periodo indicado por la tienda.
+        </p>
+
+        <p>
+          El precio mostrado al momento de confirmar el pedido será el utilizado para generar el recibo correspondiente.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          04
+        </div>
+
+        <h2>
+          Pedidos
+        </h2>
+
+        <p>
+          Para realizar un pedido, el cliente deberá proporcionar los datos solicitados y seleccionar los productos deseados.
+        </p>
+
+        <p>
+          Una vez confirmado el pedido, la página generará un recibo digital con información como:
+        </p>
+
+        <ul>
+          <li>Número o folio del pedido.</li>
+          <li>Nombre del cliente.</li>
+          <li>Productos solicitados.</li>
+          <li>Cantidades.</li>
+          <li>Precio de cada producto.</li>
+          <li>Total del pedido.</li>
+          <li>Método de pago seleccionado.</li>
+        </ul>
+
+        <p>
+          El recibo digital representa una solicitud de compra registrada dentro del sistema de Dreams Cosmetic.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          05
+        </div>
+
+        <h2>
+          Pagos
+        </h2>
+
+        <p>
+          Dreams Cosmetic no solicita ni procesa tarjetas bancarias directamente dentro de esta página.
+        </p>
+
+        <p>
+          Los métodos de pago disponibles pueden incluir efectivo y transferencia, dependiendo de las condiciones acordadas con el cliente.
+        </p>
+
+        <div class="legal-highlight">
+          Nunca será necesario ingresar los datos completos de una tarjeta bancaria dentro del catálogo de Dreams Cosmetic.
+        </div>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          06
+        </div>
+
+        <h2>
+          Estado del pedido
+        </h2>
+
+        <p>
+          Los pedidos pueden encontrarse en diferentes estados durante su procesamiento:
+        </p>
+
+        <ul>
+          <li><strong>Pendiente:</strong> el pedido fue recibido.</li>
+          <li><strong>Preparado:</strong> los productos ya fueron alistados para su entrega.</li>
+          <li><strong>Pagado:</strong> la tienda confirmó la recepción del pago.</li>
+          <li><strong>Cancelado:</strong> la operación no se completó.</li>
+        </ul>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          07
+        </div>
+
+        <h2>
+          Cancelaciones
+        </h2>
+
+        <p>
+          Cuando un pedido es cancelado antes de ser marcado como pagado, Dreams Cosmetic puede liberar nuevamente las unidades reservadas para que vuelvan a estar disponibles dentro del catálogo.
+        </p>
+
+        <p>
+          Para cualquier solicitud de cancelación o modificación, el cliente deberá comunicarse directamente con Dreams Cosmetic.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          08
+        </div>
+
+        <h2>
+          Entrega de productos
+        </h2>
+
+        <p>
+          La forma, fecha, horario y lugar de entrega podrán acordarse directamente entre Dreams Cosmetic y el cliente.
+        </p>
+
+        <p>
+          Actualmente la tienda opera desde Río Grande, Oaxaca, por lo que cualquier condición relacionada con entregas deberá confirmarse directamente con el negocio.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          09
+        </div>
+
+        <h2>
+          Información proporcionada por el cliente
+        </h2>
+
+        <p>
+          El cliente es responsable de proporcionar información correcta al realizar un pedido, especialmente su nombre y número de contacto.
+        </p>
+
+        <p>
+          Estos datos serán utilizados únicamente para identificar, preparar y dar seguimiento al pedido dentro de la operación de Dreams Cosmetic.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          10
+        </div>
+
+        <h2>
+          Imágenes y contenido
+        </h2>
+
+        <p>
+          Las imágenes de los productos tienen fines ilustrativos. Dependiendo del producto, presentación, iluminación o actualización del fabricante, pueden existir pequeñas diferencias respecto al artículo físico.
+        </p>
+
+        <p>
+          Los nombres, logotipos, diseño de la tienda y demás elementos propios de Dreams Cosmetic no deberán utilizarse de manera que genere confusión sobre la identidad del negocio.
+        </p>
+
+      </section>
+
+
+      <section class="legal-section">
+
+        <div class="section-number">
+          11
+        </div>
+
+        <h2>
+          Cambios en estos términos
+        </h2>
+
+        <p>
+          Dreams Cosmetic podrá modificar estos términos y condiciones cuando sea necesario para reflejar cambios en su funcionamiento, políticas, métodos de pago, entregas o servicios.
+        </p>
+
+        <p>
+          La versión publicada en esta página será considerada la versión vigente.
+        </p>
+
+      </section>
+
+    </div>
+
+
+    <section class="legal-contact">
+
+      <i class="fa-solid fa-heart"></i>
+
+      <h2>
+        ¿Tienes alguna duda?
+      </h2>
+
+      <p>
+        Puedes comunicarte con Dreams Cosmetic o consultar nuestras redes sociales para recibir más información sobre productos, pedidos y disponibilidad.
+      </p>
+
+      <div class="contact-links">
+
+        <a
+          href="https://www.instagram.com/dreams.beauty.mp?igsi=aGlzNDU4ZXNrNGxz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-instagram"></i>
+          Instagram
+        </a>
+
+        <a
+          href="https://www.facebook.com/share/1bbEYUizB6/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-brands fa-facebook-f"></i>
+          Facebook
+        </a>
+
+        <a
+          href="https://maps.app.goo.gl/BVobyeS7Jpxr67926"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-solid fa-location-dot"></i>
+          Río Grande, Oaxaca
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <footer class="legal-footer">
+
+      <img
+        src="imagenes/logo.png"
+        alt="Dreams Cosmetic"
+      >
+
+      <strong>
+        Dreams Cosmetic
+      </strong>
+
+      <p>
+        © <span id="legal-year"></span> Dreams Cosmetic.<br>
+        Todos los derechos reservados.
+      </p>
+
+    </footer>
+
   </main>
 
+
   <script>
-    document.getElementById('fecha-actualizacion').textContent = new Date().toLocaleDateString();
+    document
+      .getElementById("btn-volver")
+      .addEventListener(
+        "click",
+        () => {
+          if (
+            document.referrer &&
+            document.referrer.includes(
+              window.location.host
+            )
+          ) {
+            history.back();
+          } else {
+            window.location.href =
+              "index.html";
+          }
+        }
+      );
+
+    document.getElementById(
+      "legal-year"
+    ).textContent =
+      new Date().getFullYear();
   </script>
 
 </body>

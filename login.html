@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+
+  <title>Administrador | Dreams Cosmetic</title>
+
+  <link rel="icon" type="image/png" href="imagenes/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    :root {
+      --rosa: #f06fa8;
+      --rosa-fuerte: #e84f94;
+      --rosa-claro: #fff0f7;
+      --lila: #c9a7e8;
+      --lila-claro: #f3eafd;
+      --lila-profundo: #a77bd4;
+      --texto: #252027;
+      --texto-secundario: #777078;
+      --borde: #eee8ef;
+      --fondo: #fffafd;
+      --shadow: 0 18px 50px rgba(76, 51, 72, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(201, 167, 232, 0.28), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(240, 111, 168, 0.20), transparent 30%),
+        var(--fondo);
+      font-family: "DM Sans", sans-serif;
+      color: var(--texto);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .login-layout {
+      width: min(100%, 980px);
+      min-height: 580px;
+      display: grid;
+      grid-template-columns: 1fr;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .login-visual {
+      display: none;
+    }
+
+    .login-panel {
+      padding: 28px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-content {
+      width: min(100%, 380px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 35px;
+    }
+
+    .brand img {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 5px 15px rgba(201, 167, 232, 0.22);
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .brand-text strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--rosa-fuerte);
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+    }
+
+    .login-title span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+    }
+
+    .login-title h1 {
+      margin-top: 4px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(28px, 8vw, 38px);
+      line-height: 1.05;
+    }
+
+    .login-title p {
+      margin-top: 9px;
+      color: var(--texto-secundario);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .login-form {
+      margin-top: 28px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .input-wrap {
+      height: 48px;
+      display: grid;
+      grid-template-columns: 42px 1fr 42px;
+      align-items: center;
+      border: 1px solid var(--borde);
+      border-radius: 14px;
+      background: #faf7fc;
+      transition: 0.2s ease;
+    }
+
+    .input-wrap:focus-within {
+      background: white;
+      border-color: var(--lila);
+      box-shadow: 0 0 0 3px rgba(201, 167, 232, 0.13);
+    }
+
+    .input-wrap i {
+      text-align: center;
+      color: var(--lila-profundo);
+      font-size: 13px;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--texto);
+      font-size: 12px;
+    }
+
+    .toggle-password {
+      width: 42px;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: var(--texto-secundario);
+    }
+
+    .login-button {
+      min-height: 49px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 50px;
+      background: var(--texto);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .login-button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .login-error {
+      min-height: 16px;
+      margin-top: 10px;
+      color: #d54e4e;
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .store-link {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .store-link a {
+      color: var(--rosa-fuerte);
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    @media (min-width: 700px) {
+      .login-layout {
+        grid-template-columns: 1.05fr 0.95fr;
+      }
+
+      .login-visual {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 45px;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(201, 167, 232, 0.93),
+            rgba(240, 111, 168, 0.74)
+          );
+      }
+
+      .login-visual::before,
+      .login-visual::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.18);
+      }
+
+      .login-visual::before {
+        width: 290px;
+        height: 290px;
+        top: -90px;
+        right: -70px;
+      }
+
+      .login-visual::after {
+        width: 150px;
+        height: 150px;
+        left: 35px;
+        top: 110px;
+      }
+
+      .visual-content {
+        position: relative;
+        z-index: 2;
+        color: white;
+      }
+
+      .visual-content span {
+        display: block;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 2px;
+      }
+
+      .visual-content h2 {
+        margin-top: 10px;
+        max-width: 340px;
+        font-family: "Playfair Display", serif;
+        font-size: 42px;
+        line-height: 1.05;
+      }
+
+      .visual-content p {
+        max-width: 330px;
+        margin-top: 14px;
+        font-size: 12px;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.85);
+      }
+
+      .login-panel {
+        padding: 45px;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .login-layout {
+        min-height: 620px;
+      }
+
+      .login-panel {
+        padding: 60px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="login-layout">
+
+    <section class="login-visual">
+      <div class="visual-content">
+        <span>DREAMS COSMETIC</span>
+        <h2>Administra tu tienda desde un solo lugar.</h2>
+        <p>
+          Productos, inventario, pedidos, descuentos y ventas organizados en un panel sencillo.
+        </p>
+      </div>
+    </section>
+
+    <section class="login-panel">
+
+      <div class="login-content">
+
+        <div class="brand">
+          <img src="imagenes/logo.png" alt="Dreams Cosmetic">
+
+          <div class="brand-text">
+            <span>ADMINISTRACIÓN</span>
+            <strong>Dreams Cosmetic</strong>
+          </div>
+        </div>
+
+        <div class="login-title">
+          <span>BIENVENIDO</span>
+          <h1>Iniciar sesión</h1>
+          <p>
+            Ingresa con la cuenta autorizada para administrar la tienda.
+          </p>
+        </div>
+
+        <form class="login-form" id="login-form">
+
+          <div class="form-group">
+            <label for="correo">Correo electrónico</label>
+
+            <div class="input-wrap">
+              <i class="fa-regular fa-envelope"></i>
+
+              <input
+                type="email"
+                id="correo"
+                placeholder="correo@ejemplo.com"
+                autocomplete="email"
+                required
+              >
+
+              <div></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contrasena">Contraseña</label>
+
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock"></i>
+
+              <input
+                type="password"
+                id="contrasena"
+                placeholder="Tu contraseña"
+                autocomplete="current-password"
+                required
+              >
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="toggle-password"
+                aria-label="Mostrar contraseña"
+              >
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="login-button"
+            id="login-button"
+          >
+            Entrar al panel
+          </button>
+
+        </form>
+
+        <div
+          class="login-error"
+          id="login-error"
+        ></div>
+
+        <div class="store-link">
+          <a href="index.html">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver a la tienda
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+
+  <script>
+    const loginForm =
+      document.getElementById("login-form");
+
+    const loginButton =
+      document.getElementById("login-button");
+
+    const loginError =
+      document.getElementById("login-error");
+
+    const inputPassword =
+      document.getElementById("contrasena");
+
+    const togglePassword =
+      document.getElementById("toggle-password");
+
+    togglePassword.addEventListener(
+      "click",
+      () => {
+        const visible =
+          inputPassword.type === "text";
+
+        inputPassword.type =
+          visible
+            ? "password"
+            : "text";
+
+        togglePassword.innerHTML =
+          visible
+            ? '<i class="fa-regular fa-eye"></i>'
+            : '<i class="fa-regular fa-eye-slash"></i>';
+      }
+    );
+
+    loginForm.addEventListener(
+      "submit",
+      async event => {
+        event.preventDefault();
+
+        loginError.textContent = "";
+
+        const correo =
+          document
+            .getElementById("correo")
+            .value
+            .trim();
+
+        const contrasena =
+          inputPassword.value;
+
+        loginButton.disabled = true;
+        loginButton.textContent =
+          "Ingresando...";
+
+        try {
+          await auth
+            .signInWithEmailAndPassword(
+              correo,
+              contrasena
+            );
+
+          window.location.href =
+            "admin.html";
+
+        } catch (error) {
+          loginError.textContent =
+            "Correo o contraseña incorrectos.";
+
+          loginButton.disabled = false;
+          loginButton.textContent =
+            "Entrar al panel";
+        }
+      }
+    );
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        window.location.href =
+          "admin.html";
+      }
+    });
+  </script>
+
+</body>
+</html>

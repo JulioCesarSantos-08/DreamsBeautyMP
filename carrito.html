@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
+
+  <title>Mi carrito | Dreams Cosmetic</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="imagenes/logo.png"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/carrito.css"
+  >
+</head>
+
+<body>
+
+  <header class="cart-header">
+
+    <button
+      class="back-button"
+      id="btn-volver"
+      aria-label="Volver"
+    >
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
+    <div class="cart-header-title">
+      <span>Dreams Cosmetic</span>
+      <h1>Mi carrito</h1>
+    </div>
+
+    <button
+      class="trash-button"
+      id="btn-vaciar-carrito"
+      aria-label="Vaciar carrito"
+    >
+      <i class="fa-regular fa-trash-can"></i>
+    </button>
+
+  </header>
+
+
+  <main class="cart-main">
+
+    <section
+      class="cart-products"
+      id="carrito-productos"
+    ></section>
+
+
+    <section
+      class="empty-cart"
+      id="carrito-vacio"
+      hidden
+    >
+
+      <div class="empty-cart-icon">
+        <i class="fa-solid fa-bag-shopping"></i>
+      </div>
+
+      <h2>
+        Tu carrito está vacío
+      </h2>
+
+      <p>
+        Descubre nuestros productos y agrega tus favoritos.
+      </p>
+
+      <a
+        href="index.html"
+        class="continue-shopping"
+      >
+        Ver productos
+      </a>
+
+    </section>
+
+
+    <section
+      class="cart-summary"
+      id="resumen-carrito"
+    >
+
+      <div class="summary-heading">
+        <span>RESUMEN</span>
+        <h2>Tu pedido</h2>
+      </div>
+
+      <div class="summary-row">
+        <span>Productos</span>
+        <strong id="resumen-productos">
+          0
+        </strong>
+      </div>
+
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <strong id="resumen-total">
+          $0.00
+        </strong>
+      </div>
+
+      <p class="payment-note">
+        El pago se realiza al recibir tu pedido en efectivo o transferencia.
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <div
+    class="checkout-bar"
+    id="checkout-bar"
+  >
+
+    <div class="checkout-total">
+      <span>Total</span>
+      <strong id="checkout-total">
+        $0.00
+      </strong>
+    </div>
+
+    <button
+      id="btn-continuar-pedido"
+      class="checkout-button"
+    >
+      Continuar
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+
+  </div>
+
+
+  <script src="js/carrito.js"></script>
+
+  <script>
+    function moneda(valor) {
+      return new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: "MXN"
+      }).format(Number(valor) || 0);
+    }
+
+    function escapeCarrito(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderizarPaginaCarrito() {
+      const carrito =
+        window.obtenerCarritoDreams();
+
+      const contenedor =
+        document.getElementById(
+          "carrito-productos"
+        );
+
+      const vacio =
+        document.getElementById(
+          "carrito-vacio"
+        );
+
+      const resumen =
+        document.getElementById(
+          "resumen-carrito"
+        );
+
+      const checkout =
+        document.getElementById(
+          "checkout-bar"
+        );
+
+      if (!carrito.length) {
+        contenedor.innerHTML = "";
+        vacio.hidden = false;
+        resumen.hidden = true;
+        checkout.classList.add("hidden");
+        return;
+      }
+
+      vacio.hidden = true;
+      resumen.hidden = false;
+      checkout.classList.remove("hidden");
+
+      contenedor.innerHTML =
+        carrito.map(item => `
+          <article class="cart-item">
+
+            <div class="cart-item-image">
+              <img
+                src="${escapeCarrito(item.imagen)}"
+                alt="${escapeCarrito(item.nombre)}"
+              >
+            </div>
+
+            <div class="cart-item-info">
+
+              <p class="cart-item-category">
+                ${escapeCarrito(item.categoria)}
+              </p>
+
+              <h2>
+                ${escapeCarrito(item.nombre)}
+              </h2>
+
+              <strong class="cart-item-price">
+                ${moneda(item.precio)}
+              </strong>
+
+              <div class="cart-item-bottom">
+
+                <div class="quantity-control">
+
+                  <button
+                    onclick="disminuirCantidadCarrito('${escapeCarrito(item.id)}')"
+                    aria-label="Disminuir"
+                  >
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+
+                  <span>
+                    ${Number(item.cantidad)}
+                  </span>
+
+                  <button
+                    onclick="aumentarCantidadCarrito('${escapeCarrito(item.id)}')"
+                    aria-label="Aumentar"
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+
+                </div>
+
+                <button
+                  class="remove-item"
+                  onclick="eliminarDelCarrito('${escapeCarrito(item.id)}')"
+                >
+                  Eliminar
+                </button>
+
+              </div>
+
+            </div>
+
+          </article>
+        `).join("");
+
+      const cantidad =
+        window.obtenerCantidadTotalCarrito();
+
+      const total =
+        window.obtenerTotalCarrito();
+
+      document.getElementById(
+        "resumen-productos"
+      ).textContent = cantidad;
+
+      document.getElementById(
+        "resumen-total"
+      ).textContent = moneda(total);
+
+      document.getElementById(
+        "checkout-total"
+      ).textContent = moneda(total);
+    }
+
+    document
+      .getElementById("btn-volver")
+      .addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "index.html";
+        }
+      );
+
+    document
+      .getElementById(
+        "btn-vaciar-carrito"
+      )
+      .addEventListener(
+        "click",
+        () => {
+          if (
+            window.obtenerCarritoDreams()
+              .length === 0
+          ) {
+            return;
+          }
+
+          if (
+            confirm(
+              "¿Quieres vaciar todo el carrito?"
+            )
+          ) {
+            vaciarCarrito();
+          }
+        }
+      );
+
+    document
+      .getElementById(
+        "btn-continuar-pedido"
+      )
+      .addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "finalizar.html";
+        }
+      );
+
+    window.renderizarPaginaCarrito =
+      renderizarPaginaCarrito;
+
+    renderizarPaginaCarrito();
+  </script>
+
+</body>
+</html>
