@@ -1579,20 +1579,68 @@ async function guardarProductoFormulario(
   }
 }
 
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href =
-      "login.html";
+auth.onAuthStateChanged(
+  async user => {
+    if (!user) {
+      window.location.replace(
+        "login.html"
+      );
 
-    return;
+      return;
+    }
+
+    try {
+      const usuarioSnap =
+        await db
+          .collection("usuarios")
+          .doc(user.uid)
+          .get();
+
+      if (!usuarioSnap.exists) {
+        await auth.signOut();
+
+        window.location.replace(
+          "login.html"
+        );
+
+        return;
+      }
+
+      const datosUsuario =
+        usuarioSnap.data();
+
+      const rol =
+        String(
+          datosUsuario.rol || ""
+        )
+          .trim()
+          .toLowerCase();
+
+      if (rol !== "admin") {
+        window.location.replace(
+          "index.html"
+        );
+
+        return;
+      }
+
+      document.getElementById(
+        "correo-admin"
+      ).textContent =
+        user.email ||
+        "Administrador";
+
+    } catch (error) {
+      console.error(error);
+
+      await auth.signOut();
+
+      window.location.replace(
+        "login.html"
+      );
+    }
   }
-
-  document.getElementById(
-    "correo-admin"
-  ).textContent =
-    user.email ||
-    "Administrador";
-});
+);
 
 db.collection("productos")
   .onSnapshot(

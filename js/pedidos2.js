@@ -478,11 +478,6 @@ window.addEventListener(
   }
 );
 
-
-/* =====================================================
-   SI CLIENTEAUTH YA TERMINÓ ANTES
-===================================================== */
-
 if (
   window.usuarioDreams &&
   window.perfilDreams

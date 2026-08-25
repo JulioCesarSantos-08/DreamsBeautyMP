@@ -241,6 +241,156 @@
         var(--rosa-fuerte);
     }
 
+
+    .transfer-details {
+      display: none;
+      margin-top: 14px;
+      padding: 15px;
+      border: 1px solid rgba(167, 123, 212, 0.18);
+      border-radius: 17px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(243, 234, 253, 0.72),
+          rgba(255, 240, 247, 0.72)
+        );
+    }
+
+    .checkout-section:has(
+      input[name="metodo-pago"][value="Transferencia"]:checked
+    ) .transfer-details {
+      display: block;
+    }
+
+    .transfer-details-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 13px;
+    }
+
+    .transfer-details-head > i {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: white;
+      color: var(--lila-profundo);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .transfer-details-head span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+    }
+
+    .transfer-details-head strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--texto);
+      font-size: 11px;
+    }
+
+    .transfer-bank-card {
+      overflow: hidden;
+      border: 1px solid var(--borde);
+      border-radius: 15px;
+      background: white;
+    }
+
+    .transfer-bank-row {
+      padding: 11px 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .transfer-bank-row:last-child {
+      border-bottom: none;
+    }
+
+    .transfer-bank-row span {
+      display: block;
+      color: var(--texto-secundario);
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .transfer-bank-row strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--texto);
+      font-size: 10px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .transfer-copy-button {
+      min-height: 34px;
+      padding: 0 11px;
+      border: none;
+      border-radius: 50px;
+      background: var(--texto);
+      color: white;
+      font-family: inherit;
+      font-size: 8px;
+      font-weight: 800;
+    }
+
+    .transfer-copy-message {
+      min-height: 15px;
+      margin-top: 8px;
+      color: #39885a;
+      font-size: 8px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .transfer-notice {
+      margin-top: 11px;
+      padding: 11px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--texto-secundario);
+      font-size: 8px;
+      line-height: 1.55;
+    }
+
+    .transfer-notice i {
+      margin-top: 2px;
+      flex: 0 0 auto;
+      color: var(--rosa-fuerte);
+    }
+
+    .transfer-whatsapp {
+      margin-top: 10px;
+      min-height: 42px;
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(55, 164, 109, 0.16);
+      border-radius: 50px;
+      background: #eef9f2;
+      color: #39885a;
+      font-size: 9px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
     .checkout-products {
       display: grid;
       gap: 10px;
@@ -550,6 +700,131 @@
       }
     }
 
+
+    .account-profile-card {
+      overflow: hidden;
+      border: 1px solid var(--borde);
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--fondo-suave), #ffffff);
+    }
+
+    .account-profile-main {
+      padding: 15px;
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .account-profile-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--lila-claro), var(--rosa-claro));
+      color: var(--rosa-fuerte);
+      font-size: 17px;
+    }
+
+    .account-profile-main span {
+      display: block;
+      color: var(--lila-profundo);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+    }
+
+    .account-profile-main strong {
+      display: block;
+      margin-top: 3px;
+      color: var(--texto);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .account-profile-main small {
+      display: block;
+      margin-top: 3px;
+      color: var(--texto-secundario);
+      font-size: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .account-profile-details {
+      padding: 13px 15px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .account-profile-row {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 9px;
+      align-items: center;
+    }
+
+    .account-profile-row > i {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      background: var(--lila-claro);
+      color: var(--lila-profundo);
+      font-size: 10px;
+    }
+
+    .account-profile-row span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+    }
+
+    .account-profile-row strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--texto);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    .account-profile-notice {
+      margin-top: 12px;
+      padding: 11px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      border-radius: 12px;
+      background: #eef9f2;
+      color: #52705e;
+      font-size: 8px;
+      line-height: 1.55;
+    }
+
+    .account-profile-notice i {
+      margin-top: 2px;
+      color: #39885a;
+      flex: 0 0 auto;
+    }
+
+    .legacy-account-inputs {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
     @media (max-width: 350px) {
       .checkout-page {
         padding-left: 10px;
@@ -687,7 +962,7 @@
       </h1>
 
       <p>
-        Ingresa tus datos para generar tu recibo digital.
+        Revisa los datos de tu cuenta y confirma cómo deseas pagar.
       </p>
 
     </div>
@@ -704,50 +979,106 @@
           </span>
 
           <h2>
-            Tus datos
+            Datos de tu cuenta
           </h2>
 
         </div>
 
 
-        <div class="form-grid two-columns">
+        <div class="account-profile-card">
 
-          <div class="form-group">
+          <div class="account-profile-main">
 
-            <label for="nombre-cliente">
-              Nombre completo
-            </label>
+            <div class="account-profile-icon">
+              <i class="fa-solid fa-user"></i>
+            </div>
 
-            <input
-              type="text"
-              id="nombre-cliente"
-              placeholder="Ej. María López"
-              autocomplete="name"
-            >
+            <div>
+
+              <span>
+                CLIENTE DREAMS
+              </span>
+
+              <strong id="checkout-perfil-nombre">
+                Cargando tu nombre...
+              </strong>
+
+              <small id="checkout-perfil-correo">
+                Cargando correo...
+              </small>
+
+            </div>
 
           </div>
 
 
-          <div class="form-group">
+          <div class="account-profile-details">
 
-            <label for="telefono-cliente">
-              Número de teléfono
-            </label>
+            <div class="account-profile-row">
 
-            <input
-              type="tel"
-              id="telefono-cliente"
-              placeholder="Ej. 954 123 4567"
-              autocomplete="tel"
-              inputmode="tel"
-            >
+              <i class="fa-solid fa-phone"></i>
+
+              <div>
+                <span>CELULAR</span>
+                <strong id="checkout-perfil-telefono">
+                  Cargando...
+                </strong>
+              </div>
+
+            </div>
+
+
+            <div class="account-profile-row">
+
+              <i class="fa-solid fa-location-dot"></i>
+
+              <div>
+                <span>LOCALIDAD</span>
+                <strong id="checkout-perfil-localidad">
+                  Cargando...
+                </strong>
+              </div>
+
+            </div>
 
           </div>
 
         </div>
 
 
-        <div class="form-grid">
+        <div class="account-profile-notice">
+
+          <i class="fa-solid fa-shield-heart"></i>
+
+          <span>
+            Estos datos están vinculados a tu cuenta y se usarán para identificar tu pedido. Si necesitas modificarlos, más adelante podrás hacerlo desde Mi cuenta.
+          </span>
+
+        </div>
+
+
+        <div class="legacy-account-inputs" aria-hidden="true">
+
+          <label for="nombre-cliente">Nombre</label>
+          <input
+            type="text"
+            id="nombre-cliente"
+            readonly
+            tabindex="-1"
+          >
+
+          <label for="telefono-cliente">Teléfono</label>
+          <input
+            type="tel"
+            id="telefono-cliente"
+            readonly
+            tabindex="-1"
+          >
+
+        </div>
+
+
+        <div class="form-grid" style="margin-top: 16px;">
 
           <div class="form-group">
 
@@ -849,6 +1180,106 @@
             </div>
 
           </label>
+
+        </div>
+
+
+        <div
+          class="transfer-details"
+          id="datos-transferencia"
+        >
+
+          <div class="transfer-details-head">
+
+            <i class="fa-solid fa-building-columns"></i>
+
+            <div>
+              <span>DATOS PARA TRANSFERENCIA</span>
+              <strong>Santander</strong>
+            </div>
+
+          </div>
+
+
+          <div class="transfer-bank-card">
+
+            <div class="transfer-bank-row">
+
+              <div>
+                <span>BENEFICIARIO</span>
+
+                <strong>
+                  BOGAR SUSANO HERNANDEZ SANDOVAL
+                </strong>
+              </div>
+
+            </div>
+
+
+            <div class="transfer-bank-row">
+
+              <div>
+                <span>CLABE SANTANDER</span>
+
+                <strong id="clabe-transferencia">
+                  014610567752985981
+                </strong>
+              </div>
+
+              <button
+                type="button"
+                class="transfer-copy-button"
+                id="btn-copiar-clabe"
+              >
+                Copiar
+              </button>
+
+            </div>
+
+
+            <div class="transfer-bank-row">
+
+              <div>
+                <span>CELULAR DEL NEGOCIO</span>
+
+                <strong>
+                  +52 954 130 6082
+                </strong>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="transfer-copy-message"
+            id="mensaje-copiar-clabe"
+          ></div>
+
+
+          <div class="transfer-notice">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            <span>
+              Realiza tu transferencia con los datos anteriores.
+              Conserva tu comprobante; al finalizar tu pedido podrás
+              compartir tu recibo y comunicarte directamente con Dreams Cosmetic.
+            </span>
+
+          </div>
+
+
+          <a
+            class="transfer-whatsapp"
+            href="https://wa.me/529541306082?text=Hola%20Dreams%20Cosmetic%2C%20tengo%20una%20duda%20sobre%20mi%20pedido."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+            ¿Tienes dudas? Escríbenos
+          </a>
 
         </div>
 
@@ -1057,16 +1488,70 @@
 
   </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/clienteAuth.js"></script>
+<script src="js/carrito.js"></script>
+<script src="js/pedidos2.js"></script>
+<script src="js/pedidos.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script>
+  const btnCopiarClabe =
+    document.getElementById(
+      "btn-copiar-clabe"
+    );
 
-  <script src="js/firebase.js"></script>
+  const mensajeCopiarClabe =
+    document.getElementById(
+      "mensaje-copiar-clabe"
+    );
 
-  <script src="js/carrito.js"></script>
+  btnCopiarClabe?.addEventListener(
+    "click",
+    async () => {
+      const clabe =
+        document
+          .getElementById(
+            "clabe-transferencia"
+          )
+          ?.textContent
+          .trim() ||
+        "014610567752985981";
 
-  <script src="js/pedidos.js"></script>
+      try {
+        await navigator.clipboard.writeText(
+          clabe
+        );
+
+        mensajeCopiarClabe.textContent =
+          "CLABE copiada correctamente ✓";
+
+        btnCopiarClabe.textContent =
+          "Copiada";
+
+        setTimeout(
+          () => {
+            mensajeCopiarClabe.textContent =
+              "";
+
+            btnCopiarClabe.textContent =
+              "Copiar";
+          },
+          2200
+        );
+
+      } catch (error) {
+        console.error(error);
+
+        mensajeCopiarClabe.textContent =
+          `CLABE: ${clabe}`;
+      }
+    }
+  );
+</script>
 
 </body>
 </html>

@@ -1047,6 +1047,9 @@ async function crearPedido() {
         let datosUsoCodigo =
           null;
 
+        let codigoClientePedido =
+          null;  
+
         if (
           codigoPromocionalPedido &&
           codigoPromocionalPedido
@@ -1085,6 +1088,20 @@ async function crearPedido() {
             validarCodigoReal(
               codigoReal
             );
+
+            if (
+  typeof window
+    .validarCodigoClienteTransaccion ===
+  "function"
+) {
+  codigoClientePedido =
+    await window
+      .validarCodigoClienteTransaccion(
+        transaction,
+        codigoReal.codigo
+      );
+}
+
         }
 
         const cantidadesNecesarias =
@@ -1386,6 +1403,20 @@ async function crearPedido() {
           );
         }
 
+        if (
+  codigoClientePedido &&
+  typeof window
+    .marcarCodigoClienteUsadoTransaccion ===
+  "function"
+) {
+  window
+    .marcarCodigoClienteUsadoTransaccion(
+      transaction,
+      codigoClientePedido,
+      pedidoRef.id
+    );
+}
+
         const datosCodigoPedido =
           codigoReal
             ? {
@@ -1440,15 +1471,38 @@ async function crearPedido() {
             0
           );
 
+          const cuentaCliente =
+  typeof window
+    .obtenerDatosCuentaParaPedido ===
+  "function"
+    ? window
+        .obtenerDatosCuentaParaPedido()
+    : null;
+
         transaction.set(
           pedidoRef,
           {
-            folio,
-            cliente:
-              cliente.nombre,
-            telefono:
-              cliente.telefono,
-            notas,
+folio,
+
+clienteUid:
+  cuentaCliente?.uid ||
+  "",
+
+clienteEmail:
+  cuentaCliente?.email ||
+  "",
+
+clienteLocalidad:
+  cuentaCliente?.localidad ||
+  "",
+
+cliente:
+  cliente.nombre,
+
+telefono:
+  cliente.telefono,
+
+notas,
             metodoPago,
             productos:
               productosFinales,
