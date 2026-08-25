@@ -21,8 +21,16 @@
     href="imagenes/logo.png"
   >
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
@@ -53,8 +61,15 @@
     </button>
 
     <div class="cart-header-title">
-      <span>Dreams Cosmetic</span>
-      <h1>Mi carrito</h1>
+
+      <span>
+        Dreams Cosmetic
+      </span>
+
+      <h1>
+        Mi carrito
+      </h1>
+
     </div>
 
     <button
@@ -105,28 +120,209 @@
 
 
     <section
+      class="promo-code-section"
+      id="seccion-codigo-promocional"
+    >
+
+      <div class="promo-code-heading">
+
+        <div class="promo-code-heading-icon">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+
+        <div>
+
+          <span>
+            PROMOCIÓN
+          </span>
+
+          <h2>
+            ¿Tienes un código?
+          </h2>
+
+          <p>
+            Ingresa tu código promocional para obtener tu beneficio.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="promo-code-form"
+        id="formulario-codigo-promocional"
+      >
+
+        <div class="promo-code-input-wrap">
+
+          <i class="fa-solid fa-ticket"></i>
+
+          <input
+            type="text"
+            id="codigo-promocional-input"
+            placeholder="Ej. DREAMS2026"
+            maxlength="30"
+            autocomplete="off"
+            spellcheck="false"
+          >
+
+        </div>
+
+        <button
+          type="button"
+          id="btn-aplicar-codigo"
+          class="promo-code-button"
+        >
+          Aplicar
+        </button>
+
+      </div>
+
+
+      <div
+        class="promo-code-message"
+        id="mensaje-codigo-promocional"
+        hidden
+      ></div>
+
+
+      <div
+        class="promo-code-applied"
+        id="codigo-promocional-aplicado"
+        hidden
+      >
+
+        <div class="promo-applied-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div class="promo-applied-info">
+
+          <span>
+            CÓDIGO APLICADO
+          </span>
+
+          <strong id="codigo-aplicado-nombre"></strong>
+
+          <p id="codigo-aplicado-beneficio"></p>
+
+        </div>
+
+        <button
+          type="button"
+          id="btn-quitar-codigo"
+          class="promo-remove-button"
+          aria-label="Quitar código"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section
       class="cart-summary"
       id="resumen-carrito"
     >
 
       <div class="summary-heading">
-        <span>RESUMEN</span>
-        <h2>Tu pedido</h2>
+
+        <span>
+          RESUMEN
+        </span>
+
+        <h2>
+          Tu pedido
+        </h2>
+
       </div>
 
+
       <div class="summary-row">
-        <span>Productos</span>
+
+        <span>
+          Productos
+        </span>
+
         <strong id="resumen-productos">
           0
         </strong>
+
       </div>
 
+
+      <div class="summary-row">
+
+        <span>
+          Subtotal
+        </span>
+
+        <strong id="resumen-subtotal">
+          $0.00
+        </strong>
+
+      </div>
+
+
+      <div
+        class="summary-row discount-summary-row"
+        id="fila-descuento"
+        hidden
+      >
+
+        <span>
+
+          <i class="fa-solid fa-tag"></i>
+
+          Descuento
+
+          <small id="resumen-codigo-nombre"></small>
+
+        </span>
+
+        <strong id="resumen-descuento">
+          -$0.00
+        </strong>
+
+      </div>
+
+
+      <div
+        class="summary-row gift-summary-row"
+        id="fila-regalo"
+        hidden
+      >
+
+        <span>
+
+          <i class="fa-solid fa-gift"></i>
+
+          Artículo gratis
+
+        </span>
+
+        <strong id="resumen-regalo">
+          Promoción
+        </strong>
+
+      </div>
+
+
       <div class="summary-row total-row">
-        <span>Total</span>
+
+        <span>
+          Total
+        </span>
+
         <strong id="resumen-total">
           $0.00
         </strong>
+
       </div>
+
 
       <p class="payment-note">
         El pago se realiza al recibir tu pedido en efectivo o transferencia.
@@ -143,10 +339,15 @@
   >
 
     <div class="checkout-total">
-      <span>Total</span>
+
+      <span>
+        Total
+      </span>
+
       <strong id="checkout-total">
         $0.00
       </strong>
+
     </div>
 
     <button
@@ -160,14 +361,26 @@
   </div>
 
 
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+
   <script src="js/carrito.js"></script>
+
 
   <script>
     function moneda(valor) {
-      return new Intl.NumberFormat("es-MX", {
-        style: "currency",
-        currency: "MXN"
-      }).format(Number(valor) || 0);
+      return new Intl.NumberFormat(
+        "es-MX",
+        {
+          style: "currency",
+          currency: "MXN"
+        }
+      ).format(
+        Number(valor) || 0
+      );
     }
 
     function escapeCarrito(valor) {
@@ -203,41 +416,79 @@
           "checkout-bar"
         );
 
+      const seccionCodigo =
+        document.getElementById(
+          "seccion-codigo-promocional"
+        );
+
       if (!carrito.length) {
-        contenedor.innerHTML = "";
-        vacio.hidden = false;
-        resumen.hidden = true;
-        checkout.classList.add("hidden");
+        contenedor.innerHTML =
+          "";
+
+        vacio.hidden =
+          false;
+
+        resumen.hidden =
+          true;
+
+        seccionCodigo.hidden =
+          true;
+
+        checkout.classList.add(
+          "hidden"
+        );
+
         return;
       }
 
-      vacio.hidden = true;
-      resumen.hidden = false;
-      checkout.classList.remove("hidden");
+      vacio.hidden =
+        true;
+
+      resumen.hidden =
+        false;
+
+      seccionCodigo.hidden =
+        false;
+
+      checkout.classList.remove(
+        "hidden"
+      );
 
       contenedor.innerHTML =
         carrito.map(item => `
           <article class="cart-item">
 
             <div class="cart-item-image">
+
               <img
-                src="${escapeCarrito(item.imagen)}"
-                alt="${escapeCarrito(item.nombre)}"
+                src="${escapeCarrito(
+                  item.imagen
+                )}"
+                alt="${escapeCarrito(
+                  item.nombre
+                )}"
               >
+
             </div>
 
             <div class="cart-item-info">
 
               <p class="cart-item-category">
-                ${escapeCarrito(item.categoria)}
+                ${escapeCarrito(
+                  item.categoria
+                )}
               </p>
 
               <h2>
-                ${escapeCarrito(item.nombre)}
+                ${escapeCarrito(
+                  item.nombre
+                )}
               </h2>
 
               <strong class="cart-item-price">
-                ${moneda(item.precio)}
+                ${moneda(
+                  item.precio
+                )}
               </strong>
 
               <div class="cart-item-bottom">
@@ -245,18 +496,24 @@
                 <div class="quantity-control">
 
                   <button
-                    onclick="disminuirCantidadCarrito('${escapeCarrito(item.id)}')"
+                    onclick="disminuirCantidadCarrito('${escapeCarrito(
+                      item.id
+                    )}')"
                     aria-label="Disminuir"
                   >
                     <i class="fa-solid fa-minus"></i>
                   </button>
 
                   <span>
-                    ${Number(item.cantidad)}
+                    ${Number(
+                      item.cantidad
+                    )}
                   </span>
 
                   <button
-                    onclick="aumentarCantidadCarrito('${escapeCarrito(item.id)}')"
+                    onclick="aumentarCantidadCarrito('${escapeCarrito(
+                      item.id
+                    )}')"
                     aria-label="Aumentar"
                   >
                     <i class="fa-solid fa-plus"></i>
@@ -266,7 +523,9 @@
 
                 <button
                   class="remove-item"
-                  onclick="eliminarDelCarrito('${escapeCarrito(item.id)}')"
+                  onclick="eliminarDelCarrito('${escapeCarrito(
+                    item.id
+                  )}')"
                 >
                   Eliminar
                 </button>
@@ -279,26 +538,53 @@
         `).join("");
 
       const cantidad =
-        window.obtenerCantidadTotalCarrito();
+        window
+          .obtenerCantidadTotalCarrito();
 
-      const total =
-        window.obtenerTotalCarrito();
+      const subtotal =
+        window
+          .obtenerTotalCarrito();
 
       document.getElementById(
         "resumen-productos"
-      ).textContent = cantidad;
+      ).textContent =
+        cantidad;
 
       document.getElementById(
-        "resumen-total"
-      ).textContent = moneda(total);
+        "resumen-subtotal"
+      ).textContent =
+        moneda(
+          subtotal
+        );
 
-      document.getElementById(
-        "checkout-total"
-      ).textContent = moneda(total);
+      if (
+        typeof window
+          .actualizarResumenCodigoPromocional ===
+        "function"
+      ) {
+        window
+          .actualizarResumenCodigoPromocional();
+      } else {
+        document.getElementById(
+          "resumen-total"
+        ).textContent =
+          moneda(
+            subtotal
+          );
+
+        document.getElementById(
+          "checkout-total"
+        ).textContent =
+          moneda(
+            subtotal
+          );
+      }
     }
 
     document
-      .getElementById("btn-volver")
+      .getElementById(
+        "btn-volver"
+      )
       .addEventListener(
         "click",
         () => {
@@ -315,7 +601,8 @@
         "click",
         () => {
           if (
-            window.obtenerCarritoDreams()
+            window
+              .obtenerCarritoDreams()
               .length === 0
           ) {
             return;

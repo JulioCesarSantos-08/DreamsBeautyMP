@@ -2,15 +2,32 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#ffffff">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#ffffff"
+  >
 
   <title>Panel | Dreams Cosmetic</title>
 
-  <link rel="icon" type="image/png" href="imagenes/logo.png">
+  <link
+    rel="icon"
+    type="image/png"
+    href="imagenes/logo.png"
+  >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
 
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
@@ -22,21 +39,33 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   >
 
-  <link rel="stylesheet" href="css/admin.css">
+  <link
+    rel="stylesheet"
+    href="css/admin.css"
+  >
 </head>
 
 <body>
 
-  <aside class="sidebar" id="sidebar">
+  <aside
+    class="sidebar"
+    id="sidebar"
+  >
 
     <div class="sidebar-brand">
-      <img src="imagenes/logo.png" alt="Dreams Cosmetic">
+
+      <img
+        src="imagenes/logo.png"
+        alt="Dreams Cosmetic"
+      >
 
       <div>
         <span>DREAMS</span>
         <strong>Cosmetic</strong>
       </div>
+
     </div>
+
 
     <nav class="sidebar-nav">
 
@@ -48,6 +77,7 @@
         <span>Inicio</span>
       </button>
 
+
       <button
         class="nav-option"
         data-section="productos"
@@ -55,6 +85,7 @@
         <i class="fa-solid fa-box-open"></i>
         <span>Productos</span>
       </button>
+
 
       <button
         class="nav-option"
@@ -64,6 +95,7 @@
         <span>Pedidos</span>
       </button>
 
+
       <button
         class="nav-option"
         data-section="descuentos"
@@ -72,7 +104,17 @@
         <span>Descuentos</span>
       </button>
 
+
+      <button
+        class="nav-option"
+        data-section="codigos"
+      >
+        <i class="fa-solid fa-ticket"></i>
+        <span>Códigos</span>
+      </button>
+
     </nav>
+
 
     <div class="sidebar-footer">
 
@@ -91,7 +133,10 @@
   </aside>
 
 
-  <div class="admin-overlay" id="admin-overlay"></div>
+  <div
+    class="admin-overlay"
+    id="admin-overlay"
+  ></div>
 
 
   <div class="admin-page">
@@ -105,20 +150,34 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+
       <div class="header-title">
-        <span>DREAMS COSMETIC</span>
-        <h1 id="titulo-seccion">Panel general</h1>
+
+        <span>
+          DREAMS COSMETIC
+        </span>
+
+        <h1 id="titulo-seccion">
+          Panel general
+        </h1>
+
       </div>
 
+
       <div class="header-user">
+
         <div class="user-icon">
           <i class="fa-solid fa-user"></i>
         </div>
 
         <div class="user-info">
           <span>Administrador</span>
-          <strong id="correo-admin">Cargando...</strong>
+
+          <strong id="correo-admin">
+            Cargando...
+          </strong>
         </div>
+
       </div>
 
     </header>
@@ -126,63 +185,103 @@
 
     <main class="admin-main">
 
-
       <section
         class="admin-section active"
         id="seccion-inicio"
       >
 
         <div class="section-heading">
+
           <div>
-            <span>RESUMEN</span>
-            <h2>Tu tienda hoy</h2>
+
+            <span>
+              RESUMEN
+            </span>
+
+            <h2>
+              Tu tienda hoy
+            </h2>
+
           </div>
+
         </div>
+
 
         <div class="stats-grid">
 
           <article class="stat-card">
+
             <div class="stat-icon pink">
               <i class="fa-solid fa-money-bill-trend-up"></i>
             </div>
 
             <div>
-              <span>Ventas de hoy</span>
-              <strong id="ventas-hoy">$0.00</strong>
+              <span>
+                Ventas de hoy
+              </span>
+
+              <strong id="ventas-hoy">
+                $0.00
+              </strong>
             </div>
+
           </article>
 
+
           <article class="stat-card">
+
             <div class="stat-icon purple">
               <i class="fa-solid fa-receipt"></i>
             </div>
 
             <div>
-              <span>Pedidos pendientes</span>
-              <strong id="pedidos-pendientes">0</strong>
+              <span>
+                Pedidos pendientes
+              </span>
+
+              <strong id="pedidos-pendientes">
+                0
+              </strong>
             </div>
+
           </article>
 
+
           <article class="stat-card">
+
             <div class="stat-icon yellow">
               <i class="fa-solid fa-box"></i>
             </div>
 
             <div>
-              <span>Productos</span>
-              <strong id="total-productos">0</strong>
+              <span>
+                Productos
+              </span>
+
+              <strong id="total-productos">
+                0
+              </strong>
             </div>
+
           </article>
 
+
           <article class="stat-card">
+
             <div class="stat-icon red">
               <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
 
             <div>
-              <span>Sin stock</span>
-              <strong id="productos-agotados">0</strong>
+              <span>
+                Sin stock
+              </span>
+
+              <strong id="productos-agotados">
+                0
+              </strong>
             </div>
+
           </article>
 
         </div>
@@ -193,9 +292,17 @@
           <section class="dashboard-card">
 
             <div class="dashboard-card-header">
+
               <div>
-                <span>PEDIDOS</span>
-                <h3>Recientes</h3>
+
+                <span>
+                  PEDIDOS
+                </span>
+
+                <h3>
+                  Recientes
+                </h3>
+
               </div>
 
               <button
@@ -204,7 +311,9 @@
               >
                 Ver todos
               </button>
+
             </div>
+
 
             <div
               class="recent-orders"
@@ -217,9 +326,17 @@
           <section class="dashboard-card">
 
             <div class="dashboard-card-header">
+
               <div>
-                <span>INVENTARIO</span>
-                <h3>Stock bajo</h3>
+
+                <span>
+                  INVENTARIO
+                </span>
+
+                <h3>
+                  Stock bajo
+                </h3>
+
               </div>
 
               <button
@@ -228,7 +345,9 @@
               >
                 Ver inventario
               </button>
+
             </div>
+
 
             <div
               class="low-stock-list"
@@ -250,9 +369,17 @@
         <div class="section-heading actions-heading">
 
           <div>
-            <span>INVENTARIO</span>
-            <h2>Productos</h2>
+
+            <span>
+              INVENTARIO
+            </span>
+
+            <h2>
+              Productos
+            </h2>
+
           </div>
+
 
           <button
             class="primary-admin-button"
@@ -264,9 +391,11 @@
 
         </div>
 
+
         <div class="admin-toolbar">
 
           <div class="admin-search">
+
             <i class="fa-solid fa-magnifying-glass"></i>
 
             <input
@@ -274,15 +403,28 @@
               id="buscar-producto-admin"
               placeholder="Buscar producto..."
             >
+
           </div>
 
+
           <select id="filtro-stock-admin">
-            <option value="todos">Todo el inventario</option>
-            <option value="disponibles">Disponibles</option>
-            <option value="agotados">Agotados</option>
+
+            <option value="todos">
+              Todo el inventario
+            </option>
+
+            <option value="disponibles">
+              Disponibles
+            </option>
+
+            <option value="agotados">
+              Agotados
+            </option>
+
           </select>
 
         </div>
+
 
         <div
           class="product-admin-grid"
@@ -298,11 +440,21 @@
       >
 
         <div class="section-heading">
+
           <div>
-            <span>VENTAS</span>
-            <h2>Pedidos</h2>
+
+            <span>
+              VENTAS
+            </span>
+
+            <h2>
+              Pedidos
+            </h2>
+
           </div>
+
         </div>
+
 
         <div class="order-tabs">
 
@@ -313,12 +465,14 @@
             Todos
           </button>
 
+
           <button
             class="order-tab"
             data-estado="pendiente"
           >
             Pendientes
           </button>
+
 
           <button
             class="order-tab"
@@ -327,12 +481,14 @@
             Preparados
           </button>
 
+
           <button
             class="order-tab"
             data-estado="pagado"
           >
             Pagados
           </button>
+
 
           <button
             class="order-tab"
@@ -343,6 +499,7 @@
 
         </div>
 
+
         <div
           class="orders-admin-list"
           id="lista-pedidos-admin"
@@ -351,45 +508,239 @@
       </section>
 
 
-<section
-  class="admin-section"
-  id="seccion-descuentos"
->
+      <section
+        class="admin-section"
+        id="seccion-descuentos"
+      >
 
-  <div class="section-heading actions-heading">
+        <div class="section-heading actions-heading">
 
-    <div>
-      <span>PROMOCIONES</span>
-      <h2>Descuentos</h2>
-    </div>
+          <div>
 
-    <button
-      class="primary-admin-button"
-      id="btn-nuevo-descuento"
-    >
-      <i class="fa-solid fa-plus"></i>
-      Nuevo descuento
-    </button>
+            <span>
+              PROMOCIONES
+            </span>
 
-  </div>
+            <h2>
+              Descuentos
+            </h2>
 
-  <div class="discount-info-box">
-    <div>
-      <i class="fa-solid fa-tags"></i>
-    </div>
+          </div>
 
-    <p>
-      Puedes aplicar promociones temporales a un producto específico o a todos los productos de una categoría.
-    </p>
-  </div>
 
-  <div
-    class="discount-admin-grid"
-    id="lista-descuentos-admin"
-  ></div>
+          <button
+            class="primary-admin-button"
+            id="btn-nuevo-descuento"
+          >
+            <i class="fa-solid fa-plus"></i>
+            Nuevo descuento
+          </button>
 
-</section>
+        </div>
 
+
+        <div class="discount-info-box">
+
+          <div>
+            <i class="fa-solid fa-tags"></i>
+          </div>
+
+          <p>
+            Puedes aplicar promociones temporales a un producto específico o a todos los productos de una categoría.
+          </p>
+
+        </div>
+
+
+        <div
+          class="discount-admin-grid"
+          id="lista-descuentos-admin"
+        ></div>
+
+      </section>
+
+
+      <section
+        class="admin-section"
+        id="seccion-codigos"
+      >
+
+        <div class="section-heading actions-heading">
+
+          <div>
+
+            <span>
+              CUPONES Y BENEFICIOS
+            </span>
+
+            <h2>
+              Códigos promocionales
+            </h2>
+
+          </div>
+
+
+          <button
+            class="primary-admin-button"
+            id="btn-nuevo-codigo"
+          >
+            <i class="fa-solid fa-plus"></i>
+            Nuevo código
+          </button>
+
+        </div>
+
+
+        <div class="codes-info-box">
+
+          <div class="codes-info-icon">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+
+          <div>
+
+            <strong>
+              Crea promociones canjeables
+            </strong>
+
+            <p>
+              Define códigos con descuentos, productos gratis, fecha de vigencia y cantidad máxima de usos.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="codes-summary-grid">
+
+          <article class="code-summary-card">
+
+            <div class="code-summary-icon">
+              <i class="fa-solid fa-ticket"></i>
+            </div>
+
+            <div>
+              <span>
+                Códigos creados
+              </span>
+
+              <strong id="total-codigos">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="code-summary-card">
+
+            <div class="code-summary-icon active">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+              <span>
+                Activos
+              </span>
+
+              <strong id="codigos-activos">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="code-summary-card">
+
+            <div class="code-summary-icon used">
+              <i class="fa-solid fa-gift"></i>
+            </div>
+
+            <div>
+              <span>
+                Canjes realizados
+              </span>
+
+              <strong id="total-canjes-codigos">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="code-summary-card">
+
+            <div class="code-summary-icon exhausted">
+              <i class="fa-solid fa-hourglass-end"></i>
+            </div>
+
+            <div>
+              <span>
+                Agotados
+              </span>
+
+              <strong id="codigos-agotados">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+        </div>
+
+
+        <div class="codes-toolbar">
+
+          <div class="admin-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              type="search"
+              id="buscar-codigo-admin"
+              placeholder="Buscar código..."
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <select id="filtro-codigos-admin">
+
+            <option value="todos">
+              Todos los códigos
+            </option>
+
+            <option value="activos">
+              Activos
+            </option>
+
+            <option value="agotados">
+              Agotados
+            </option>
+
+            <option value="desactivados">
+              Desactivados
+            </option>
+
+            <option value="finalizados">
+              Finalizados
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="codes-admin-grid"
+          id="lista-codigos-admin"
+        ></div>
+
+      </section>
 
     </main>
 
@@ -408,12 +759,19 @@
   >
 
     <div class="modal-header">
+
       <div>
-        <span>INVENTARIO</span>
+
+        <span>
+          INVENTARIO
+        </span>
+
         <h2 id="titulo-modal-producto">
           Nuevo producto
         </h2>
+
       </div>
+
 
       <button
         class="modal-close"
@@ -421,7 +779,9 @@
       >
         <i class="fa-solid fa-xmark"></i>
       </button>
+
     </div>
+
 
     <form
       class="modal-form"
@@ -433,6 +793,7 @@
         id="producto-id"
       >
 
+
       <div class="image-upload-box">
 
         <div
@@ -443,8 +804,11 @@
           <span>Sin imagen</span>
         </div>
 
+
         <label class="upload-button">
+
           <i class="fa-solid fa-cloud-arrow-up"></i>
+
           Adjuntar imagen
 
           <input
@@ -452,7 +816,9 @@
             id="imagen-producto"
             accept="image/*"
           >
+
         </label>
+
 
         <span
           class="upload-status"
@@ -465,6 +831,7 @@
       <div class="form-grid">
 
         <div class="form-group">
+
           <label for="producto-nombre">
             Nombre
           </label>
@@ -474,9 +841,12 @@
             id="producto-nombre"
             required
           >
+
         </div>
 
+
         <div class="form-group">
+
           <label for="producto-categoria">
             Categoría
           </label>
@@ -486,9 +856,12 @@
             id="producto-categoria"
             required
           >
+
         </div>
 
+
         <div class="form-group">
+
           <label for="producto-precio">
             Precio
           </label>
@@ -500,9 +873,12 @@
             step="0.01"
             required
           >
+
         </div>
 
+
         <div class="form-group">
+
           <label for="producto-stock">
             Stock
           </label>
@@ -513,9 +889,12 @@
             min="0"
             required
           >
+
         </div>
 
+
         <div class="form-group full">
+
           <label for="producto-descripcion">
             Descripción
           </label>
@@ -524,6 +903,7 @@
             id="producto-descripcion"
             required
           ></textarea>
+
         </div>
 
       </div>
@@ -539,6 +919,7 @@
           Cancelar
         </button>
 
+
         <button
           type="submit"
           class="primary-admin-button"
@@ -553,198 +934,724 @@
 
   </section>
 
-<section
-  class="admin-modal discount-modal"
-  id="modal-descuento"
->
 
-  <div class="modal-header">
-
-    <div>
-      <span>PROMOCIONES</span>
-      <h2>Nuevo descuento</h2>
-    </div>
-
-    <button
-      class="modal-close"
-      id="cerrar-modal-descuento"
-      type="button"
-    >
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-
-  </div>
-
-  <form
-    class="modal-form"
-    id="form-descuento"
+  <section
+    class="admin-modal discount-modal"
+    id="modal-descuento"
   >
 
-    <div class="discount-type-selector">
+    <div class="modal-header">
 
-      <label class="discount-type-option">
+      <div>
 
-        <input
-          type="radio"
-          name="tipo-descuento"
-          value="producto"
-          checked
-        >
+        <span>
+          PROMOCIONES
+        </span>
 
-        <div>
-          <i class="fa-solid fa-box"></i>
+        <h2>
+          Nuevo descuento
+        </h2>
 
-          <span>
-            <strong>Producto</strong>
-            <small>Aplicar a un producto</small>
-          </span>
-        </div>
+      </div>
 
-      </label>
 
-      <label class="discount-type-option">
-
-        <input
-          type="radio"
-          name="tipo-descuento"
-          value="categoria"
-        >
-
-        <div>
-          <i class="fa-solid fa-layer-group"></i>
-
-          <span>
-            <strong>Categoría</strong>
-            <small>Aplicar a toda una categoría</small>
-          </span>
-        </div>
-
-      </label>
+      <button
+        class="modal-close"
+        id="cerrar-modal-descuento"
+        type="button"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
     </div>
 
-    <div
-      class="form-group"
-      id="grupo-descuento-producto"
+
+    <form
+      class="modal-form"
+      id="form-descuento"
     >
-      <label for="descuento-producto">
-        Producto
-      </label>
 
-      <select
-        id="descuento-producto"
-      ></select>
-    </div>
+      <div class="discount-type-selector">
 
-    <div
-      class="form-group"
-      id="grupo-descuento-categoria"
-      hidden
-    >
-      <label for="descuento-categoria">
-        Categoría
-      </label>
+        <label class="discount-type-option">
 
-      <select
-        id="descuento-categoria"
-      ></select>
-    </div>
+          <input
+            type="radio"
+            name="tipo-descuento"
+            value="producto"
+            checked
+          >
 
-    <div class="form-grid">
+          <div>
 
-      <div class="form-group">
-        <label for="descuento-porcentaje">
-          Porcentaje
+            <i class="fa-solid fa-box"></i>
+
+            <span>
+              <strong>
+                Producto
+              </strong>
+
+              <small>
+                Aplicar a un producto
+              </small>
+            </span>
+
+          </div>
+
         </label>
 
-        <div class="percentage-input">
+
+        <label class="discount-type-option">
+
           <input
-            type="number"
-            id="descuento-porcentaje"
-            min="1"
-            max="100"
-            step="1"
-            placeholder="20"
+            type="radio"
+            name="tipo-descuento"
+            value="categoria"
+          >
+
+          <div>
+
+            <i class="fa-solid fa-layer-group"></i>
+
+            <span>
+              <strong>
+                Categoría
+              </strong>
+
+              <small>
+                Aplicar a toda una categoría
+              </small>
+            </span>
+
+          </div>
+
+        </label>
+
+      </div>
+
+
+      <div
+        class="form-group"
+        id="grupo-descuento-producto"
+      >
+
+        <label for="descuento-producto">
+          Producto
+        </label>
+
+        <select
+          id="descuento-producto"
+        ></select>
+
+      </div>
+
+
+      <div
+        class="form-group"
+        id="grupo-descuento-categoria"
+        hidden
+      >
+
+        <label for="descuento-categoria">
+          Categoría
+        </label>
+
+        <select
+          id="descuento-categoria"
+        ></select>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label for="descuento-porcentaje">
+            Porcentaje
+          </label>
+
+          <div class="percentage-input">
+
+            <input
+              type="number"
+              id="descuento-porcentaje"
+              min="1"
+              max="100"
+              step="1"
+              placeholder="20"
+              required
+            >
+
+            <span>
+              %
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div></div>
+
+
+        <div class="form-group">
+
+          <label for="descuento-inicio">
+            Inicio
+          </label>
+
+          <input
+            type="datetime-local"
+            id="descuento-inicio"
             required
           >
 
-          <span>%</span>
         </div>
+
+
+        <div class="form-group">
+
+          <label for="descuento-fin">
+            Finaliza
+          </label>
+
+          <input
+            type="datetime-local"
+            id="descuento-fin"
+            required
+          >
+
+        </div>
+
       </div>
 
-      <div></div>
 
-      <div class="form-group">
-        <label for="descuento-inicio">
-          Inicio
-        </label>
+      <div
+        class="discount-preview"
+        id="preview-descuento"
+      >
 
-        <input
-          type="datetime-local"
-          id="descuento-inicio"
-          required
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+        <div>
+
+          <strong>
+            Configura tu promoción
+          </strong>
+
+          <span>
+            Aquí aparecerá un resumen antes de guardarla.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="secondary-admin-button"
+          id="cancelar-descuento"
         >
-      </div>
+          Cancelar
+        </button>
 
-      <div class="form-group">
-        <label for="descuento-fin">
-          Finaliza
-        </label>
 
-        <input
-          type="datetime-local"
-          id="descuento-fin"
-          required
+        <button
+          type="submit"
+          class="primary-admin-button"
+          id="guardar-descuento"
         >
+          Crear descuento
+        </button>
+
       </div>
 
-    </div>
+    </form>
 
-    <div
-      class="discount-preview"
-      id="preview-descuento"
-    >
-      <i class="fa-solid fa-wand-magic-sparkles"></i>
+  </section>
+
+
+  <section
+    class="admin-modal code-modal"
+    id="modal-codigo"
+  >
+
+    <div class="modal-header">
 
       <div>
-        <strong>Configura tu promoción</strong>
+
         <span>
-          Aquí aparecerá un resumen antes de guardarla.
+          CÓDIGOS PROMOCIONALES
         </span>
+
+        <h2 id="titulo-modal-codigo">
+          Nuevo código
+        </h2>
+
       </div>
-    </div>
 
-    <div class="modal-actions">
 
       <button
+        class="modal-close"
+        id="cerrar-modal-codigo"
         type="button"
-        class="secondary-admin-button"
-        id="cancelar-descuento"
       >
-        Cancelar
-      </button>
-
-      <button
-        type="submit"
-        class="primary-admin-button"
-        id="guardar-descuento"
-      >
-        Crear descuento
+        <i class="fa-solid fa-xmark"></i>
       </button>
 
     </div>
 
-  </form>
 
-</section>
+    <form
+      class="modal-form"
+      id="form-codigo"
+    >
+
+      <input
+        type="hidden"
+        id="codigo-id"
+      >
+
+
+      <div class="code-name-box">
+
+        <div class="form-group">
+
+          <label for="codigo-nombre">
+            Código
+          </label>
+
+          <div class="code-input-wrap">
+
+            <i class="fa-solid fa-ticket"></i>
+
+            <input
+              type="text"
+              id="codigo-nombre"
+              placeholder="Ej. DREAMS2026"
+              maxlength="30"
+              autocomplete="off"
+              required
+            >
+
+          </div>
+
+          <small class="code-field-help">
+            El cliente deberá escribir este código exactamente para obtener el beneficio.
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="code-form-section">
+
+        <div class="code-form-heading">
+
+          <span>
+            BENEFICIO
+          </span>
+
+          <h3>
+            ¿Qué recibirá el cliente?
+          </h3>
+
+        </div>
+
+
+        <div class="code-benefit-selector">
+
+          <label class="code-benefit-option">
+
+            <input
+              type="radio"
+              name="tipo-beneficio-codigo"
+              value="porcentaje"
+              checked
+            >
+
+            <div>
+
+              <i class="fa-solid fa-percent"></i>
+
+              <span>
+
+                <strong>
+                  Descuento
+                </strong>
+
+                <small>
+                  Aplica un porcentaje
+                </small>
+
+              </span>
+
+            </div>
+
+          </label>
+
+
+          <label class="code-benefit-option">
+
+            <input
+              type="radio"
+              name="tipo-beneficio-codigo"
+              value="productoGratis"
+            >
+
+            <div>
+
+              <i class="fa-solid fa-gift"></i>
+
+              <span>
+
+                <strong>
+                  Artículo gratis
+                </strong>
+
+                <small>
+                  Regala un producto
+                </small>
+
+              </span>
+
+            </div>
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="code-form-section"
+        id="configuracion-codigo-porcentaje"
+      >
+
+        <div class="code-form-heading">
+
+          <span>
+            DESCUENTO
+          </span>
+
+          <h3>
+            Configura el porcentaje
+          </h3>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="codigo-porcentaje">
+            Porcentaje de descuento
+          </label>
+
+          <div class="percentage-input">
+
+            <input
+              type="number"
+              id="codigo-porcentaje"
+              min="1"
+              max="100"
+              step="1"
+              placeholder="20"
+            >
+
+            <span>
+              %
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Aplicar descuento a
+          </label>
+
+          <div class="code-scope-selector">
+
+            <label class="code-scope-option">
+
+              <input
+                type="radio"
+                name="alcance-codigo"
+                value="tienda"
+                checked
+              >
+
+              <div>
+                <i class="fa-solid fa-store"></i>
+                <span>Toda la tienda</span>
+              </div>
+
+            </label>
+
+
+            <label class="code-scope-option">
+
+              <input
+                type="radio"
+                name="alcance-codigo"
+                value="categoria"
+              >
+
+              <div>
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Categoría</span>
+              </div>
+
+            </label>
+
+
+            <label class="code-scope-option">
+
+              <input
+                type="radio"
+                name="alcance-codigo"
+                value="producto"
+              >
+
+              <div>
+                <i class="fa-solid fa-box"></i>
+                <span>Producto</span>
+              </div>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="form-group"
+          id="grupo-codigo-categoria"
+          hidden
+        >
+
+          <label for="codigo-categoria">
+            Categoría
+          </label>
+
+          <select id="codigo-categoria"></select>
+
+        </div>
+
+
+        <div
+          class="form-group"
+          id="grupo-codigo-producto"
+          hidden
+        >
+
+          <label for="codigo-producto">
+            Producto
+          </label>
+
+          <select id="codigo-producto"></select>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="code-form-section"
+        id="configuracion-codigo-regalo"
+        hidden
+      >
+
+        <div class="code-form-heading">
+
+          <span>
+            REGALO
+          </span>
+
+          <h3>
+            Selecciona el artículo gratis
+          </h3>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="codigo-producto-gratis">
+            Producto que se regalará
+          </label>
+
+          <select id="codigo-producto-gratis"></select>
+
+          <small class="code-field-help">
+            El producto se agregará al pedido con precio de $0.00 y descontará una unidad del stock.
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="code-form-section">
+
+        <div class="code-form-heading">
+
+          <span>
+            CANJES
+          </span>
+
+          <h3>
+            Define cuántas veces se puede usar
+          </h3>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="codigo-limite-usos">
+            Límite total de canjes
+          </label>
+
+          <input
+            type="number"
+            id="codigo-limite-usos"
+            min="1"
+            step="1"
+            placeholder="3"
+            required
+          >
+
+          <small class="code-field-help">
+            Ejemplo: si escribes 3, el código dejará de funcionar después del tercer pedido que lo utilice.
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="code-form-section">
+
+        <div class="code-form-heading">
+
+          <span>
+            VIGENCIA
+          </span>
+
+          <h3>
+            Periodo en que podrá utilizarse
+          </h3>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="codigo-inicio">
+              Inicio
+            </label>
+
+            <input
+              type="datetime-local"
+              id="codigo-inicio"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label for="codigo-fin">
+              Finaliza
+            </label>
+
+            <input
+              type="datetime-local"
+              id="codigo-fin"
+              required
+            >
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="code-preview"
+        id="preview-codigo"
+      >
+
+        <div class="code-preview-icon">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+
+        <div>
+
+          <strong>
+            Configura tu código
+          </strong>
+
+          <span>
+            Aquí aparecerá un resumen antes de guardarlo.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="secondary-admin-button"
+          id="cancelar-codigo"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="primary-admin-button"
+          id="guardar-codigo"
+        >
+          Crear código
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-  <script src="js/firebase.js"></script>
-  <script src="js/cloudinary.js"></script>
-  <script src="js/admin.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/cloudinary.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/admin2.js"></script>
 
 </body>
 </html>

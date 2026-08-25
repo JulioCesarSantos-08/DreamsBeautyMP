@@ -339,6 +339,132 @@
       white-space: nowrap;
     }
 
+
+    .receipt-product-gift {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+      padding: 4px 7px;
+      border-radius: 50px;
+      background: var(--lila-claro);
+      color: var(--lila-profundo);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+    }
+
+    .receipt-product-total.gift {
+      color: var(--lila-profundo);
+      font-size: 9px;
+    }
+
+    .receipt-promo-box {
+      margin-bottom: 15px;
+      padding: 13px;
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 11px;
+      align-items: center;
+      border: 1px solid rgba(62, 155, 98, 0.14);
+      border-radius: 14px;
+      background: linear-gradient(
+        135deg,
+        #effaf3,
+        var(--rosa-claro)
+      );
+    }
+
+    .receipt-promo-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: white;
+      color: var(--verde);
+      font-size: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .receipt-promo-info span {
+      display: block;
+      color: var(--verde);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+    }
+
+    .receipt-promo-info strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--texto);
+      font-size: 11px;
+    }
+
+    .receipt-promo-info p {
+      margin-top: 3px;
+      color: var(--texto-secundario);
+      font-size: 8px;
+      line-height: 1.5;
+    }
+
+    .receipt-summary {
+      display: grid;
+      gap: 0;
+    }
+
+    .receipt-summary-row {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      border-bottom: 1px solid var(--borde);
+      color: var(--texto-secundario);
+      font-size: 10px;
+    }
+
+    .receipt-summary-row strong {
+      color: var(--texto);
+      font-size: 10px;
+      text-align: right;
+    }
+
+    .receipt-summary-row.discount {
+      color: var(--verde);
+    }
+
+    .receipt-summary-row.discount strong {
+      color: var(--verde);
+    }
+
+    .receipt-summary-row.gift {
+      color: var(--lila-profundo);
+    }
+
+    .receipt-summary-row.gift strong {
+      color: var(--lila-profundo);
+    }
+
+    .receipt-summary-row.total {
+      min-height: 55px;
+      margin-top: 5px;
+      border-bottom: none;
+      color: var(--texto);
+    }
+
+    .receipt-summary-row.total span {
+      font-family: "Playfair Display", serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .receipt-summary-row.total strong {
+      font-size: 23px;
+    }
+
     .receipt-total {
       display: flex;
       justify-content: space-between;
@@ -959,31 +1085,54 @@
                         </strong>
 
                         <span>
-                          ${Number(
-                            producto.cantidad
-                          ) || 1}
-                          ×
-                          ${monedaRecibo(
-                            producto.precio
-                          )}
+                          ${
+                            producto.esRegalo === true
+                              ? `${Number(
+                                  producto.cantidad
+                                ) || 1} × Promoción`
+                              : `${Number(
+                                  producto.cantidad
+                                ) || 1} × ${monedaRecibo(
+                                  producto.precio
+                                )}`
+                          }
                         </span>
+
+                        ${
+                          producto.esRegalo === true
+                            ? `
+                                <div class="receipt-product-gift">
+                                  <i class="fa-solid fa-gift"></i>
+                                  ARTÍCULO GRATIS
+                                </div>
+                              `
+                            : ""
+                        }
 
                       </div>
 
-                      <div class="receipt-product-total">
+                      <div class="receipt-product-total ${
+                        producto.esRegalo === true
+                          ? "gift"
+                          : ""
+                      }">
 
-                        ${monedaRecibo(
-                          producto.subtotal ??
-                          (
-                            Number(
-                              producto.precio
-                            ) *
-                            Number(
-                              producto.cantidad ||
-                              1
-                            )
-                          )
-                        )}
+                        ${
+                          producto.esRegalo === true
+                            ? "GRATIS"
+                            : monedaRecibo(
+                                producto.subtotal ??
+                                (
+                                  Number(
+                                    producto.precio
+                                  ) *
+                                  Number(
+                                    producto.cantidad ||
+                                    1
+                                  )
+                                )
+                              )
+                        }
 
                       </div>
 
@@ -999,17 +1148,136 @@
 
           <section class="receipt-section">
 
-            <div class="receipt-total">
+            ${
+              recibo.codigoPromocional?.codigo
+                ? `
+                    <div class="receipt-promo-box">
 
-              <span>
-                Total
-              </span>
+                      <div class="receipt-promo-icon">
+                        <i class="fa-solid fa-ticket"></i>
+                      </div>
 
-              <strong>
-                ${monedaRecibo(
-                  recibo.total
-                )}
-              </strong>
+                      <div class="receipt-promo-info">
+
+                        <span>
+                          CÓDIGO PROMOCIONAL
+                        </span>
+
+                        <strong>
+                          ${escapeRecibo(
+                            recibo.codigoPromocional.codigo
+                          )}
+                        </strong>
+
+                        <p>
+                          ${
+                            recibo.codigoPromocional.tipoBeneficio ===
+                            "productoGratis"
+                              ? `${escapeRecibo(
+                                  recibo.codigoPromocional.productoGratisNombre ||
+                                  "Artículo"
+                                )} gratis`
+                              : `${Number(
+                                  recibo.codigoPromocional.porcentaje
+                                ) || 0}% de descuento${
+                                  recibo.codigoPromocional.alcance ===
+                                  "categoria"
+                                    ? ` en ${escapeRecibo(
+                                        recibo.codigoPromocional.categoria ||
+                                        "la categoría seleccionada"
+                                      )}`
+                                    : recibo.codigoPromocional.alcance ===
+                                      "producto"
+                                      ? ` en ${escapeRecibo(
+                                          recibo.codigoPromocional.productoNombre ||
+                                          "el producto seleccionado"
+                                        )}`
+                                      : " en tu compra"
+                                }`
+                          }
+                        </p>
+
+                      </div>
+
+                    </div>
+                  `
+                : ""
+            }
+
+            <div class="receipt-summary">
+
+              <div class="receipt-summary-row">
+
+                <span>
+                  Subtotal
+                </span>
+
+                <strong>
+                  ${monedaRecibo(
+                    recibo.subtotal ??
+                    recibo.total
+                  )}
+                </strong>
+
+              </div>
+
+              ${
+                Number(recibo.descuento) > 0
+                  ? `
+                      <div class="receipt-summary-row discount">
+
+                        <span>
+                          <i class="fa-solid fa-tag"></i>
+                          Descuento
+                        </span>
+
+                        <strong>
+                          -${monedaRecibo(
+                            recibo.descuento
+                          )}
+                        </strong>
+
+                      </div>
+                    `
+                  : ""
+              }
+
+              ${
+                recibo.codigoPromocional?.tipoBeneficio ===
+                "productoGratis"
+                  ? `
+                      <div class="receipt-summary-row gift">
+
+                        <span>
+                          <i class="fa-solid fa-gift"></i>
+                          Artículo gratis
+                        </span>
+
+                        <strong>
+                          ${escapeRecibo(
+                            recibo.codigoPromocional.productoGratisNombre ||
+                            "Promoción"
+                          )}
+                        </strong>
+
+                      </div>
+                    `
+                  : ""
+              }
+
+              <div class="receipt-summary-row total">
+
+                <span>
+                  Total
+                </span>
+
+                <strong>
+                  ${monedaRecibo(
+                    recibo.total
+                  )}
+                </strong>
+
+              </div>
 
             </div>
 
@@ -1125,8 +1393,25 @@
         reciboActual.folio ||
         reciboIdActual;
 
+      const promoTexto =
+        reciboActual.codigoPromocional?.codigo
+          ? `\nCódigo: ${reciboActual.codigoPromocional.codigo}${
+              Number(reciboActual.descuento) > 0
+                ? `\nDescuento: -${monedaRecibo(
+                    reciboActual.descuento
+                  )}`
+                : reciboActual.codigoPromocional.tipoBeneficio ===
+                  "productoGratis"
+                  ? `\nRegalo: ${
+                      reciboActual.codigoPromocional.productoGratisNombre ||
+                      "Artículo promocional"
+                    }`
+                  : ""
+            }`
+          : "";
+
       const texto =
-        `Dreams Cosmetic\nPedido: ${folio}\nTotal: ${monedaRecibo(
+        `Dreams Cosmetic\nPedido: ${folio}${promoTexto}\nTotal: ${monedaRecibo(
           reciboActual.total
         )}\nMétodo de pago: ${
           reciboActual.metodoPago ||
