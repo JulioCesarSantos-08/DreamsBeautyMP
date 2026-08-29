@@ -574,6 +574,170 @@
     .saved-codes-list{display:grid;gap:11px}.saved-code-card{overflow:hidden;border:1px solid #eee8ef;border-radius:18px;background:white}.saved-code-top{padding:14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;background:linear-gradient(135deg,#faf6ff,#fff7fa);border-bottom:1px dashed #e8dfe9}.saved-code-top span{display:block;color:#a77bd4;font-size:7px;font-weight:800;letter-spacing:1.3px}.saved-code-top strong{display:block;margin-top:3px;color:#252027;font-size:14px;overflow-wrap:anywhere}.saved-code-status{padding:5px 8px;border-radius:50px;font-size:7px;font-weight:800;white-space:nowrap}.saved-code-status.disponible{background:#eaf8ef;color:#39885a}.saved-code-status.usado{background:#f2eff3;color:#716a72}.saved-code-status.vencido,.saved-code-status.agotado{background:#fff0ee;color:#c65a52}.saved-code-body{padding:14px}.saved-code-benefit{color:#39333a;font-size:10px;font-weight:700;line-height:1.45}.saved-code-expiry{margin-top:7px;color:#8f888f;font-size:8px}.saved-codes-empty{padding:34px 18px;border:1px dashed #e7dfe8;border-radius:18px;text-align:center;background:#fffafd}.saved-codes-empty i{width:50px;height:50px;margin:0 auto;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#f3eafd;color:#a77bd4;font-size:17px}.saved-codes-empty strong{display:block;margin-top:11px;color:#252027;font-size:11px}.saved-codes-empty p{max-width:290px;margin:5px auto 0;color:#8c858d;font-size:8px;line-height:1.5}
     @media(min-width:600px){.client-modal-overlay{align-items:center}.client-modal{border-radius:24px}}
 
+
+    .guest-menu-card {
+      margin: 4px 0 14px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 48px minmax(0,1fr) 28px;
+      gap: 11px;
+      align-items: center;
+      border: 1px solid #eee8ef;
+      border-radius: 17px;
+      background: linear-gradient(135deg,#fff7fb,#faf6ff);
+    }
+
+    .guest-menu-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#fff0f7,#f3eafd);
+      color: #e84f94;
+      font-size: 18px;
+    }
+
+    .guest-menu-info {
+      min-width: 0;
+    }
+
+    .guest-menu-info span {
+      display: block;
+      color: #a77bd4;
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+    }
+
+    .guest-menu-info strong {
+      display: block;
+      margin-top: 3px;
+      color: #252027;
+      font-size: 11px;
+    }
+
+    .guest-menu-info small {
+      display: block;
+      margin-top: 2px;
+      color: #8c858d;
+      font-size: 8px;
+      line-height: 1.35;
+    }
+
+    .guest-menu-card > i {
+      color: #b7afb8;
+      font-size: 10px;
+    }
+
+    .auth-required-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(31,25,33,.52);
+      backdrop-filter: blur(8px);
+    }
+
+    .auth-required-overlay.active {
+      display: flex;
+    }
+
+    .auth-required-modal {
+      width: min(100%, 430px);
+      padding: 24px 18px 18px;
+      border-radius: 24px 24px 18px 18px;
+      background: white;
+      box-shadow: 0 25px 70px rgba(35,25,39,.22);
+      text-align: center;
+    }
+
+    .auth-required-icon {
+      width: 62px;
+      height: 62px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#f3eafd,#fff0f7);
+      color: #e84f94;
+      font-size: 22px;
+    }
+
+    .auth-required-modal span {
+      display: block;
+      margin-top: 15px;
+      color: #a77bd4;
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .auth-required-modal h2 {
+      margin-top: 4px;
+      color: #252027;
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+    }
+
+    .auth-required-modal p {
+      max-width: 340px;
+      margin: 8px auto 0;
+      color: #777078;
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .auth-required-actions {
+      margin-top: 18px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .auth-required-primary,
+    .auth-required-secondary,
+    .auth-required-close {
+      min-height: 46px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .auth-required-primary {
+      border: none;
+      background: #252027;
+      color: white;
+    }
+
+    .auth-required-secondary {
+      border: 1px solid #eee8ef;
+      background: #fffafd;
+      color: #252027;
+    }
+
+    .auth-required-close {
+      border: none;
+      background: transparent;
+      color: #8c858d;
+      min-height: 38px;
+    }
+
+    @media (min-width: 600px) {
+      .auth-required-overlay {
+        align-items: center;
+      }
+
+      .auth-required-modal {
+        border-radius: 24px;
+      }
+    }
+
   </style>
 </head>
 
@@ -1368,14 +1532,53 @@
 
     <div class="mobile-menu-content">
 
-      <button type="button" class="client-menu-card" id="menu-mi-cuenta">
-        <div class="client-menu-avatar" id="menu-cliente-avatar"><i class="fa-solid fa-user"></i></div>
-        <div class="client-menu-info"><span>MI CUENTA</span><strong id="menu-cliente-nombre">Cargando...</strong><small id="menu-cliente-email"></small></div>
+      <button
+        type="button"
+        class="guest-menu-card"
+        id="menu-iniciar-sesion"
+      >
+        <div class="guest-menu-icon">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="guest-menu-info">
+          <span>TU CUENTA</span>
+          <strong>Iniciar sesión / Registrarse</strong>
+          <small>Compra, guarda códigos y consulta tus promociones.</small>
+        </div>
+
         <i class="fa-solid fa-chevron-right"></i>
       </button>
 
-      <button id="menu-canjear-codigo"><i class="fa-solid fa-ticket"></i>Canjear código</button>
-      <button id="menu-mis-codigos"><i class="fa-solid fa-tags"></i>Mis códigos</button>
+      <button
+        type="button"
+        class="client-menu-card"
+        id="menu-mi-cuenta"
+        hidden
+      >
+        <div class="client-menu-avatar" id="menu-cliente-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="client-menu-info">
+          <span>MI CUENTA</span>
+          <strong id="menu-cliente-nombre">Cliente Dreams</strong>
+          <small id="menu-cliente-email"></small>
+        </div>
+
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+
+      <button id="menu-canjear-codigo">
+        <i class="fa-solid fa-ticket"></i>
+        Canjear código
+      </button>
+
+      <button id="menu-mis-codigos">
+        <i class="fa-solid fa-tags"></i>
+        Mis códigos
+      </button>
+
       <div class="client-menu-separator"></div>
 
       <a href="#productos">
@@ -1454,7 +1657,12 @@
 
       <div class="client-menu-separator"></div>
 
-      <button type="button" class="client-menu-logout" id="menu-cerrar-sesion">
+      <button
+        type="button"
+        class="client-menu-logout"
+        id="menu-cerrar-sesion"
+        hidden
+      >
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
         Cerrar sesión
       </button>
@@ -1475,6 +1683,60 @@
     </div>
 
   </aside>
+
+
+  <div
+    class="auth-required-overlay"
+    id="modal-auth-requerido"
+  >
+    <section class="auth-required-modal">
+
+      <div class="auth-required-icon">
+        <i class="fa-solid fa-user-lock"></i>
+      </div>
+
+      <span id="auth-required-eyebrow">
+        TU CUENTA
+      </span>
+
+      <h2 id="auth-required-title">
+        Inicia sesión para continuar
+      </h2>
+
+      <p id="auth-required-text">
+        Puedes seguir viendo todo el catálogo sin una cuenta. Para usar esta función necesitamos identificarte.
+      </p>
+
+      <div class="auth-required-actions">
+
+        <button
+          type="button"
+          class="auth-required-primary"
+          id="auth-required-login"
+        >
+          Iniciar sesión
+        </button>
+
+        <button
+          type="button"
+          class="auth-required-secondary"
+          id="auth-required-register"
+        >
+          Crear cuenta
+        </button>
+
+        <button
+          type="button"
+          class="auth-required-close"
+          id="auth-required-close"
+        >
+          Seguir viendo productos
+        </button>
+
+      </div>
+
+    </section>
+  </div>
 
 
 
@@ -1516,7 +1778,352 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
   <script src="js/firebase.js"></script>
-  <script src="js/clienteAuth.js"></script>
+
+  <script>
+    let sesionPublicaDreams = null;
+    let perfilPublicoDreams = null;
+
+    function configurarVistaInvitadoDreams() {
+      sesionPublicaDreams = null;
+      perfilPublicoDreams = null;
+
+      window.usuarioDreams = null;
+      window.perfilDreams = null;
+
+      document
+        .getElementById("menu-iniciar-sesion")
+        ?.removeAttribute("hidden");
+
+      document
+        .getElementById("menu-mi-cuenta")
+        ?.setAttribute("hidden", "");
+
+      document
+        .getElementById("menu-cerrar-sesion")
+        ?.setAttribute("hidden", "");
+    }
+
+    function configurarVistaSesionDreams(
+      usuario,
+      perfil
+    ) {
+      sesionPublicaDreams = usuario;
+      perfilPublicoDreams = perfil;
+
+      window.usuarioDreams = usuario;
+
+      window.perfilDreams = {
+        ...perfil,
+        uid: usuario.uid,
+        email:
+          usuario.email ||
+          perfil.email ||
+          "",
+        foto:
+          usuario.photoURL ||
+          perfil.foto ||
+          ""
+      };
+
+      document
+        .getElementById("menu-iniciar-sesion")
+        ?.setAttribute("hidden", "");
+
+      document
+        .getElementById("menu-mi-cuenta")
+        ?.removeAttribute("hidden");
+
+      document
+        .getElementById("menu-cerrar-sesion")
+        ?.removeAttribute("hidden");
+
+      window.dispatchEvent(
+        new CustomEvent(
+          "dreams:cliente-listo",
+          {
+            detail: {
+              usuario:
+                window.usuarioDreams,
+
+              perfil:
+                window.perfilDreams
+            }
+          }
+        )
+      );
+    }
+
+    function abrirModalAuthRequeridoDreams(
+      motivo = "general"
+    ) {
+      const modal =
+        document.getElementById(
+          "modal-auth-requerido"
+        );
+
+      const titulo =
+        document.getElementById(
+          "auth-required-title"
+        );
+
+      const texto =
+        document.getElementById(
+          "auth-required-text"
+        );
+
+      if (motivo === "codigo") {
+        titulo.textContent =
+          "Inicia sesión para canjear códigos";
+
+        texto.textContent =
+          "Para guardar una promoción necesitamos asociarla a tu cuenta. Puedes crearla en unos segundos y después seguir comprando normalmente.";
+      } else if (motivo === "misCodigos") {
+        titulo.textContent =
+          "Tus códigos viven en tu cuenta";
+
+        texto.textContent =
+          "Inicia sesión para consultar los códigos que ya guardaste, revisar su vigencia y utilizarlos en tus compras.";
+      } else {
+        titulo.textContent =
+          "Inicia sesión para continuar";
+
+        texto.textContent =
+          "Puedes seguir viendo todo el catálogo sin una cuenta. Para usar esta función necesitamos identificarte.";
+      }
+
+      modal?.classList.add(
+        "active"
+      );
+
+      document.body.style.overflow =
+        "hidden";
+    }
+
+    function cerrarModalAuthRequeridoDreams() {
+      document
+        .getElementById(
+          "modal-auth-requerido"
+        )
+        ?.classList.remove(
+          "active"
+        );
+
+      document.body.style.overflow =
+        "";
+    }
+
+    function irLoginDreams(
+      modo = "login"
+    ) {
+      const destino =
+        modo === "registro"
+          ? "login.html?modo=registro&redirect=index.html"
+          : "login.html?redirect=index.html";
+
+      window.location.href =
+        destino;
+    }
+
+    document
+      .getElementById(
+        "menu-iniciar-sesion"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          window.location.href =
+            "login.html?redirect=index.html";
+        }
+      );
+
+    document
+      .getElementById(
+        "auth-required-login"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          irLoginDreams("login");
+        }
+      );
+
+    document
+      .getElementById(
+        "auth-required-register"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          irLoginDreams("registro");
+        }
+      );
+
+    document
+      .getElementById(
+        "auth-required-close"
+      )
+      ?.addEventListener(
+        "click",
+        cerrarModalAuthRequeridoDreams
+      );
+
+    document
+      .getElementById(
+        "modal-auth-requerido"
+      )
+      ?.addEventListener(
+        "click",
+        event => {
+          if (
+            event.target.id ===
+            "modal-auth-requerido"
+          ) {
+            cerrarModalAuthRequeridoDreams();
+          }
+        }
+      );
+
+    document
+      .getElementById(
+        "menu-canjear-codigo"
+      )
+      ?.addEventListener(
+        "click",
+        event => {
+          if (!auth.currentUser) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            cerrarMenuDreamsPublico();
+            abrirModalAuthRequeridoDreams(
+              "codigo"
+            );
+          }
+        },
+        true
+      );
+
+    document
+      .getElementById(
+        "menu-mis-codigos"
+      )
+      ?.addEventListener(
+        "click",
+        event => {
+          if (!auth.currentUser) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            cerrarMenuDreamsPublico();
+            abrirModalAuthRequeridoDreams(
+              "misCodigos"
+            );
+          }
+        },
+        true
+      );
+
+    function cerrarMenuDreamsPublico() {
+      document
+        .getElementById(
+          "mobile-menu"
+        )
+        ?.classList.remove(
+          "active"
+        );
+
+      document
+        .getElementById(
+          "overlay"
+        )
+        ?.classList.remove(
+          "active"
+        );
+    }
+
+    auth.onAuthStateChanged(
+      async usuario => {
+        if (!usuario) {
+          configurarVistaInvitadoDreams();
+          return;
+        }
+
+        try {
+          const documento =
+            await db
+              .collection("usuarios")
+              .doc(usuario.uid)
+              .get();
+
+          if (!documento.exists) {
+            configurarVistaInvitadoDreams();
+            return;
+          }
+
+          const perfil =
+            documento.data();
+
+          const rol =
+            String(
+              perfil.rol ||
+              "cliente"
+            )
+              .trim()
+              .toLowerCase();
+
+          if (
+            rol === "cliente" &&
+            perfil.perfilCompleto !== true
+          ) {
+            window.location.href =
+              "login.html?redirect=index.html";
+
+            return;
+          }
+
+          await db
+            .collection("usuarios")
+            .doc(usuario.uid)
+            .set(
+              {
+                email:
+                  String(
+                    usuario.email || ""
+                  )
+                    .trim()
+                    .toLowerCase(),
+
+                foto:
+                  usuario.photoURL ||
+                  perfil.foto ||
+                  "",
+
+                ultimoAcceso:
+                  firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+              },
+              {
+                merge: true
+              }
+            );
+
+          configurarVistaSesionDreams(
+            usuario,
+            perfil
+          );
+
+        } catch (error) {
+          console.error(
+            "No se pudo cargar la sesión pública:",
+            error
+          );
+
+          configurarVistaInvitadoDreams();
+        }
+      }
+    );
+  </script>
   <script src="js/clienteCuenta.js"></script>
   <script src="js/carrito.js"></script>
   <script src="js/tienda.js"></script>

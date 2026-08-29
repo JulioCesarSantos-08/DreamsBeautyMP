@@ -633,15 +633,81 @@ async function cargarCodigosGuardadosCarrito() {
 }
 
 
+function mostrarCodigosCarritoInvitado() {
+  usuarioCodigosCarrito =
+    null;
+
+  perfilCodigosCarrito =
+    null;
+
+  codigosCarritoInicializados =
+    false;
+
+  const bloqueCodigos =
+    document.getElementById(
+      "bloque-codigos-guardados"
+    );
+
+  const avisoInvitado =
+    document.getElementById(
+      "carrito-auth-codigos"
+    );
+
+  if (bloqueCodigos) {
+    bloqueCodigos.hidden =
+      true;
+  }
+
+  avisoInvitado
+    ?.classList.add(
+      "show"
+    );
+}
+
+
+function mostrarCodigosCarritoCliente() {
+  const bloqueCodigos =
+    document.getElementById(
+      "bloque-codigos-guardados"
+    );
+
+  const avisoInvitado =
+    document.getElementById(
+      "carrito-auth-codigos"
+    );
+
+  if (bloqueCodigos) {
+    bloqueCodigos.hidden =
+      false;
+  }
+
+  avisoInvitado
+    ?.classList.remove(
+      "show"
+    );
+}
+
+
 function iniciarCodigosCarrito(
   usuario,
   perfil
 ) {
+  if (
+    !usuario ||
+    !perfil
+  ) {
+    mostrarCodigosCarritoInvitado();
+
+    return;
+  }
+
   usuarioCodigosCarrito =
     usuario;
 
   perfilCodigosCarrito =
     perfil;
+
+  mostrarCodigosCarritoCliente();
 
   if (
     codigosCarritoInicializados
@@ -675,12 +741,35 @@ function iniciarCodigosCarrito(
 window.addEventListener(
   "dreams:cliente-listo",
   event => {
+    if (
+      !event.detail?.usuario ||
+      !event.detail?.perfil
+    ) {
+      mostrarCodigosCarritoInvitado();
+
+      return;
+    }
+
     iniciarCodigosCarrito(
       event.detail.usuario,
       event.detail.perfil
     );
   }
 );
+
+
+if (
+  typeof auth !==
+    "undefined"
+) {
+  auth.onAuthStateChanged(
+    usuario => {
+      if (!usuario) {
+        mostrarCodigosCarritoInvitado();
+      }
+    }
+  );
+}
 
 
 if (
@@ -691,4 +780,10 @@ if (
     window.usuarioDreams,
     window.perfilDreams
   );
+} else if (
+  typeof auth !==
+    "undefined" &&
+  !auth.currentUser
+) {
+  mostrarCodigosCarritoInvitado();
 }

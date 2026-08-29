@@ -1,89 +1,81 @@
-const loginForm =
-  document.getElementById("login-form");
+const loginForm = document.getElementById("login-form");
+const registroForm = document.getElementById("registro-form");
+const perfilForm = document.getElementById("perfil-form");
+const resetForm = document.getElementById("reset-form");
 
-const registroForm =
-  document.getElementById("registro-form");
+const loginMensaje = document.getElementById("login-mensaje");
+const registroMensaje = document.getElementById("registro-mensaje");
+const perfilError = document.getElementById("perfil-error");
+const resetMensaje = document.getElementById("reset-mensaje");
 
-const perfilForm =
-  document.getElementById("perfil-form");
+const perfilOverlay = document.getElementById("perfil-overlay");
+const resetOverlay = document.getElementById("reset-overlay");
+const authLoading = document.getElementById("auth-loading");
+const loadingTitulo = document.getElementById("loading-titulo");
+const loadingTexto = document.getElementById("loading-texto");
 
-const resetForm =
-  document.getElementById("reset-form");
+const btnLogin = document.getElementById("btn-login");
+const btnRegistro = document.getElementById("btn-registro");
+const btnGoogleLogin = document.getElementById("btn-google-login");
+const btnGoogleRegistro = document.getElementById("btn-google-registro");
+const btnGuardarPerfil = document.getElementById("btn-guardar-perfil");
+const btnReset = document.getElementById("btn-reset");
 
-const loginMensaje =
-  document.getElementById("login-mensaje");
+let usuarioPerfilPendiente = null;
+let procesandoUsuario = false;
 
-const registroMensaje =
-  document.getElementById("registro-mensaje");
+const parametrosAuth = new URLSearchParams(window.location.search);
 
-const perfilError =
-  document.getElementById("perfil-error");
+const modoInicialAuth = parametrosAuth.get("modo");
 
-const resetMensaje =
-  document.getElementById("reset-mensaje");
+const redirectSolicitadoAuth =
+  parametrosAuth.get("redirect");
 
-const perfilOverlay =
-  document.getElementById("perfil-overlay");
+function obtenerRedirectSeguroAuth() {
+  const permitidos = new Set([
+    "index.html",
+    "carrito.html",
+    "finalizar.html",
+    "producto.html"
+  ]);
 
-const resetOverlay =
-  document.getElementById("reset-overlay");
+  const destino =
+    String(
+      redirectSolicitadoAuth || ""
+    )
+      .trim()
+      .replace(/^\/+/, "");
 
-const authLoading =
-  document.getElementById("auth-loading");
+  if (!permitidos.has(destino)) {
+    return "index.html";
+  }
 
-const loadingTitulo =
-  document.getElementById("loading-titulo");
+  return destino;
+}
 
-const loadingTexto =
-  document.getElementById("loading-texto");
-
-const btnLogin =
-  document.getElementById("btn-login");
-
-const btnRegistro =
-  document.getElementById("btn-registro");
-
-const btnGoogleLogin =
-  document.getElementById("btn-google-login");
-
-const btnGoogleRegistro =
-  document.getElementById("btn-google-registro");
-
-const btnGuardarPerfil =
-  document.getElementById("btn-guardar-perfil");
-
-const btnReset =
-  document.getElementById("btn-reset");
-
-let usuarioPerfilPendiente =
-  null;
-
-let procesandoUsuario =
-  false;
+function irDestinoClienteAuth() {
+  window.location.replace(
+    obtenerRedirectSeguroAuth()
+  );
+}
 
 function mostrarLoading(
   titulo = "Revisando tu cuenta",
   texto = "Un momento por favor."
 ) {
   if (loadingTitulo) {
-    loadingTitulo.textContent =
-      titulo;
+    loadingTitulo.textContent = titulo;
   }
 
   if (loadingTexto) {
-    loadingTexto.textContent =
-      texto;
+    loadingTexto.textContent = texto;
   }
 
-  authLoading?.classList.add(
-    "active"
-  );
+  authLoading?.classList.add("active");
 }
 
 function ocultarLoading() {
-  authLoading?.classList.remove(
-    "active"
-  );
+  authLoading?.classList.remove("active");
 }
 
 function mostrarMensaje(
@@ -95,8 +87,7 @@ function mostrarMensaje(
     return;
   }
 
-  elemento.textContent =
-    mensaje;
+  elemento.textContent = mensaje;
 
   elemento.className =
     `auth-message ${tipo}`;
@@ -109,8 +100,7 @@ function limpiarMensaje(
     return;
   }
 
-  elemento.textContent =
-    "";
+  elemento.textContent = "";
 
   elemento.className =
     "auth-message";
@@ -274,6 +264,11 @@ function traducirErrorAuth(
 function cambiarVistaAuth(
   vista
 ) {
+  const vistaFinal =
+    vista === "registro"
+      ? "registro"
+      : "login";
+
   document
     .querySelectorAll(
       ".auth-tab"
@@ -283,7 +278,7 @@ function cambiarVistaAuth(
         boton.classList.toggle(
           "active",
           boton.dataset.authTab ===
-            vista
+            vistaFinal
         );
       }
     );
@@ -302,7 +297,7 @@ function cambiarVistaAuth(
 
   document
     .getElementById(
-      vista === "login"
+      vistaFinal === "login"
         ? "vista-login"
         : "vista-registro"
     )
@@ -431,8 +426,12 @@ async function crearPerfilInicial(
 ) {
   const referencia =
     db
-      .collection("usuarios")
-      .doc(usuario.uid);
+      .collection(
+        "usuarios"
+      )
+      .doc(
+        usuario.uid
+      );
 
   const documento =
     await referencia.get();
@@ -444,32 +443,43 @@ async function crearPerfilInicial(
   const datos = {
     uid:
       usuario.uid,
+
     email:
       normalizarCorreo(
         usuario.email
       ),
+
     nombre:
       usuario.displayName ||
       "",
+
     foto:
       usuario.photoURL ||
       "",
+
     telefono:
       "",
+
     localidad:
       "",
+
     rol:
       "cliente",
+
     perfilCompleto:
       false,
+
     proveedor:
-      usuario.providerData?.[0]
+      usuario
+        .providerData?.[0]
         ?.providerId ||
       "password",
+
     creadoEn:
       firebase.firestore
         .FieldValue
         .serverTimestamp(),
+
     ultimoAcceso:
       firebase.firestore
         .FieldValue
@@ -488,26 +498,34 @@ async function actualizarUltimoAcceso(
 ) {
   try {
     await db
-      .collection("usuarios")
-      .doc(usuario.uid)
+      .collection(
+        "usuarios"
+      )
+      .doc(
+        usuario.uid
+      )
       .set(
         {
           email:
             normalizarCorreo(
               usuario.email
             ),
+
           foto:
             usuario.photoURL ||
             "",
+
           ultimoAcceso:
             firebase.firestore
               .FieldValue
               .serverTimestamp()
         },
         {
-          merge: true
+          merge:
+            true
         }
       );
+
   } catch (error) {
     console.error(
       error
@@ -548,11 +566,14 @@ async function resolverUsuario(
 
     let datosUsuario;
 
-    if (!documento.exists) {
+    if (
+      !documento.exists
+    ) {
       datosUsuario =
         await crearPerfilInicial(
           usuario
         );
+
     } else {
       datosUsuario =
         documento.data();
@@ -591,7 +612,8 @@ async function resolverUsuario(
             "cliente"
         },
         {
-          merge: true
+          merge:
+            true
         }
       );
 
@@ -614,9 +636,7 @@ async function resolverUsuario(
       return;
     }
 
-    window.location.replace(
-      "index.html"
-    );
+    irDestinoClienteAuth();
 
   } catch (error) {
     console.error(
@@ -645,7 +665,8 @@ document
         "click",
         () => {
           cambiarVistaAuth(
-            boton.dataset.authTab
+            boton.dataset
+              .authTab
           );
         }
       );
@@ -666,9 +687,10 @@ document
               .togglePassword;
 
           const input =
-            document.getElementById(
-              id
-            );
+            document
+              .getElementById(
+                id
+              );
 
           if (!input) {
             return;
@@ -692,248 +714,276 @@ document
     }
   );
 
-loginForm?.addEventListener(
-  "submit",
-  async event => {
-    event.preventDefault();
+loginForm
+  ?.addEventListener(
+    "submit",
+    async event => {
+      event.preventDefault();
 
-    limpiarMensaje(
-      loginMensaje
-    );
+      limpiarMensaje(
+        loginMensaje
+      );
 
-    const correo =
-      normalizarCorreo(
+      const correo =
+        normalizarCorreo(
+          document
+            .getElementById(
+              "login-correo"
+            )
+            ?.value
+        );
+
+      const contrasena =
         document
           .getElementById(
-            "login-correo"
+            "login-contrasena"
           )
-          .value
-      );
+          ?.value ||
+        "";
 
-    const contrasena =
-      document
-        .getElementById(
-          "login-contrasena"
-        )
-        .value;
-
-    if (
-      !correo ||
-      !contrasena
-    ) {
-      mostrarMensaje(
-        loginMensaje,
-        "Completa tu correo y contraseña."
-      );
-
-      return;
-    }
-
-    btnLogin.disabled =
-      true;
-
-    btnLogin.textContent =
-      "Ingresando...";
-
-    mostrarLoading(
-      "Iniciando sesión",
-      "Estamos verificando tus datos."
-    );
-
-    try {
-      await auth
-        .signInWithEmailAndPassword(
-          correo,
-          contrasena
-        );
-
-    } catch (error) {
-      console.error(
-        error
-      );
-
-      ocultarLoading();
-
-      const mensaje =
-        traducirErrorAuth(
-          error
-        );
-
-      if (mensaje) {
+      if (
+        !correo ||
+        !contrasena
+      ) {
         mostrarMensaje(
           loginMensaje,
-          mensaje
+          "Completa tu correo y contraseña."
         );
+
+        return;
       }
 
-      btnLogin.disabled =
-        false;
+      if (btnLogin) {
+        btnLogin.disabled =
+          true;
 
-      btnLogin.textContent =
-        "Iniciar sesión";
-    }
-  }
-);
+        btnLogin.textContent =
+          "Ingresando...";
+      }
 
-registroForm?.addEventListener(
-  "submit",
-  async event => {
-    event.preventDefault();
-
-    limpiarMensaje(
-      registroMensaje
-    );
-
-    const correo =
-      normalizarCorreo(
-        document
-          .getElementById(
-            "registro-correo"
-          )
-          .value
+      mostrarLoading(
+        "Iniciando sesión",
+        "Estamos verificando tus datos."
       );
 
-    const contrasena =
-      document
-        .getElementById(
-          "registro-contrasena"
-        )
-        .value;
-
-    const confirmar =
-      document
-        .getElementById(
-          "registro-confirmar"
-        )
-        .value;
-
-    if (!correo) {
-      mostrarMensaje(
-        registroMensaje,
-        "Ingresa un correo electrónico."
-      );
-
-      return;
-    }
-
-    if (
-      contrasena.length < 6
-    ) {
-      mostrarMensaje(
-        registroMensaje,
-        "La contraseña debe tener al menos 6 caracteres."
-      );
-
-      return;
-    }
-
-    if (
-      contrasena !==
-      confirmar
-    ) {
-      mostrarMensaje(
-        registroMensaje,
-        "Las contraseñas no coinciden."
-      );
-
-      return;
-    }
-
-    btnRegistro.disabled =
-      true;
-
-    btnRegistro.textContent =
-      "Creando cuenta...";
-
-    mostrarLoading(
-      "Creando tu cuenta",
-      "Esto tomará solo un momento."
-    );
-
-    try {
-      const credencial =
+      try {
         await auth
-          .createUserWithEmailAndPassword(
+          .signInWithEmailAndPassword(
             correo,
             contrasena
           );
 
-      const usuario =
-        credencial.user;
-
-      await db
-        .collection(
-          "usuarios"
-        )
-        .doc(
-          usuario.uid
-        )
-        .set(
-          {
-            uid:
-              usuario.uid,
-            email:
-              correo,
-            nombre:
-              "",
-            foto:
-              "",
-            telefono:
-              "",
-            localidad:
-              "",
-            rol:
-              "cliente",
-            perfilCompleto:
-              false,
-            proveedor:
-              "password",
-            creadoEn:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp(),
-            ultimoAcceso:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-          },
-          {
-            merge: true
-          }
+      } catch (error) {
+        console.error(
+          error
         );
 
-      procesandoUsuario =
-        false;
+        procesandoUsuario =
+          false;
 
-      await resolverUsuario(
-        usuario
-      );
+        ocultarLoading();
 
-    } catch (error) {
-      console.error(
-        error
-      );
+        const mensaje =
+          traducirErrorAuth(
+            error
+          );
 
-      procesandoUsuario =
-        false;
+        if (mensaje) {
+          mostrarMensaje(
+            loginMensaje,
+            mensaje
+          );
+        }
 
-      ocultarLoading();
+        if (btnLogin) {
+          btnLogin.disabled =
+            false;
 
-      mostrarMensaje(
-        registroMensaje,
-        traducirErrorAuth(
-          error
-        )
-      );
-
-      btnRegistro.disabled =
-        false;
-
-      btnRegistro.textContent =
-        "Crear mi cuenta";
+          btnLogin.textContent =
+            "Iniciar sesión";
+        }
+      }
     }
-  }
-);
+  );
+
+registroForm
+  ?.addEventListener(
+    "submit",
+    async event => {
+      event.preventDefault();
+
+      limpiarMensaje(
+        registroMensaje
+      );
+
+      const correo =
+        normalizarCorreo(
+          document
+            .getElementById(
+              "registro-correo"
+            )
+            ?.value
+        );
+
+      const contrasena =
+        document
+          .getElementById(
+            "registro-contrasena"
+          )
+          ?.value ||
+        "";
+
+      const confirmar =
+        document
+          .getElementById(
+            "registro-confirmar"
+          )
+          ?.value ||
+        "";
+
+      if (!correo) {
+        mostrarMensaje(
+          registroMensaje,
+          "Ingresa un correo electrónico."
+        );
+
+        return;
+      }
+
+      if (
+        contrasena.length <
+        6
+      ) {
+        mostrarMensaje(
+          registroMensaje,
+          "La contraseña debe tener al menos 6 caracteres."
+        );
+
+        return;
+      }
+
+      if (
+        contrasena !==
+        confirmar
+      ) {
+        mostrarMensaje(
+          registroMensaje,
+          "Las contraseñas no coinciden."
+        );
+
+        return;
+      }
+
+      if (btnRegistro) {
+        btnRegistro.disabled =
+          true;
+
+        btnRegistro.textContent =
+          "Creando cuenta...";
+      }
+
+      mostrarLoading(
+        "Creando tu cuenta",
+        "Esto tomará solo un momento."
+      );
+
+      try {
+        const credencial =
+          await auth
+            .createUserWithEmailAndPassword(
+              correo,
+              contrasena
+            );
+
+        const usuario =
+          credencial.user;
+
+        await db
+          .collection(
+            "usuarios"
+          )
+          .doc(
+            usuario.uid
+          )
+          .set(
+            {
+              uid:
+                usuario.uid,
+
+              email:
+                correo,
+
+              nombre:
+                "",
+
+              foto:
+                "",
+
+              telefono:
+                "",
+
+              localidad:
+                "",
+
+              rol:
+                "cliente",
+
+              perfilCompleto:
+                false,
+
+              proveedor:
+                "password",
+
+              creadoEn:
+                firebase.firestore
+                  .FieldValue
+                  .serverTimestamp(),
+
+              ultimoAcceso:
+                firebase.firestore
+                  .FieldValue
+                  .serverTimestamp()
+            },
+            {
+              merge:
+                true
+            }
+          );
+
+        procesandoUsuario =
+          false;
+
+        await resolverUsuario(
+          usuario
+        );
+
+      } catch (error) {
+        console.error(
+          error
+        );
+
+        procesandoUsuario =
+          false;
+
+        ocultarLoading();
+
+        mostrarMensaje(
+          registroMensaje,
+          traducirErrorAuth(
+            error
+          )
+        );
+
+        if (btnRegistro) {
+          btnRegistro.disabled =
+            false;
+
+          btnRegistro.textContent =
+            "Crear mi cuenta";
+        }
+      }
+    }
+  );
 
 async function entrarConGoogle(
   boton,
@@ -947,8 +997,10 @@ async function entrarConGoogle(
     registroMensaje
   );
 
-  boton.disabled =
-    true;
+  if (boton) {
+    boton.disabled =
+      true;
+  }
 
   mostrarLoading(
     "Conectando con Google",
@@ -986,39 +1038,52 @@ async function entrarConGoogle(
     const documento =
       await referencia.get();
 
-    if (!documento.exists) {
+    if (
+      !documento.exists
+    ) {
       await referencia.set({
         uid:
           usuario.uid,
+
         email:
           normalizarCorreo(
             usuario.email
           ),
+
         nombre:
           usuario.displayName ||
           "",
+
         foto:
           usuario.photoURL ||
           "",
+
         telefono:
           "",
+
         localidad:
           "",
+
         rol:
           "cliente",
+
         perfilCompleto:
           false,
+
         proveedor:
           "google.com",
+
         creadoEn:
           firebase.firestore
             .FieldValue
             .serverTimestamp(),
+
         ultimoAcceso:
           firebase.firestore
             .FieldValue
             .serverTimestamp()
       });
+
     } else {
       await referencia.set(
         {
@@ -1026,18 +1091,21 @@ async function entrarConGoogle(
             normalizarCorreo(
               usuario.email
             ),
+
           foto:
             usuario.photoURL ||
             documento.data()
-              .foto ||
+              ?.foto ||
             "",
+
           ultimoAcceso:
             firebase.firestore
               .FieldValue
               .serverTimestamp()
         },
         {
-          merge: true
+          merge:
+            true
         }
       );
     }
@@ -1071,211 +1139,244 @@ async function entrarConGoogle(
       );
     }
 
-    boton.disabled =
-      false;
+    if (boton) {
+      boton.disabled =
+        false;
+    }
   }
 }
 
-btnGoogleLogin?.addEventListener(
-  "click",
-  () => {
-    entrarConGoogle(
-      btnGoogleLogin,
-      loginMensaje
-    );
-  }
-);
-
-btnGoogleRegistro?.addEventListener(
-  "click",
-  () => {
-    entrarConGoogle(
-      btnGoogleRegistro,
-      registroMensaje
-    );
-  }
-);
-
-perfilForm?.addEventListener(
-  "submit",
-  async event => {
-    event.preventDefault();
-
-    if (
-      !usuarioPerfilPendiente
-    ) {
-      return;
+btnGoogleLogin
+  ?.addEventListener(
+    "click",
+    () => {
+      entrarConGoogle(
+        btnGoogleLogin,
+        loginMensaje
+      );
     }
+  );
 
-    perfilError.textContent =
-      "";
+btnGoogleRegistro
+  ?.addEventListener(
+    "click",
+    () => {
+      entrarConGoogle(
+        btnGoogleRegistro,
+        registroMensaje
+      );
+    }
+  );
 
-    const nombre =
-      document
-        .getElementById(
-          "perfil-nombre"
-        )
-        .value
-        .trim()
-        .replace(
-          /\s+/g,
-          " "
+perfilForm
+  ?.addEventListener(
+    "submit",
+    async event => {
+      event.preventDefault();
+
+      if (
+        !usuarioPerfilPendiente
+      ) {
+        return;
+      }
+
+      if (perfilError) {
+        perfilError.textContent =
+          "";
+      }
+
+      const nombre =
+        document
+          .getElementById(
+            "perfil-nombre"
+          )
+          ?.value
+          .trim()
+          .replace(
+            /\s+/g,
+            " "
+          ) ||
+        "";
+
+      const telefono =
+        limpiarTelefono(
+          document
+            .getElementById(
+              "perfil-telefono"
+            )
+            ?.value
         );
 
-    const telefono =
-      limpiarTelefono(
+      const localidad =
+        document
+          .getElementById(
+            "perfil-localidad"
+          )
+          ?.value
+          .trim()
+          .replace(
+            /\s+/g,
+            " "
+          ) ||
+        "";
+
+      if (
+        nombre.length <=
+        10
+      ) {
+        if (perfilError) {
+          perfilError.textContent =
+            "El nombre completo debe tener más de 10 caracteres.";
+        }
+
+        document
+          .getElementById(
+            "perfil-nombre"
+          )
+          ?.focus();
+
+        return;
+      }
+
+      if (
+        telefono.length <
+        10
+      ) {
+        if (perfilError) {
+          perfilError.textContent =
+            "El número de celular debe contener mínimo 10 dígitos.";
+        }
+
         document
           .getElementById(
             "perfil-telefono"
           )
-          .value
-      );
+          ?.focus();
 
-    const localidad =
-      document
-        .getElementById(
-          "perfil-localidad"
-        )
-        .value
-        .trim()
-        .replace(
-          /\s+/g,
-          " "
-        );
-
-    if (
-      nombre.length <= 10
-    ) {
-      perfilError.textContent =
-        "El nombre completo debe tener más de 10 caracteres.";
-
-      document
-        .getElementById(
-          "perfil-nombre"
-        )
-        .focus();
-
-      return;
-    }
-
-    if (
-      telefono.length < 10
-    ) {
-      perfilError.textContent =
-        "El número de celular debe contener mínimo 10 dígitos.";
-
-      document
-        .getElementById(
-          "perfil-telefono"
-        )
-        .focus();
-
-      return;
-    }
-
-    if (
-      localidad.length < 2
-    ) {
-      perfilError.textContent =
-        "Escribe de dónde eres.";
-
-      document
-        .getElementById(
-          "perfil-localidad"
-        )
-        .focus();
-
-      return;
-    }
-
-    btnGuardarPerfil.disabled =
-      true;
-
-    btnGuardarPerfil.textContent =
-      "Guardando...";
-
-    mostrarLoading(
-      "Guardando tu perfil",
-      "Estamos preparando tu cuenta."
-    );
-
-    try {
-      const usuario =
-        usuarioPerfilPendiente;
-
-      await db
-        .collection(
-          "usuarios"
-        )
-        .doc(
-          usuario.uid
-        )
-        .set(
-          {
-            uid:
-              usuario.uid,
-            email:
-              normalizarCorreo(
-                usuario.email
-              ),
-            nombre,
-            telefono,
-            localidad,
-            foto:
-              usuario.photoURL ||
-              "",
-            rol:
-              "cliente",
-            perfilCompleto:
-              true,
-            perfilActualizadoEn:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp(),
-            ultimoAcceso:
-              firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-          },
-          {
-            merge: true
-          }
-        );
-
-      if (
-        usuario.displayName !==
-        nombre
-      ) {
-        await usuario.updateProfile({
-          displayName:
-            nombre
-        });
+        return;
       }
 
-      cerrarPerfil();
+      if (
+        localidad.length <
+        2
+      ) {
+        if (perfilError) {
+          perfilError.textContent =
+            "Escribe de dónde eres.";
+        }
 
-      window.location.replace(
-        "index.html"
+        document
+          .getElementById(
+            "perfil-localidad"
+          )
+          ?.focus();
+
+        return;
+      }
+
+      if (btnGuardarPerfil) {
+        btnGuardarPerfil.disabled =
+          true;
+
+        btnGuardarPerfil.textContent =
+          "Guardando...";
+      }
+
+      mostrarLoading(
+        "Guardando tu perfil",
+        "Estamos preparando tu cuenta."
       );
 
-    } catch (error) {
-      console.error(
-        error
-      );
+      try {
+        const usuario =
+          usuarioPerfilPendiente;
 
-      ocultarLoading();
+        await db
+          .collection(
+            "usuarios"
+          )
+          .doc(
+            usuario.uid
+          )
+          .set(
+            {
+              uid:
+                usuario.uid,
 
-      perfilError.textContent =
-        "No pudimos guardar tu información. Inténtalo nuevamente.";
+              email:
+                normalizarCorreo(
+                  usuario.email
+                ),
 
-      btnGuardarPerfil.disabled =
-        false;
+              nombre,
 
-      btnGuardarPerfil.textContent =
-        "Guardar y entrar a la tienda";
+              telefono,
+
+              localidad,
+
+              foto:
+                usuario.photoURL ||
+                "",
+
+              rol:
+                "cliente",
+
+              perfilCompleto:
+                true,
+
+              perfilActualizadoEn:
+                firebase.firestore
+                  .FieldValue
+                  .serverTimestamp(),
+
+              ultimoAcceso:
+                firebase.firestore
+                  .FieldValue
+                  .serverTimestamp()
+            },
+            {
+              merge:
+                true
+            }
+          );
+
+        if (
+          usuario.displayName !==
+          nombre
+        ) {
+          await usuario
+            .updateProfile({
+              displayName:
+                nombre
+            });
+        }
+
+        cerrarPerfil();
+
+        irDestinoClienteAuth();
+
+      } catch (error) {
+        console.error(
+          error
+        );
+
+        ocultarLoading();
+
+        if (perfilError) {
+          perfilError.textContent =
+            "No pudimos guardar tu información. Inténtalo nuevamente.";
+        }
+
+        if (btnGuardarPerfil) {
+          btnGuardarPerfil.disabled =
+            false;
+
+          btnGuardarPerfil.textContent =
+            "Guardar y entrar a la tienda";
+        }
+      }
     }
-  }
-);
+  );
 
 document
   .getElementById(
@@ -1286,8 +1387,14 @@ document
     event => {
       event.target.value =
         event.target.value
-          .replace(/\D/g, "")
-          .slice(0, 15);
+          .replace(
+            /\D/g,
+            ""
+          )
+          .slice(
+            0,
+            15
+          );
     }
   );
 
@@ -1309,24 +1416,28 @@ document
           .trim() ||
         "";
 
-      document.getElementById(
-        "reset-correo"
-      ).value =
-        correoLogin;
+      const resetCorreo =
+        document
+          .getElementById(
+            "reset-correo"
+          );
 
-      resetOverlay?.classList.add(
-        "active"
-      );
+      if (resetCorreo) {
+        resetCorreo.value =
+          correoLogin;
+      }
+
+      resetOverlay
+        ?.classList.add(
+          "active"
+        );
 
       document.body.style.overflow =
         "hidden";
 
       setTimeout(
         () => {
-          document
-            .getElementById(
-              "reset-correo"
-            )
+          resetCorreo
             ?.focus();
         },
         100
@@ -1335,9 +1446,10 @@ document
   );
 
 function cerrarReset() {
-  resetOverlay?.classList.remove(
-    "active"
-  );
+  resetOverlay
+    ?.classList.remove(
+      "active"
+    );
 
   document.body.style.overflow =
     "";
@@ -1354,80 +1466,95 @@ document
     cerrarReset
   );
 
-resetOverlay?.addEventListener(
-  "click",
-  event => {
-    if (
-      event.target ===
-      resetOverlay
-    ) {
-      cerrarReset();
+resetOverlay
+  ?.addEventListener(
+    "click",
+    event => {
+      if (
+        event.target ===
+        resetOverlay
+      ) {
+        cerrarReset();
+      }
     }
-  }
-);
+  );
 
-resetForm?.addEventListener(
-  "submit",
-  async event => {
-    event.preventDefault();
+resetForm
+  ?.addEventListener(
+    "submit",
+    async event => {
+      event.preventDefault();
 
-    limpiarMensajeReset();
+      limpiarMensajeReset();
 
-    const correo =
-      normalizarCorreo(
-        document
-          .getElementById(
-            "reset-correo"
-          )
-          .value
-      );
-
-    if (!correo) {
-      mostrarMensajeReset(
-        "Ingresa tu correo electrónico."
-      );
-
-      return;
-    }
-
-    btnReset.disabled =
-      true;
-
-    btnReset.textContent =
-      "Enviando...";
-
-    try {
-      await auth
-        .sendPasswordResetEmail(
-          correo
+      const correo =
+        normalizarCorreo(
+          document
+            .getElementById(
+              "reset-correo"
+            )
+            ?.value
         );
 
-      mostrarMensajeReset(
-        "Te enviamos un enlace para restablecer tu contraseña. Revisa también tu carpeta de spam.",
-        "success"
-      );
+      if (!correo) {
+        mostrarMensajeReset(
+          "Ingresa tu correo electrónico."
+        );
 
-      btnReset.textContent =
-        "Enlace enviado";
+        return;
+      }
 
-    } catch (error) {
-      console.error(
-        error
-      );
+      if (btnReset) {
+        btnReset.disabled =
+          true;
 
-      mostrarMensajeReset(
-        traducirErrorAuth(
+        btnReset.textContent =
+          "Enviando...";
+      }
+
+      try {
+        await auth
+          .sendPasswordResetEmail(
+            correo
+          );
+
+        mostrarMensajeReset(
+          "Te enviamos un enlace para restablecer tu contraseña. Revisa también tu carpeta de spam.",
+          "success"
+        );
+
+        if (btnReset) {
+          btnReset.textContent =
+            "Enlace enviado";
+        }
+
+      } catch (error) {
+        console.error(
           error
-        )
-      );
+        );
 
-      btnReset.disabled =
-        false;
+        mostrarMensajeReset(
+          traducirErrorAuth(
+            error
+          )
+        );
 
-      btnReset.textContent =
-        "Enviar enlace";
+        if (btnReset) {
+          btnReset.disabled =
+            false;
+
+          btnReset.textContent =
+            "Enviar enlace";
+        }
+      }
     }
-  }
+  );
+
+cambiarVistaAuth(
+  modoInicialAuth ===
+  "registro"
+    ? "registro"
+    : "login"
 );
 
 auth.onAuthStateChanged(

@@ -46,6 +46,185 @@
     rel="stylesheet"
     href="css/carrito.css"
   >
+
+  <style>
+    .cart-auth-box {
+      margin-top: 4px;
+      padding: 16px;
+      display: none;
+      grid-template-columns: 44px minmax(0,1fr);
+      gap: 12px;
+      align-items: center;
+      border: 1px solid rgba(167,123,212,.18);
+      border-radius: 18px;
+      background: linear-gradient(135deg,rgba(201,167,232,.1),rgba(240,111,168,.07));
+    }
+
+    .cart-auth-box.show {
+      display: grid;
+    }
+
+    .cart-auth-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: white;
+      color: #e84f94;
+      font-size: 16px;
+      box-shadow: 0 8px 22px rgba(73,54,81,.08);
+    }
+
+    .cart-auth-info strong {
+      display: block;
+      color: #252027;
+      font-size: 11px;
+    }
+
+    .cart-auth-info p {
+      margin-top: 4px;
+      color: #7f7880;
+      font-size: 8px;
+      line-height: 1.5;
+    }
+
+    .cart-auth-actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .cart-auth-actions button {
+      min-height: 42px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 8px;
+      font-weight: 800;
+    }
+
+    .cart-auth-login {
+      border: none;
+      background: #252027;
+      color: white;
+    }
+
+    .cart-auth-register {
+      border: 1px solid #eee8ef;
+      background: white;
+      color: #252027;
+    }
+
+    .checkout-auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(31,25,33,.52);
+      backdrop-filter: blur(8px);
+    }
+
+    .checkout-auth-overlay.active {
+      display: flex;
+    }
+
+    .checkout-auth-modal {
+      width: min(100%,430px);
+      padding: 24px 18px 18px;
+      border-radius: 24px 24px 18px 18px;
+      background: white;
+      box-shadow: 0 25px 70px rgba(35,25,39,.22);
+      text-align: center;
+    }
+
+    .checkout-auth-icon {
+      width: 62px;
+      height: 62px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg,#f3eafd,#fff0f7);
+      color: #e84f94;
+      font-size: 22px;
+    }
+
+    .checkout-auth-modal span {
+      display: block;
+      margin-top: 15px;
+      color: #a77bd4;
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .checkout-auth-modal h2 {
+      margin-top: 4px;
+      color: #252027;
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+    }
+
+    .checkout-auth-modal p {
+      max-width: 340px;
+      margin: 8px auto 0;
+      color: #777078;
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .checkout-auth-actions {
+      margin-top: 18px;
+      display: grid;
+      gap: 9px;
+    }
+
+    .checkout-auth-primary,
+    .checkout-auth-secondary,
+    .checkout-auth-close {
+      min-height: 46px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .checkout-auth-primary {
+      border: none;
+      background: #252027;
+      color: white;
+    }
+
+    .checkout-auth-secondary {
+      border: 1px solid #eee8ef;
+      background: #fffafd;
+      color: #252027;
+    }
+
+    .checkout-auth-close {
+      border: none;
+      background: transparent;
+      color: #8c858d;
+      min-height: 38px;
+    }
+
+    @media (min-width: 600px) {
+      .checkout-auth-overlay {
+        align-items: center;
+      }
+
+      .checkout-auth-modal {
+        border-radius: 24px;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -402,7 +581,257 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
 <script src="js/firebase.js"></script>
-<script src="js/clienteAuth.js"></script>
+
+<script>
+  function mostrarEstadoInvitadoCarrito() {
+    window.usuarioDreams = null;
+    window.perfilDreams = null;
+
+    document
+      .getElementById(
+        "carrito-auth-codigos"
+      )
+      ?.classList.add(
+        "show"
+      );
+
+    const bloqueCodigos =
+      document.getElementById(
+        "bloque-codigos-guardados"
+      );
+
+    if (bloqueCodigos) {
+      bloqueCodigos.hidden =
+        true;
+    }
+  }
+
+  function mostrarEstadoSesionCarrito(
+    usuario,
+    perfil
+  ) {
+    window.usuarioDreams =
+      usuario;
+
+    window.perfilDreams = {
+      ...perfil,
+      uid:
+        usuario.uid,
+      email:
+        usuario.email ||
+        perfil.email ||
+        "",
+      foto:
+        usuario.photoURL ||
+        perfil.foto ||
+        ""
+    };
+
+    document
+      .getElementById(
+        "carrito-auth-codigos"
+      )
+      ?.classList.remove(
+        "show"
+      );
+
+    const bloqueCodigos =
+      document.getElementById(
+        "bloque-codigos-guardados"
+      );
+
+    if (bloqueCodigos) {
+      bloqueCodigos.hidden =
+        false;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent(
+        "dreams:cliente-listo",
+        {
+          detail: {
+            usuario:
+              window.usuarioDreams,
+            perfil:
+              window.perfilDreams
+          }
+        }
+      )
+    );
+  }
+
+  function abrirAuthCheckoutDreams() {
+    document
+      .getElementById(
+        "modal-checkout-auth"
+      )
+      ?.classList.add(
+        "active"
+      );
+
+    document.body.style.overflow =
+      "hidden";
+  }
+
+  function cerrarAuthCheckoutDreams() {
+    document
+      .getElementById(
+        "modal-checkout-auth"
+      )
+      ?.classList.remove(
+        "active"
+      );
+
+    document.body.style.overflow =
+      "";
+  }
+
+  function irLoginCarritoDreams(
+    modo = "login"
+  ) {
+    const url =
+      modo === "registro"
+        ? "login.html?modo=registro&redirect=finalizar.html"
+        : "login.html?redirect=finalizar.html";
+
+    window.location.href =
+      url;
+  }
+
+  document
+    .getElementById(
+      "carrito-auth-login"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+        irLoginCarritoDreams(
+          "login"
+        );
+      }
+    );
+
+  document
+    .getElementById(
+      "carrito-auth-register"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+        irLoginCarritoDreams(
+          "registro"
+        );
+      }
+    );
+
+  document
+    .getElementById(
+      "checkout-auth-login"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+        irLoginCarritoDreams(
+          "login"
+        );
+      }
+    );
+
+  document
+    .getElementById(
+      "checkout-auth-register"
+    )
+    ?.addEventListener(
+      "click",
+      () => {
+        irLoginCarritoDreams(
+          "registro"
+        );
+      }
+    );
+
+  document
+    .getElementById(
+      "checkout-auth-close"
+    )
+    ?.addEventListener(
+      "click",
+      cerrarAuthCheckoutDreams
+    );
+
+  document
+    .getElementById(
+      "modal-checkout-auth"
+    )
+    ?.addEventListener(
+      "click",
+      event => {
+        if (
+          event.target.id ===
+          "modal-checkout-auth"
+        ) {
+          cerrarAuthCheckoutDreams();
+        }
+      }
+    );
+
+  auth.onAuthStateChanged(
+    async usuario => {
+      if (!usuario) {
+        mostrarEstadoInvitadoCarrito();
+        return;
+      }
+
+      try {
+        const documento =
+          await db
+            .collection("usuarios")
+            .doc(usuario.uid)
+            .get();
+
+        if (!documento.exists) {
+          mostrarEstadoInvitadoCarrito();
+          return;
+        }
+
+        const perfil =
+          documento.data();
+
+        const rol =
+          String(
+            perfil.rol ||
+            "cliente"
+          )
+            .trim()
+            .toLowerCase();
+
+        if (
+          rol === "cliente" &&
+          perfil.perfilCompleto !==
+            true
+        ) {
+          window.location.href =
+            "login.html?redirect=finalizar.html";
+          return;
+        }
+
+        mostrarEstadoSesionCarrito(
+          usuario,
+          perfil
+        );
+
+      } catch (error) {
+        console.error(
+          "No se pudo cargar la sesión del carrito:",
+          error
+        );
+
+        mostrarEstadoInvitadoCarrito();
+      }
+    }
+  );
+</script>
+
 <script src="js/carrito.js"></script>
 <script src="js/codigosCarrito.js"></script>
 
@@ -662,6 +1091,11 @@
       .addEventListener(
         "click",
         () => {
+          if (!auth.currentUser) {
+            abrirAuthCheckoutDreams();
+            return;
+          }
+
           window.location.href =
             "finalizar.html";
         }
