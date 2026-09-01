@@ -79,15 +79,23 @@ function descuentoEstaActivo(descuento) {
 }
 
 function obtenerDescuentoProducto(producto) {
-  const aplicables = descuentosDreams.filter(descuento => {
-    if (!descuentoEstaActivo(descuento)) {
-      return false;
-    }
+  const activos = descuentosDreams.filter(
+    descuento => descuentoEstaActivo(descuento)
+  );
 
+  if (!activos.length) {
+    return null;
+  }
+
+  const descuentosProducto = activos.filter(descuento => {
     const productos = Array.isArray(descuento.productos)
       ? descuento.productos
       : [];
 
+    return productos.includes(producto.id);
+  });
+
+  const descuentosCategoria = activos.filter(descuento => {
     const categorias = Array.isArray(descuento.categorias)
       ? descuento.categorias
       : [];
@@ -96,32 +104,53 @@ function obtenerDescuentoProducto(producto) {
       ? [descuento.categoria]
       : [];
 
-    const aplicaProducto = productos.includes(producto.id);
-
-    const aplicaCategoria =
+    return (
       categorias.includes(producto.categoria) ||
-      categoriaIndividual.includes(producto.categoria);
-
-    return aplicaProducto || aplicaCategoria;
+      categoriaIndividual.includes(producto.categoria)
+    );
   });
 
-  if (!aplicables.length) {
-    return null;
+  const descuentosTienda = activos.filter(descuento => {
+    return (
+      descuento.tipo === "tienda" ||
+      descuento.alcance === "tienda"
+    );
+  });
+
+  function obtenerMayorDescuento(lista) {
+    if (!lista.length) {
+      return null;
+    }
+
+    return lista.reduce((mayor, actual) => {
+      const porcentajeMayor =
+        Number(mayor.porcentaje) || 0;
+
+      const porcentajeActual =
+        Number(actual.porcentaje) || 0;
+
+      return porcentajeActual > porcentajeMayor
+        ? actual
+        : mayor;
+    });
   }
 
-  return aplicables.reduce((mayor, actual) => {
-    const porcentajeMayor = Number(mayor.porcentaje) || 0;
-    const porcentajeActual = Number(actual.porcentaje) || 0;
-
-    return porcentajeActual > porcentajeMayor
-      ? actual
-      : mayor;
-  });
+  return (
+    obtenerMayorDescuento(descuentosProducto) ||
+    obtenerMayorDescuento(descuentosCategoria) ||
+    obtenerMayorDescuento(descuentosTienda) ||
+    null
+  );
 }
 
 function obtenerDatosPrecio(producto) {
-  const precioOriginal = Math.max(0, Number(producto.precio) || 0);
-  const descuento = obtenerDescuentoProducto(producto);
+  const precioOriginal = Math.max(
+    0,
+    Number(producto.precio) || 0
+  );
+
+  const descuento =
+    obtenerDescuentoProducto(producto);
 
   if (!descuento) {
     return {
@@ -134,11 +163,15 @@ function obtenerDatosPrecio(producto) {
 
   const porcentaje = Math.min(
     100,
-    Math.max(0, Number(descuento.porcentaje) || 0)
+    Math.max(
+      0,
+      Number(descuento.porcentaje) || 0
+    )
   );
 
   const precioFinal =
-    precioOriginal - precioOriginal * (porcentaje / 100);
+    precioOriginal -
+    precioOriginal * (porcentaje / 100);
 
   return {
     precioOriginal,
@@ -149,7 +182,8 @@ function obtenerDatosPrecio(producto) {
 }
 
 function obtenerRutaImagen(producto) {
-  const imagen = String(producto.imagen || "").trim();
+  const imagen =
+    String(producto.imagen || "").trim();
 
   if (!imagen) {
     return "imagenes/sistema/producto-sin-imagen.png";
@@ -172,128 +206,246 @@ function obtenerRutaImagen(producto) {
 
 function ordenarStockPrimero(lista) {
   return [...lista].sort((a, b) => {
-    const stockA = Number(a.stock) || 0;
-    const stockB = Number(b.stock) || 0;
+    const stockA =
+      Number(a.stock) || 0;
 
-    if (stockA > 0 && stockB <= 0) return -1;
-    if (stockA <= 0 && stockB > 0) return 1;
+    const stockB =
+      Number(b.stock) || 0;
+
+    if (
+      stockA > 0 &&
+      stockB <= 0
+    ) {
+      return -1;
+    }
+
+    if (
+      stockA <= 0 &&
+      stockB > 0
+    ) {
+      return 1;
+    }
 
     return 0;
   });
 }
 
 function aplicarOrden(lista) {
-  const productos = [...lista];
+  const productos =
+    [...lista];
 
-  if (ordenActual === "precio-menor") {
+  if (
+    ordenActual ===
+    "precio-menor"
+  ) {
     productos.sort((a, b) => {
-      return obtenerDatosPrecio(a).precioFinal -
-        obtenerDatosPrecio(b).precioFinal;
-    });
-  }
-
-  if (ordenActual === "precio-mayor") {
-    productos.sort((a, b) => {
-      return obtenerDatosPrecio(b).precioFinal -
-        obtenerDatosPrecio(a).precioFinal;
-    });
-  }
-
-  if (ordenActual === "nombre") {
-    productos.sort((a, b) => {
-      return String(a.nombre || "").localeCompare(
-        String(b.nombre || ""),
-        "es",
-        { sensitivity: "base" }
+      return (
+        obtenerDatosPrecio(a).precioFinal -
+        obtenerDatosPrecio(b).precioFinal
       );
     });
   }
 
-  return ordenarStockPrimero(productos);
+  if (
+    ordenActual ===
+    "precio-mayor"
+  ) {
+    productos.sort((a, b) => {
+      return (
+        obtenerDatosPrecio(b).precioFinal -
+        obtenerDatosPrecio(a).precioFinal
+      );
+    });
+  }
+
+  if (
+    ordenActual === "nombre"
+  ) {
+    productos.sort((a, b) => {
+      return String(
+        a.nombre || ""
+      ).localeCompare(
+        String(b.nombre || ""),
+        "es",
+        {
+          sensitivity: "base"
+        }
+      );
+    });
+  }
+
+  return ordenarStockPrimero(
+    productos
+  );
 }
 
 function obtenerProductosFiltrados() {
-  let lista = [...productosDreams];
+  let lista =
+    [...productosDreams];
 
-  if (categoriaActiva !== "todos") {
-    lista = lista.filter(producto =>
-      normalizarTexto(producto.categoria) ===
-      normalizarTexto(categoriaActiva)
-    );
+  if (
+    categoriaActiva !==
+    "todos"
+  ) {
+    lista =
+      lista.filter(producto =>
+        normalizarTexto(
+          producto.categoria
+        ) ===
+        normalizarTexto(
+          categoriaActiva
+        )
+      );
   }
 
   if (textoBusqueda) {
-    const busqueda = normalizarTexto(textoBusqueda);
-
-    lista = lista.filter(producto => {
-      const nombre = normalizarTexto(producto.nombre);
-      const categoria = normalizarTexto(producto.categoria);
-      const descripcion = normalizarTexto(producto.descripcion);
-
-      return (
-        nombre.includes(busqueda) ||
-        categoria.includes(busqueda) ||
-        descripcion.includes(busqueda)
+    const busqueda =
+      normalizarTexto(
+        textoBusqueda
       );
-    });
+
+    lista =
+      lista.filter(producto => {
+        const nombre =
+          normalizarTexto(
+            producto.nombre
+          );
+
+        const categoria =
+          normalizarTexto(
+            producto.categoria
+          );
+
+        const descripcion =
+          normalizarTexto(
+            producto.descripcion
+          );
+
+        return (
+          nombre.includes(
+            busqueda
+          ) ||
+          categoria.includes(
+            busqueda
+          ) ||
+          descripcion.includes(
+            busqueda
+          )
+        );
+      });
   }
 
-  if (filtroStock === "disponibles") {
-    lista = lista.filter(producto =>
-      Number(producto.stock) > 0
-    );
+  if (
+    filtroStock ===
+    "disponibles"
+  ) {
+    lista =
+      lista.filter(
+        producto =>
+          Number(
+            producto.stock
+          ) > 0
+      );
   }
 
-  if (filtroStock === "agotados") {
-    lista = lista.filter(producto =>
-      Number(producto.stock) <= 0
-    );
+  if (
+    filtroStock ===
+    "agotados"
+  ) {
+    lista =
+      lista.filter(
+        producto =>
+          Number(
+            producto.stock
+          ) <= 0
+      );
   }
 
   return aplicarOrden(lista);
 }
 
-function crearTarjetaProducto(producto) {
-  const agotado = Number(producto.stock) <= 0;
-  const precios = obtenerDatosPrecio(producto);
-  const imagen = obtenerRutaImagen(producto);
+function crearTarjetaProducto(
+  producto
+) {
+  const agotado =
+    Number(producto.stock) <= 0;
 
-  const descuentoHTML = precios.tieneDescuento
-    ? `
-      <span class="product-badge offer">
-        -${Math.round(precios.porcentaje)}%
-      </span>
-    `
-    : "";
+  const precios =
+    obtenerDatosPrecio(
+      producto
+    );
 
-  const agotadoHTML = agotado
-    ? `
-      <span class="product-badge sold-out">
-        AGOTADO
-      </span>
-    `
-    : descuentoHTML;
+  const imagen =
+    obtenerRutaImagen(
+      producto
+    );
 
-  const precioAnteriorHTML = precios.tieneDescuento
-    ? `
-      <span class="product-old-price">
-        ${formatearPrecio(precios.precioOriginal)}
-      </span>
-    `
-    : "";
+  const descuentoHTML =
+    precios.tieneDescuento
+      ? `
+        <span class="product-badge offer">
+          -${Math.round(
+            precios.porcentaje
+          )}%
+        </span>
+      `
+      : "";
+
+  const agotadoHTML =
+    agotado
+      ? `
+        <span class="product-badge sold-out">
+          AGOTADO
+        </span>
+      `
+      : descuentoHTML;
+
+  const precioAnteriorHTML =
+    precios.tieneDescuento
+      ? `
+        <span class="product-old-price">
+          ${formatearPrecio(
+            precios.precioOriginal
+          )}
+        </span>
+      `
+      : "";
 
   return `
     <article
-      class="product-card ${agotado ? "is-sold-out" : ""}"
-      data-id="${escapeHtml(producto.id)}"
+      class="product-card ${
+        agotado
+          ? "is-sold-out"
+          : ""
+      }"
+      data-id="${
+        escapeHtml(
+          producto.id
+        )
+      }"
     >
+
       <div
         class="product-image-container"
-        onclick="abrirProducto('${escapeHtml(producto.id)}')"
+        onclick="abrirProducto('${
+          escapeHtml(
+            producto.id
+          )
+        }')"
       >
+
         <img
-          src="${escapeHtml(imagen)}"
-          alt="${escapeHtml(producto.nombre || "Producto")}"
+          src="${
+            escapeHtml(
+              imagen
+            )
+          }"
+          alt="${
+            escapeHtml(
+              producto.nombre ||
+              "Producto"
+            )
+          }"
           loading="lazy"
           onerror="this.src='imagenes/sistema/producto-sin-imagen.png'"
         >
@@ -304,237 +456,472 @@ function crearTarjetaProducto(producto) {
           type="button"
           class="add-product-button"
           aria-label="Agregar al carrito"
-          onclick="event.stopPropagation(); agregarProductoRapido('${escapeHtml(producto.id)}')"
-          ${agotado ? "disabled" : ""}
+          onclick="event.stopPropagation(); agregarProductoRapido('${
+            escapeHtml(
+              producto.id
+            )
+          }')"
+          ${
+            agotado
+              ? "disabled"
+              : ""
+          }
         >
-          <i class="fa-solid ${agotado ? "fa-xmark" : "fa-plus"}"></i>
+
+          <i
+            class="fa-solid ${
+              agotado
+                ? "fa-xmark"
+                : "fa-plus"
+            }"
+          ></i>
+
         </button>
+
       </div>
 
       <div
         class="product-info"
-        onclick="abrirProducto('${escapeHtml(producto.id)}')"
+        onclick="abrirProducto('${
+          escapeHtml(
+            producto.id
+          )
+        }')"
       >
+
         <p class="product-category">
-          ${escapeHtml(producto.categoria || "Dreams Cosmetic")}
+          ${
+            escapeHtml(
+              producto.categoria ||
+              "Dreams Cosmetic"
+            )
+          }
         </p>
 
         <h3 class="product-name">
-          ${escapeHtml(producto.nombre || "Producto")}
+          ${
+            escapeHtml(
+              producto.nombre ||
+              "Producto"
+            )
+          }
         </h3>
 
         <div class="product-price-row">
+
           <span class="product-price">
-            ${formatearPrecio(precios.precioFinal)}
+            ${
+              formatearPrecio(
+                precios.precioFinal
+              )
+            }
           </span>
 
           ${precioAnteriorHTML}
+
         </div>
 
-        <p class="product-stock ${agotado ? "out" : ""}">
+        <p
+          class="product-stock ${
+            agotado
+              ? "out"
+              : ""
+          }"
+        >
           ${
             agotado
               ? "Agotado temporalmente"
-              : `${Number(producto.stock)} disponible${Number(producto.stock) === 1 ? "" : "s"}`
+              : `${
+                  Number(
+                    producto.stock
+                  )
+                } disponible${
+                  Number(
+                    producto.stock
+                  ) === 1
+                    ? ""
+                    : "s"
+                }`
           }
         </p>
+
       </div>
+
     </article>
   `;
 }
 
 function renderizarProductos() {
-  if (!productosContainer) {
+  if (
+    !productosContainer
+  ) {
     return;
   }
 
-  const lista = obtenerProductosFiltrados();
+  const lista =
+    obtenerProductosFiltrados();
 
-  productosContainer.innerHTML = "";
+  productosContainer.innerHTML =
+    "";
 
-  if (cantidadResultados) {
+  if (
+    cantidadResultados
+  ) {
     cantidadResultados.textContent =
-      `${lista.length} producto${lista.length === 1 ? "" : "s"}`;
+      `${
+        lista.length
+      } producto${
+        lista.length === 1
+          ? ""
+          : "s"
+      }`;
   }
 
-  if (!lista.length) {
-    if (sinResultados) {
-      sinResultados.hidden = false;
+  if (
+    !lista.length
+  ) {
+    if (
+      sinResultados
+    ) {
+      sinResultados.hidden =
+        false;
     }
 
     return;
   }
 
-  if (sinResultados) {
-    sinResultados.hidden = true;
+  if (
+    sinResultados
+  ) {
+    sinResultados.hidden =
+      true;
   }
 
   productosContainer.innerHTML =
-    lista.map(crearTarjetaProducto).join("");
+    lista
+      .map(
+        crearTarjetaProducto
+      )
+      .join("");
 }
 
 function obtenerCategorias() {
-  const categorias = productosDreams
-    .map(producto => String(producto.categoria || "").trim())
-    .filter(Boolean);
+  const categorias =
+    productosDreams
+      .map(
+        producto =>
+          String(
+            producto.categoria ||
+            ""
+          ).trim()
+      )
+      .filter(Boolean);
 
-  return [...new Set(categorias)].sort((a, b) =>
-    a.localeCompare(b, "es", { sensitivity: "base" })
+  return [
+    ...new Set(
+      categorias
+    )
+  ].sort(
+    (a, b) =>
+      a.localeCompare(
+        b,
+        "es",
+        {
+          sensitivity:
+            "base"
+        }
+      )
   );
 }
 
 function renderizarCategorias() {
-  if (!categoriasContainer) {
+  if (
+    !categoriasContainer
+  ) {
     return;
   }
 
-  const categorias = obtenerCategorias();
+  const categorias =
+    obtenerCategorias();
 
   categoriasContainer.innerHTML = `
     <button
-      class="category-pill ${categoriaActiva === "todos" ? "active" : ""}"
+      class="category-pill ${
+        categoriaActiva ===
+        "todos"
+          ? "active"
+          : ""
+      }"
       data-categoria="todos"
     >
       Todos
     </button>
 
-    ${categorias.map(categoria => `
-      <button
-        class="category-pill ${
-          categoriaActiva === categoria
-            ? "active"
-            : ""
-        }"
-        data-categoria="${escapeHtml(categoria)}"
-      >
-        ${escapeHtml(categoria)}
-      </button>
-    `).join("")}
+    ${
+      categorias
+        .map(
+          categoria => `
+            <button
+              class="category-pill ${
+                categoriaActiva ===
+                categoria
+                  ? "active"
+                  : ""
+              }"
+              data-categoria="${
+                escapeHtml(
+                  categoria
+                )
+              }"
+            >
+              ${
+                escapeHtml(
+                  categoria
+                )
+              }
+            </button>
+          `
+        )
+        .join("")
+    }
   `;
 
   categoriasContainer
-    .querySelectorAll(".category-pill")
-    .forEach(boton => {
-      boton.addEventListener("click", () => {
-        categoriaActiva = boton.dataset.categoria || "todos";
+    .querySelectorAll(
+      ".category-pill"
+    )
+    .forEach(
+      boton => {
+        boton.addEventListener(
+          "click",
+          () => {
+            categoriaActiva =
+              boton.dataset
+                .categoria ||
+              "todos";
 
-        renderizarCategorias();
-        renderizarProductos();
+            renderizarCategorias();
 
-        document
-          .getElementById("productos")
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-      });
-    });
+            renderizarProductos();
+
+            document
+              .getElementById(
+                "productos"
+              )
+              ?.scrollIntoView({
+                behavior:
+                  "smooth",
+
+                block:
+                  "start"
+              });
+          }
+        );
+      }
+    );
 }
 
 function renderizarOfertas() {
-  const seccion = document.getElementById("seccion-ofertas");
+  const seccion =
+    document.getElementById(
+      "seccion-ofertas"
+    );
 
-  if (!productosOfertaContainer) {
+  if (
+    !productosOfertaContainer
+  ) {
     return;
   }
 
-  const ofertas = productosDreams
-    .filter(producto =>
-      obtenerDatosPrecio(producto).tieneDescuento
-    )
-    .sort((a, b) => {
-      const stockA = Number(a.stock) || 0;
-      const stockB = Number(b.stock) || 0;
+  const ofertas =
+    productosDreams
+      .filter(
+        producto =>
+          obtenerDatosPrecio(
+            producto
+          ).tieneDescuento
+      )
+      .sort(
+        (a, b) => {
+          const stockA =
+            Number(
+              a.stock
+            ) || 0;
 
-      if (stockA > 0 && stockB <= 0) return -1;
-      if (stockA <= 0 && stockB > 0) return 1;
+          const stockB =
+            Number(
+              b.stock
+            ) || 0;
 
-      return 0;
-    })
-    .slice(0, 10);
+          if (
+            stockA > 0 &&
+            stockB <= 0
+          ) {
+            return -1;
+          }
 
-  if (!ofertas.length) {
+          if (
+            stockA <= 0 &&
+            stockB > 0
+          ) {
+            return 1;
+          }
+
+          return 0;
+        }
+      )
+      .slice(
+        0,
+        10
+      );
+
+  if (
+    !ofertas.length
+  ) {
     if (seccion) {
-      seccion.style.display = "none";
+      seccion.style.display =
+        "none";
     }
 
     return;
   }
 
   if (seccion) {
-    seccion.style.display = "";
+    seccion.style.display =
+      "";
   }
 
   productosOfertaContainer.innerHTML =
-    ofertas.map(producto => `
-      <div
-        class="offer-card"
-        onclick="abrirProducto('${escapeHtml(producto.id)}')"
-      >
-        <div class="offer-card-image">
-          <img
-            src="${escapeHtml(obtenerRutaImagen(producto))}"
-            alt="${escapeHtml(producto.nombre || "Producto")}"
-            loading="lazy"
-            onerror="this.src='imagenes/sistema/producto-sin-imagen.png'"
+    ofertas
+      .map(
+        producto => `
+          <div
+            class="offer-card"
+            onclick="abrirProducto('${
+              escapeHtml(
+                producto.id
+              )
+            }')"
           >
 
-          <span>
-            -${Math.round(obtenerDatosPrecio(producto).porcentaje)}%
-          </span>
-        </div>
+            <div class="offer-card-image">
 
-        <div class="offer-card-info">
-          <p>
-            ${escapeHtml(producto.nombre || "")}
-          </p>
+              <img
+                src="${
+                  escapeHtml(
+                    obtenerRutaImagen(
+                      producto
+                    )
+                  )
+                }"
+                alt="${
+                  escapeHtml(
+                    producto.nombre ||
+                    "Producto"
+                  )
+                }"
+                loading="lazy"
+                onerror="this.src='imagenes/sistema/producto-sin-imagen.png'"
+              >
 
-          <strong>
-            ${formatearPrecio(
-              obtenerDatosPrecio(producto).precioFinal
-            )}
-          </strong>
-        </div>
-      </div>
-    `).join("");
+              <span>
+                -${
+                  Math.round(
+                    obtenerDatosPrecio(
+                      producto
+                    ).porcentaje
+                  )
+                }%
+              </span>
+
+            </div>
+
+            <div class="offer-card-info">
+
+              <p>
+                ${
+                  escapeHtml(
+                    producto.nombre ||
+                    ""
+                  )
+                }
+              </p>
+
+              <strong>
+                ${
+                  formatearPrecio(
+                    obtenerDatosPrecio(
+                      producto
+                    ).precioFinal
+                  )
+                }
+              </strong>
+
+            </div>
+
+          </div>
+        `
+      )
+      .join("");
 }
 
 function renderizarTodo() {
   renderizarCategorias();
+
   renderizarProductos();
+
   renderizarOfertas();
 }
 
 function cargarProductos() {
   return db
-    .collection("productos")
+    .collection(
+      "productos"
+    )
     .onSnapshot(
       snapshot => {
-        productosDreams = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        productosDreams =
+          snapshot.docs.map(
+            doc => ({
+              id: doc.id,
+              ...doc.data()
+            })
+          );
 
         renderizarTodo();
       },
+
       error => {
-        console.error(error);
+        console.error(
+          error
+        );
 
         productosContainer.innerHTML = `
-          <div class="empty-state" style="grid-column:1/-1;">
+          <div
+            class="empty-state"
+            style="grid-column:1/-1;"
+          >
+
             <div class="empty-icon">
-              <i class="fa-solid fa-triangle-exclamation"></i>
+              <i
+                class="fa-solid fa-triangle-exclamation"
+              ></i>
             </div>
 
-            <h3>No pudimos cargar los productos</h3>
+            <h3>
+              No pudimos cargar los productos
+            </h3>
 
             <p>
               Intenta actualizar la página.
             </p>
+
           </div>
         `;
 
-        if (cantidadResultados) {
+        if (
+          cantidadResultados
+        ) {
           cantidadResultados.textContent =
             "No se pudieron cargar los productos";
         }
@@ -544,16 +931,24 @@ function cargarProductos() {
 
 function cargarDescuentos() {
   return db
-    .collection("descuentos")
-    .onSnapshot(snapshot => {
-      descuentosDreams = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    .collection(
+      "descuentos"
+    )
+    .onSnapshot(
+      snapshot => {
+        descuentosDreams =
+          snapshot.docs.map(
+            doc => ({
+              id: doc.id,
+              ...doc.data()
+            })
+          );
 
-      renderizarProductos();
-      renderizarOfertas();
-    });
+        renderizarProductos();
+
+        renderizarOfertas();
+      }
+    );
 }
 
 function abrirProducto(id) {
@@ -563,95 +958,160 @@ function abrirProducto(id) {
   );
 
   window.location.href =
-    `producto.html?id=${encodeURIComponent(id)}`;
+    `producto.html?id=${
+      encodeURIComponent(
+        id
+      )
+    }`;
 }
 
-function agregarProductoRapido(id) {
-  const producto = productosDreams.find(item =>
-    item.id === id
-  );
+function agregarProductoRapido(
+  id
+) {
+  const producto =
+    productosDreams.find(
+      item =>
+        item.id === id
+    );
 
-  if (!producto || Number(producto.stock) <= 0) {
+  if (
+    !producto ||
+    Number(
+      producto.stock
+    ) <= 0
+  ) {
     return;
   }
 
   if (
-    typeof window.agregarAlCarrito ===
+    typeof window
+      .agregarAlCarrito ===
     "function"
   ) {
-    window.agregarAlCarrito(producto);
+    window.agregarAlCarrito(
+      producto
+    );
   }
 }
 
 function abrirOverlay() {
-  overlay?.classList.add("active");
-  document.body.style.overflow = "hidden";
+  overlay?.classList.add(
+    "active"
+  );
+
+  document.body.style.overflow =
+    "hidden";
 }
 
 function cerrarOverlay() {
-  overlay?.classList.remove("active");
-  filterPanel?.classList.remove("active");
-  mobileMenu?.classList.remove("active");
-  document.body.style.overflow = "";
+  overlay?.classList.remove(
+    "active"
+  );
+
+  filterPanel?.classList.remove(
+    "active"
+  );
+
+  mobileMenu?.classList.remove(
+    "active"
+  );
+
+  document.body.style.overflow =
+    "";
 }
 
 function abrirFiltros() {
-  mobileMenu?.classList.remove("active");
-  filterPanel?.classList.add("active");
+  mobileMenu?.classList.remove(
+    "active"
+  );
+
+  filterPanel?.classList.add(
+    "active"
+  );
+
   abrirOverlay();
 }
 
 function abrirMenu() {
-  filterPanel?.classList.remove("active");
-  mobileMenu?.classList.add("active");
+  filterPanel?.classList.remove(
+    "active"
+  );
+
+  mobileMenu?.classList.add(
+    "active"
+  );
+
   abrirOverlay();
 }
 
-buscador?.addEventListener("input", event => {
-  textoBusqueda = event.target.value;
+buscador?.addEventListener(
+  "input",
+  event => {
+    textoBusqueda =
+      event.target.value;
 
-  if (limpiarBusqueda) {
-    limpiarBusqueda.style.display =
-      textoBusqueda.trim()
-        ? "flex"
-        : "none";
+    if (
+      limpiarBusqueda
+    ) {
+      limpiarBusqueda.style.display =
+        textoBusqueda.trim()
+          ? "flex"
+          : "none";
+    }
+
+    renderizarProductos();
   }
+);
 
-  renderizarProductos();
-});
+limpiarBusqueda?.addEventListener(
+  "click",
+  () => {
+    buscador.value =
+      "";
 
-limpiarBusqueda?.addEventListener("click", () => {
-  buscador.value = "";
-  textoBusqueda = "";
-  limpiarBusqueda.style.display = "none";
+    textoBusqueda =
+      "";
 
-  renderizarProductos();
-  buscador.focus();
-});
+    limpiarBusqueda.style.display =
+      "none";
+
+    renderizarProductos();
+
+    buscador.focus();
+  }
+);
 
 document
-  .getElementById("btn-filtros")
+  .getElementById(
+    "btn-filtros"
+  )
   ?.addEventListener(
     "click",
     abrirFiltros
   );
 
 document
-  .getElementById("cerrar-filtros")
+  .getElementById(
+    "cerrar-filtros"
+  )
   ?.addEventListener(
     "click",
     cerrarOverlay
   );
 
 document
-  .getElementById("btn-menu")
+  .getElementById(
+    "btn-menu"
+  )
   ?.addEventListener(
     "click",
     abrirMenu
   );
 
 document
-  .getElementById("cerrar-menu")
+  .getElementById(
+    "cerrar-menu"
+  )
   ?.addEventListener(
     "click",
     cerrarOverlay
@@ -666,18 +1126,22 @@ document
   .querySelectorAll(
     'input[name="stock"]'
   )
-  .forEach(radio => {
-    radio.addEventListener(
-      "change",
-      event => {
-        filtroStock =
-          event.target.value;
-      }
-    );
-  });
+  .forEach(
+    radio => {
+      radio.addEventListener(
+        "change",
+        event => {
+          filtroStock =
+            event.target.value;
+        }
+      );
+    }
+  );
 
 document
-  .getElementById("orden-productos")
+  .getElementById(
+    "orden-productos"
+  )
   ?.addEventListener(
     "change",
     event => {
@@ -687,22 +1151,30 @@ document
   );
 
 document
-  .getElementById("aplicar-filtros")
+  .getElementById(
+    "aplicar-filtros"
+  )
   ?.addEventListener(
     "click",
     () => {
       renderizarProductos();
+
       cerrarOverlay();
     }
   );
 
 document
-  .getElementById("limpiar-filtros")
+  .getElementById(
+    "limpiar-filtros"
+  )
   ?.addEventListener(
     "click",
     () => {
-      filtroStock = "todos";
-      ordenActual = "relevancia";
+      filtroStock =
+        "todos";
+
+      ordenActual =
+        "relevancia";
 
       const radioTodos =
         document.querySelector(
@@ -714,11 +1186,16 @@ document
           "orden-productos"
         );
 
-      if (radioTodos) {
-        radioTodos.checked = true;
+      if (
+        radioTodos
+      ) {
+        radioTodos.checked =
+          true;
       }
 
-      if (selectOrden) {
+      if (
+        selectOrden
+      ) {
         selectOrden.value =
           "relevancia";
       }
@@ -728,23 +1205,31 @@ document
   );
 
 document
-  .getElementById("nav-buscar")
+  .getElementById(
+    "nav-buscar"
+  )
   ?.addEventListener(
     "click",
     () => {
       window.scrollTo({
         top: 0,
-        behavior: "smooth"
+        behavior:
+          "smooth"
       });
 
-      setTimeout(() => {
-        buscador?.focus();
-      }, 350);
+      setTimeout(
+        () => {
+          buscador?.focus();
+        },
+        350
+      );
     }
   );
 
 document
-  .getElementById("nav-categorias")
+  .getElementById(
+    "nav-categorias"
+  )
   ?.addEventListener(
     "click",
     () => {
@@ -753,54 +1238,75 @@ document
           ".categories-section"
         )
         ?.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+          behavior:
+            "smooth",
+
+          block:
+            "start"
         });
     }
   );
 
 document
-  .getElementById("menu-categorias")
+  .getElementById(
+    "menu-categorias"
+  )
   ?.addEventListener(
     "click",
     () => {
       cerrarOverlay();
 
-      setTimeout(() => {
-        document
-          .querySelector(
-            ".categories-section"
-          )
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-      }, 250);
+      setTimeout(
+        () => {
+          document
+            .querySelector(
+              ".categories-section"
+            )
+            ?.scrollIntoView({
+              behavior:
+                "smooth",
+
+              block:
+                "start"
+            });
+        },
+        250
+      );
     }
   );
 
 document
-  .getElementById("menu-ofertas")
+  .getElementById(
+    "menu-ofertas"
+  )
   ?.addEventListener(
     "click",
     () => {
       cerrarOverlay();
 
-      setTimeout(() => {
-        document
-          .getElementById(
-            "seccion-ofertas"
-          )
-          ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-      }, 250);
+      setTimeout(
+        () => {
+          document
+            .getElementById(
+              "seccion-ofertas"
+            )
+            ?.scrollIntoView({
+              behavior:
+                "smooth",
+
+              block:
+                "start"
+            });
+        },
+        250
+      );
     }
   );
 
 document
-  .getElementById("ver-todas-ofertas")
+  .getElementById(
+    "ver-todas-ofertas"
+  )
   ?.addEventListener(
     "click",
     () => {
@@ -810,39 +1316,58 @@ document
       textoBusqueda =
         "";
 
-      if (buscador) {
-        buscador.value = "";
+      if (
+        buscador
+      ) {
+        buscador.value =
+          "";
       }
 
       const productosConOferta =
         productosDreams.filter(
           producto =>
-            obtenerDatosPrecio(producto)
-              .tieneDescuento
+            obtenerDatosPrecio(
+              producto
+            ).tieneDescuento
         );
 
       productosContainer.innerHTML =
         productosConOferta
-          .sort((a, b) =>
-            Number(b.stock > 0) -
-            Number(a.stock > 0)
+          .sort(
+            (a, b) =>
+              Number(
+                b.stock > 0
+              ) -
+              Number(
+                a.stock > 0
+              )
           )
-          .map(crearTarjetaProducto)
+          .map(
+            crearTarjetaProducto
+          )
           .join("");
 
-      if (cantidadResultados) {
+      if (
+        cantidadResultados
+      ) {
         cantidadResultados.textContent =
-          `${productosConOferta.length} producto${
-            productosConOferta.length === 1
+          `${
+            productosConOferta.length
+          } producto${
+            productosConOferta.length ===
+            1
               ? ""
               : "s"
           } en oferta`;
       }
 
       document
-        .getElementById("productos")
+        .getElementById(
+          "productos"
+        )
         ?.scrollIntoView({
-          behavior: "smooth"
+          behavior:
+            "smooth"
         });
     }
   );
@@ -854,5 +1379,5 @@ window.agregarProductoRapido =
   agregarProductoRapido;
 
 cargarDescuentos();
-cargarProductos();
 
+cargarProductos();
