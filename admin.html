@@ -113,6 +113,15 @@
         <span>Códigos</span>
       </button>
 
+
+      <button
+        class="nav-option"
+        data-section="usuarios"
+      >
+        <i class="fa-solid fa-users"></i>
+        <span>Usuarios</span>
+      </button>
+
     </nav>
 
 
@@ -739,6 +748,280 @@
           class="codes-admin-grid"
           id="lista-codigos-admin"
         ></div>
+
+      </section>
+
+
+      <section
+        class="admin-section"
+        id="seccion-usuarios"
+      >
+
+        <div class="section-heading">
+
+          <div>
+
+            <span>
+              CLIENTES Y CUENTAS
+            </span>
+
+            <h2>
+              Usuarios
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="users-info-box">
+
+          <div class="users-info-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+
+          <div>
+
+            <strong>
+              Personas registradas en Dreams Cosmetic
+            </strong>
+
+            <p>
+              Consulta las cuentas creadas, su información de contacto, rol y fecha de registro.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="users-summary-grid">
+
+          <article class="user-summary-card">
+
+            <div class="user-summary-icon">
+              <i class="fa-solid fa-user-group"></i>
+            </div>
+
+            <div>
+              <span>
+                Registrados
+              </span>
+
+              <strong id="total-usuarios">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="user-summary-card">
+
+            <div class="user-summary-icon clients">
+              <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+
+            <div>
+              <span>
+                Clientes
+              </span>
+
+              <strong id="total-clientes">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="user-summary-card">
+
+            <div class="user-summary-icon admins">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+
+            <div>
+              <span>
+                Administradores
+              </span>
+
+              <strong id="total-administradores">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+
+          <article class="user-summary-card">
+
+            <div class="user-summary-icon new">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <div>
+              <span>
+                Nuevos este mes
+              </span>
+
+              <strong id="usuarios-nuevos-mes">
+                0
+              </strong>
+            </div>
+
+          </article>
+
+        </div>
+
+
+        <div class="users-toolbar">
+
+          <div class="admin-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+              type="search"
+              id="buscar-usuario-admin"
+              placeholder="Buscar por nombre, correo o teléfono..."
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <select id="filtro-rol-usuarios">
+
+            <option value="todos">
+              Todos los roles
+            </option>
+
+            <option value="cliente">
+              Clientes
+            </option>
+
+            <option value="admin">
+              Administradores
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div
+          class="users-admin-list"
+          id="lista-usuarios-admin"
+        >
+
+          <div class="users-empty-state">
+
+            <div>
+              <i class="fa-solid fa-user-group"></i>
+            </div>
+
+            <strong>
+              Cargando usuarios...
+            </strong>
+
+            <span>
+              Las cuentas registradas aparecerán aquí.
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="traffic-admin-card">
+
+          <div class="traffic-admin-heading">
+
+            <div>
+
+              <span>
+                TRÁFICO DE LA TIENDA
+              </span>
+
+              <h3>
+                Visitas
+              </h3>
+
+            </div>
+
+            <div
+              class="traffic-status"
+              id="estado-estadisticas-visitas"
+            >
+              <i class="fa-solid fa-chart-line"></i>
+              Próximamente
+            </div>
+
+          </div>
+
+
+          <p class="traffic-description">
+            Este bloque quedará preparado para mostrar visitas de hoy, esta semana, este mes y visitantes únicos cuando conectemos el sistema de estadísticas.
+          </p>
+
+
+          <div class="traffic-summary-grid">
+
+            <article class="traffic-summary-item">
+
+              <span>
+                Hoy
+              </span>
+
+              <strong id="visitas-hoy">
+                —
+              </strong>
+
+            </article>
+
+
+            <article class="traffic-summary-item">
+
+              <span>
+                Esta semana
+              </span>
+
+              <strong id="visitas-semana">
+                —
+              </strong>
+
+            </article>
+
+
+            <article class="traffic-summary-item">
+
+              <span>
+                Este mes
+              </span>
+
+              <strong id="visitas-mes">
+                —
+              </strong>
+
+            </article>
+
+
+            <article class="traffic-summary-item">
+
+              <span>
+                Visitantes únicos
+              </span>
+
+              <strong id="visitantes-unicos">
+                —
+              </strong>
+
+            </article>
+
+          </div>
+
+        </div>
 
       </section>
 
@@ -1675,11 +1958,12 @@
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-<script src="js/firebase.js"></script>
-<script src="js/cloudinary.js"></script>
-<script src="js/admin.js"></script>
-<script src="js/admin2.js"></script>
-<script src="js/admin3.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/cloudinary.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/admin2.js"></script>
+  <script src="js/admin3.js"></script>
+  <script src="js/admin4.js"></script>
 
 </body>
 </html>
